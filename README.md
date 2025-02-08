@@ -42,7 +42,7 @@ vitality-builder/
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/vitality-builder.git
+git clone https://github.com/amuniare/vitality-builder.git
 cd vitality-builder
 ```
 
