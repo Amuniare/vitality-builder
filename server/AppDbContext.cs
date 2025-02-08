@@ -1,4 +1,6 @@
+// AppDbContext.cs
 using Microsoft.EntityFrameworkCore;
+using VitalityBuilder.Api.Models;
 
 namespace VitalityBuilder.Api.Data
 {
@@ -9,9 +11,6 @@ namespace VitalityBuilder.Api.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) 
             : base(options) { }
 
-        // Add your DbSets here
-        // public DbSet<Character> Characters { get; set; }
-        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Configure your model here
