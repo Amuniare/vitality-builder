@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "tZNMpY6Ud8inQn1fZXvcSo1Yr0MS7dA5xIfsvJv+/0U=",
+  "Source": "VitalityBuilder.Api",
+  "BasePath": "_content/VitalityBuilder.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
