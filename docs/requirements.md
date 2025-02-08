@@ -1,4 +1,4 @@
-Let me create a comprehensive requirements document for the Vitality System Character Builder application. This will help guide our development process and ensure we meet all the necessary functionality.
+
 
 # Vitality System Character Builder - Requirements Document
 
@@ -11,6 +11,18 @@ The application will use a modern three-tier architecture:
 - Frontend: React-based single-page application providing an intuitive user interface
 - Backend: .NET Web API handling business logic and data persistence
 - Database: SQLite database storing character data and system rules
+
+                       +-----------------+
+                       |   React Frontend|
+                       +--------+--------+
+                                |
+                       +--------v--------+
+                       |  .NET Web API   |
+                       +--------+--------+
+                                |
+                       +--------v--------+
+                       | SQLite Database |
+                       +-----------------+
 
 ## Functional Requirements
 
@@ -239,4 +251,48 @@ The project will be considered successful when:
    - Deployment to production
 
 
-testing github changes
+# Vitality System Character Builder - Requirements Document (Updated)
+## Technical Requirements Addendum
+## Development Environment Requirements
+
+Required Software:
+    .NET Development:
+        .NET 7 SDK (Minimum)
+        ASP.NET Core Runtime
+        Entity Framework Core Tools
+        SQLite or SQL Server Express (based on configuration)
+    Frontend Development:
+        Node.js v18+
+        npm v9+
+        TypeScript v5+
+        React v18+
+        Vite (for React project setup)
+    Database:
+        SQLite3 (for local development)
+        Entity Framework Core design tools
+    Build Tools:
+        Webpack 5+
+        Babel 7+
+        ESLint
+        Prettier
+    Testing:
+        Jest
+        React Testing Library
+        xUnit/NUnit for .NET
+        Moq (for .NET mocking)
+    Additional Tools:
+        Git 2.35+
+        Postman/Insomnia (API testing)
+        Modern browser (Chrome 115+ or Firefox 115+)
+Recommended Development Tools:
+    Visual Studio 2022 (for .NET development)
+    VS Code (for frontend work) with extensions:
+        ESLint
+        Prettier
+        C#
+        TSLint
+        React Snippets
+    SQLite Browser/DB Browser
+    Docker (for containerization)
+    Windows Terminal/PowerShell 7+ (Windows)
+    Bash/Zsh (Linux/macOS)
