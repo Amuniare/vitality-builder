@@ -1,0 +1,57 @@
+Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Code Snippets\vitality-builder
+
+=== Directory Tree ===
+ vitality-builder/
+   .git/
+     COMMIT_EDITMSG
+     config
+     description
+     HEAD
+     hooks/
+       [...deeper contents omitted...]
+     index
+     info/
+       [...deeper contents omitted...]
+     logs/
+       [...deeper contents omitted...]
+     objects/
+       [...deeper contents omitted...]
+     refs/
+       [...deeper contents omitted...]
+   .gitignore
+   client/
+     node_modules/
+       [...deeper contents omitted...]
+     package-lock.json
+     package.json
+     public/
+       [...deeper contents omitted...]
+     src/
+       [...deeper contents omitted...]
+   docs/
+     CONTRIBUTING.md
+     requirements.md
+   LICENSE.md
+   README.md
+   server/
+     appsettings.Development.json
+     appsettings.json
+     Data.cs
+     Models.cs
+     obj/
+       [...deeper contents omitted...]
+     Program.cs
+     Properties/
+       [...deeper contents omitted...]
+     VitalityBuilder.Api.csproj
+     VitalityBuilder.Api.http
+   shared/
+     directoryScanner.py
+     output/
+       [...deeper contents omitted...]
+
+=== Python Files ===
+
+File: directoryScanner.py
+Size: 5,057 bytes
+Modified: 2025-02-08 13:38:25
