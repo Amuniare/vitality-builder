@@ -1,51 +1,50 @@
 using Microsoft.EntityFrameworkCore;
-using VitalityBuilder.Api.Data; 
-
-
-
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+using VitalityBuilder.Api.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add database context
+// Add services to the container
+builder.Services.AddControllers();
+
+// Database Configuration
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 
-builder.Services.AddOpenApi();
+// Add repository
+builder.Services.AddScoped<ICharacterRepository, CharacterRepository>();
+
+// Add authorization services (even if not using authentication yet)
+builder.Services.AddAuthorization();
+
+// Configure HTTPS properly
+builder.Services.AddHttpsRedirection(options =>
+{
+    options.HttpsPort = 7034; // Match your launchSettings.json
+});
+
+
+
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseDeveloperExceptionPage();
+    // Disable HTTPS redirection in development if needed
+    // app.UseHttpsRedirection();
+}
+else
+{
+    app.UseHttpsRedirection();
 }
 
-app.UseHttpsRedirection();
+app.UseRouting();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+// Add authentication middleware (if needed later)
+// app.UseAuthentication();
+app.UseAuthorization();
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
