@@ -26,8 +26,8 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Database configuration
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
+builder.Services.AddDbContext<AppDbContext>(options => 
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
 // Add repository
 builder.Services.AddScoped<ICharacterRepository, CharacterRepository>();
