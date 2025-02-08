@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Yofd72c80WQ=",
+  "dgSpecHash": "RW7tCWb4nX8=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Trent\\OneDrive\\Documents\\Visual Studio 2022\\Projects\\vitality-builder\\server\\VitalityBuilder.Api.csproj",
+  "projectFilePath": "C:\\Users\\Trent\\OneDrive\\Documents\\GitHub\\vitality-builder\\server\\VitalityBuilder.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Trent\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\Trent\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.1\\microsoft.aspnetcore.openapi.9.0.1.nupkg.sha512",

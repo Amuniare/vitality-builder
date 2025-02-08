@@ -3180,11 +3180,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Trent\\OneDrive\\Documents\\Visual Studio 2022\\Projects\\vitality-builder\\server\\VitalityBuilder.Api.csproj",
+      "projectUniqueName": "C:\\Users\\Trent\\OneDrive\\Documents\\GitHub\\vitality-builder\\server\\VitalityBuilder.Api.csproj",
       "projectName": "VitalityBuilder.Api",
-      "projectPath": "C:\\Users\\Trent\\OneDrive\\Documents\\Visual Studio 2022\\Projects\\vitality-builder\\server\\VitalityBuilder.Api.csproj",
+      "projectPath": "C:\\Users\\Trent\\OneDrive\\Documents\\GitHub\\vitality-builder\\server\\VitalityBuilder.Api.csproj",
       "packagesPath": "C:\\Users\\Trent\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Trent\\OneDrive\\Documents\\Visual Studio 2022\\Projects\\vitality-builder\\server\\obj\\",
+      "outputPath": "C:\\Users\\Trent\\OneDrive\\Documents\\GitHub\\vitality-builder\\server\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Trent\\AppData\\Roaming\\NuGet\\NuGet.Config"
