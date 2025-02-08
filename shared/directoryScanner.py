@@ -7,7 +7,7 @@ import sys
 
 # Configuration
 Scan_Specified_Directory = 1
-Max_Directory_Depth = 2  # Controls how many levels deep the directory scan will go
+Max_Directory_Depth = 3  # Controls how many levels deep the directory scan will go
 
 @dataclass
 class FileInfo:

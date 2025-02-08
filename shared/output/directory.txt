@@ -1,4 +1,4 @@
-Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Code Snippets\vitality-builder
+Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Projects\vitality-builder
 
 === Directory Tree ===
  vitality-builder/
@@ -6,28 +6,2337 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Code Sn
      COMMIT_EDITMSG
      config
      description
+     FETCH_HEAD
      HEAD
      hooks/
-       [...deeper contents omitted...]
+       applypatch-msg.sample
+       commit-msg.sample
+       fsmonitor-watchman.sample
+       post-update.sample
+       pre-applypatch.sample
+       pre-commit.sample
+       pre-merge-commit.sample
+       pre-push.sample
+       pre-rebase.sample
+       pre-receive.sample
+       prepare-commit-msg.sample
+       push-to-checkout.sample
+       sendemail-validate.sample
+       update.sample
      index
      info/
-       [...deeper contents omitted...]
+       exclude
      logs/
-       [...deeper contents omitted...]
+       HEAD
+       refs/
+         [...deeper contents omitted...]
      objects/
-       [...deeper contents omitted...]
+       00/
+         [...deeper contents omitted...]
+       02/
+         [...deeper contents omitted...]
+       03/
+         [...deeper contents omitted...]
+       06/
+         [...deeper contents omitted...]
+       08/
+         [...deeper contents omitted...]
+       0c/
+         [...deeper contents omitted...]
+       15/
+         [...deeper contents omitted...]
+       1d/
+         [...deeper contents omitted...]
+       20/
+         [...deeper contents omitted...]
+       21/
+         [...deeper contents omitted...]
+       2a/
+         [...deeper contents omitted...]
+       2b/
+         [...deeper contents omitted...]
+       2d/
+         [...deeper contents omitted...]
+       30/
+         [...deeper contents omitted...]
+       3f/
+         [...deeper contents omitted...]
+       42/
+         [...deeper contents omitted...]
+       49/
+         [...deeper contents omitted...]
+       50/
+         [...deeper contents omitted...]
+       54/
+         [...deeper contents omitted...]
+       61/
+         [...deeper contents omitted...]
+       71/
+         [...deeper contents omitted...]
+       74/
+         [...deeper contents omitted...]
+       7b/
+         [...deeper contents omitted...]
+       8e/
+         [...deeper contents omitted...]
+       8f/
+         [...deeper contents omitted...]
+       94/
+         [...deeper contents omitted...]
+       95/
+         [...deeper contents omitted...]
+       9c/
+         [...deeper contents omitted...]
+       9d/
+         [...deeper contents omitted...]
+       a1/
+         [...deeper contents omitted...]
+       a4/
+         [...deeper contents omitted...]
+       a5/
+         [...deeper contents omitted...]
+       a6/
+         [...deeper contents omitted...]
+       a7/
+         [...deeper contents omitted...]
+       a9/
+         [...deeper contents omitted...]
+       aa/
+         [...deeper contents omitted...]
+       b4/
+         [...deeper contents omitted...]
+       b5/
+         [...deeper contents omitted...]
+       c5/
+         [...deeper contents omitted...]
+       cb/
+         [...deeper contents omitted...]
+       cc/
+         [...deeper contents omitted...]
+       d2/
+         [...deeper contents omitted...]
+       d3/
+         [...deeper contents omitted...]
+       da/
+         [...deeper contents omitted...]
+       dd/
+         [...deeper contents omitted...]
+       de/
+         [...deeper contents omitted...]
+       df/
+         [...deeper contents omitted...]
+       e6/
+         [...deeper contents omitted...]
+       e9/
+         [...deeper contents omitted...]
+       eb/
+         [...deeper contents omitted...]
+       ec/
+         [...deeper contents omitted...]
+       f2/
+         [...deeper contents omitted...]
+       f6/
+         [...deeper contents omitted...]
+       fc/
+         [...deeper contents omitted...]
+       fe/
+         [...deeper contents omitted...]
+       info/
+         [...deeper contents omitted...]
+       pack/
+         [...deeper contents omitted...]
+     ORIG_HEAD
      refs/
-       [...deeper contents omitted...]
+       heads/
+         [...deeper contents omitted...]
+       remotes/
+         [...deeper contents omitted...]
+       tags/
+         [...deeper contents omitted...]
    .gitignore
    client/
+     assets/
      node_modules/
-       [...deeper contents omitted...]
+       .bin/
+         [...deeper contents omitted...]
+       .package-lock.json
+       @alloc/
+         [...deeper contents omitted...]
+       @ampproject/
+         [...deeper contents omitted...]
+       @babel/
+         [...deeper contents omitted...]
+       @bcoe/
+         [...deeper contents omitted...]
+       @cnakazawa/
+         [...deeper contents omitted...]
+       @csstools/
+         [...deeper contents omitted...]
+       @eslint/
+         [...deeper contents omitted...]
+       @eslint-community/
+         [...deeper contents omitted...]
+       @hapi/
+         [...deeper contents omitted...]
+       @humanwhocodes/
+         [...deeper contents omitted...]
+       @isaacs/
+         [...deeper contents omitted...]
+       @istanbuljs/
+         [...deeper contents omitted...]
+       @jest/
+         [...deeper contents omitted...]
+       @jridgewell/
+         [...deeper contents omitted...]
+       @leichtgewicht/
+         [...deeper contents omitted...]
+       @mrmlnc/
+         [...deeper contents omitted...]
+       @nicolo-ribaudo/
+         [...deeper contents omitted...]
+       @nodelib/
+         [...deeper contents omitted...]
+       @pkgjs/
+         [...deeper contents omitted...]
+       @pmmmwh/
+         [...deeper contents omitted...]
+       @rollup/
+         [...deeper contents omitted...]
+       @rtsao/
+         [...deeper contents omitted...]
+       @rushstack/
+         [...deeper contents omitted...]
+       @sinclair/
+         [...deeper contents omitted...]
+       @sinonjs/
+         [...deeper contents omitted...]
+       @surma/
+         [...deeper contents omitted...]
+       @svgr/
+         [...deeper contents omitted...]
+       @tootallnate/
+         [...deeper contents omitted...]
+       @trysound/
+         [...deeper contents omitted...]
+       @types/
+         [...deeper contents omitted...]
+       @typescript-eslint/
+         [...deeper contents omitted...]
+       @ungap/
+         [...deeper contents omitted...]
+       @webassemblyjs/
+         [...deeper contents omitted...]
+       @xtuc/
+         [...deeper contents omitted...]
+       abab/
+         [...deeper contents omitted...]
+       accepts/
+         [...deeper contents omitted...]
+       acorn/
+         [...deeper contents omitted...]
+       acorn-dynamic-import/
+         [...deeper contents omitted...]
+       acorn-globals/
+         [...deeper contents omitted...]
+       acorn-jsx/
+         [...deeper contents omitted...]
+       acorn-walk/
+         [...deeper contents omitted...]
+       address/
+         [...deeper contents omitted...]
+       ajv/
+         [...deeper contents omitted...]
+       ajv-errors/
+         [...deeper contents omitted...]
+       ajv-keywords/
+         [...deeper contents omitted...]
+       alphanum-sort/
+         [...deeper contents omitted...]
+       ansi-colors/
+         [...deeper contents omitted...]
+       ansi-escapes/
+         [...deeper contents omitted...]
+       ansi-html/
+         [...deeper contents omitted...]
+       ansi-regex/
+         [...deeper contents omitted...]
+       ansi-styles/
+         [...deeper contents omitted...]
+       anymatch/
+         [...deeper contents omitted...]
+       aproba/
+         [...deeper contents omitted...]
+       argparse/
+         [...deeper contents omitted...]
+       aria-query/
+         [...deeper contents omitted...]
+       arr-diff/
+         [...deeper contents omitted...]
+       arr-flatten/
+         [...deeper contents omitted...]
+       arr-union/
+         [...deeper contents omitted...]
+       array-buffer-byte-length/
+         [...deeper contents omitted...]
+       array-equal/
+         [...deeper contents omitted...]
+       array-flatten/
+         [...deeper contents omitted...]
+       array-includes/
+         [...deeper contents omitted...]
+       array-union/
+         [...deeper contents omitted...]
+       array-uniq/
+         [...deeper contents omitted...]
+       array-unique/
+         [...deeper contents omitted...]
+       array.prototype.reduce/
+         [...deeper contents omitted...]
+       arraybuffer.prototype.slice/
+         [...deeper contents omitted...]
+       arrify/
+         [...deeper contents omitted...]
+       asap/
+         [...deeper contents omitted...]
+       asn1/
+         [...deeper contents omitted...]
+       asn1.js/
+         [...deeper contents omitted...]
+       assert/
+         [...deeper contents omitted...]
+       assert-plus/
+         [...deeper contents omitted...]
+       assign-symbols/
+         [...deeper contents omitted...]
+       ast-types-flow/
+         [...deeper contents omitted...]
+       astral-regex/
+         [...deeper contents omitted...]
+       async/
+         [...deeper contents omitted...]
+       async-each/
+         [...deeper contents omitted...]
+       async-function/
+         [...deeper contents omitted...]
+       async-limiter/
+         [...deeper contents omitted...]
+       asynckit/
+         [...deeper contents omitted...]
+       atob/
+         [...deeper contents omitted...]
+       autoprefixer/
+         [...deeper contents omitted...]
+       available-typed-arrays/
+         [...deeper contents omitted...]
+       aws-sign2/
+         [...deeper contents omitted...]
+       aws4/
+         [...deeper contents omitted...]
+       axobject-query/
+         [...deeper contents omitted...]
+       babel-code-frame/
+         [...deeper contents omitted...]
+       babel-eslint/
+         [...deeper contents omitted...]
+       babel-extract-comments/
+         [...deeper contents omitted...]
+       babel-jest/
+         [...deeper contents omitted...]
+       babel-loader/
+         [...deeper contents omitted...]
+       babel-plugin-istanbul/
+         [...deeper contents omitted...]
+       babel-plugin-jest-hoist/
+         [...deeper contents omitted...]
+       babel-plugin-macros/
+         [...deeper contents omitted...]
+       babel-plugin-named-asset-import/
+         [...deeper contents omitted...]
+       babel-plugin-polyfill-corejs2/
+         [...deeper contents omitted...]
+       babel-plugin-polyfill-corejs3/
+         [...deeper contents omitted...]
+       babel-plugin-polyfill-regenerator/
+         [...deeper contents omitted...]
+       babel-plugin-syntax-object-rest-spread/
+         [...deeper contents omitted...]
+       babel-plugin-transform-object-rest-spread/
+         [...deeper contents omitted...]
+       babel-plugin-transform-react-remove-prop-types/
+         [...deeper contents omitted...]
+       babel-preset-jest/
+         [...deeper contents omitted...]
+       babel-preset-react-app/
+         [...deeper contents omitted...]
+       babel-runtime/
+         [...deeper contents omitted...]
+       babylon/
+         [...deeper contents omitted...]
+       balanced-match/
+         [...deeper contents omitted...]
+       base/
+         [...deeper contents omitted...]
+       base64-js/
+         [...deeper contents omitted...]
+       batch/
+         [...deeper contents omitted...]
+       bcrypt-pbkdf/
+         [...deeper contents omitted...]
+       big.js/
+         [...deeper contents omitted...]
+       binary-extensions/
+         [...deeper contents omitted...]
+       bindings/
+         [...deeper contents omitted...]
+       bluebird/
+         [...deeper contents omitted...]
+       bn.js/
+         [...deeper contents omitted...]
+       body-parser/
+         [...deeper contents omitted...]
+       bonjour/
+         [...deeper contents omitted...]
+       boolbase/
+         [...deeper contents omitted...]
+       brace-expansion/
+         [...deeper contents omitted...]
+       braces/
+         [...deeper contents omitted...]
+       brorand/
+         [...deeper contents omitted...]
+       browser-process-hrtime/
+         [...deeper contents omitted...]
+       browser-resolve/
+         [...deeper contents omitted...]
+       browserify-aes/
+         [...deeper contents omitted...]
+       browserify-cipher/
+         [...deeper contents omitted...]
+       browserify-des/
+         [...deeper contents omitted...]
+       browserify-rsa/
+         [...deeper contents omitted...]
+       browserify-sign/
+         [...deeper contents omitted...]
+       browserify-zlib/
+         [...deeper contents omitted...]
+       browserslist/
+         [...deeper contents omitted...]
+       bser/
+         [...deeper contents omitted...]
+       buffer/
+         [...deeper contents omitted...]
+       buffer-from/
+         [...deeper contents omitted...]
+       buffer-indexof/
+         [...deeper contents omitted...]
+       buffer-xor/
+         [...deeper contents omitted...]
+       builtin-status-codes/
+         [...deeper contents omitted...]
+       bytes/
+         [...deeper contents omitted...]
+       cacache/
+         [...deeper contents omitted...]
+       cache-base/
+         [...deeper contents omitted...]
+       call-bind/
+         [...deeper contents omitted...]
+       call-bind-apply-helpers/
+         [...deeper contents omitted...]
+       call-bound/
+         [...deeper contents omitted...]
+       call-me-maybe/
+         [...deeper contents omitted...]
+       caller-callsite/
+         [...deeper contents omitted...]
+       caller-path/
+         [...deeper contents omitted...]
+       callsites/
+         [...deeper contents omitted...]
+       camel-case/
+         [...deeper contents omitted...]
+       camelcase/
+         [...deeper contents omitted...]
+       caniuse-api/
+         [...deeper contents omitted...]
+       caniuse-lite/
+         [...deeper contents omitted...]
+       capture-exit/
+         [...deeper contents omitted...]
+       case-sensitive-paths-webpack-plugin/
+         [...deeper contents omitted...]
+       caseless/
+         [...deeper contents omitted...]
+       chalk/
+         [...deeper contents omitted...]
+       chardet/
+         [...deeper contents omitted...]
+       chokidar/
+         [...deeper contents omitted...]
+       chownr/
+         [...deeper contents omitted...]
+       chrome-trace-event/
+         [...deeper contents omitted...]
+       ci-info/
+         [...deeper contents omitted...]
+       cipher-base/
+         [...deeper contents omitted...]
+       class-utils/
+         [...deeper contents omitted...]
+       clean-css/
+         [...deeper contents omitted...]
+       cli-cursor/
+         [...deeper contents omitted...]
+       cli-width/
+         [...deeper contents omitted...]
+       cliui/
+         [...deeper contents omitted...]
+       clone-deep/
+         [...deeper contents omitted...]
+       co/
+         [...deeper contents omitted...]
+       coa/
+         [...deeper contents omitted...]
+       code-point-at/
+         [...deeper contents omitted...]
+       collection-visit/
+         [...deeper contents omitted...]
+       color/
+         [...deeper contents omitted...]
+       color-convert/
+         [...deeper contents omitted...]
+       color-name/
+         [...deeper contents omitted...]
+       color-string/
+         [...deeper contents omitted...]
+       combined-stream/
+         [...deeper contents omitted...]
+       commander/
+         [...deeper contents omitted...]
+       common-tags/
+         [...deeper contents omitted...]
+       commondir/
+         [...deeper contents omitted...]
+       component-emitter/
+         [...deeper contents omitted...]
+       compressible/
+         [...deeper contents omitted...]
+       compression/
+         [...deeper contents omitted...]
+       concat-map/
+         [...deeper contents omitted...]
+       concat-stream/
+         [...deeper contents omitted...]
+       confusing-browser-globals/
+         [...deeper contents omitted...]
+       connect-history-api-fallback/
+         [...deeper contents omitted...]
+       console-browserify/
+         [...deeper contents omitted...]
+       constants-browserify/
+         [...deeper contents omitted...]
+       contains-path/
+         [...deeper contents omitted...]
+       content-disposition/
+         [...deeper contents omitted...]
+       content-type/
+         [...deeper contents omitted...]
+       convert-source-map/
+         [...deeper contents omitted...]
+       cookie/
+         [...deeper contents omitted...]
+       cookie-signature/
+         [...deeper contents omitted...]
+       copy-concurrently/
+         [...deeper contents omitted...]
+       copy-descriptor/
+         [...deeper contents omitted...]
+       core-js/
+         [...deeper contents omitted...]
+       core-js-compat/
+         [...deeper contents omitted...]
+       core-util-is/
+         [...deeper contents omitted...]
+       cosmiconfig/
+         [...deeper contents omitted...]
+       cra-template-typescript/
+         [...deeper contents omitted...]
+       create-ecdh/
+         [...deeper contents omitted...]
+       create-hash/
+         [...deeper contents omitted...]
+       create-hmac/
+         [...deeper contents omitted...]
+       cross-spawn/
+         [...deeper contents omitted...]
+       crypto-browserify/
+         [...deeper contents omitted...]
+       css-blank-pseudo/
+         [...deeper contents omitted...]
+       css-color-names/
+         [...deeper contents omitted...]
+       css-declaration-sorter/
+         [...deeper contents omitted...]
+       css-has-pseudo/
+         [...deeper contents omitted...]
+       css-loader/
+         [...deeper contents omitted...]
+       css-prefers-color-scheme/
+         [...deeper contents omitted...]
+       css-select/
+         [...deeper contents omitted...]
+       css-select-base-adapter/
+         [...deeper contents omitted...]
+       css-tree/
+         [...deeper contents omitted...]
+       css-what/
+         [...deeper contents omitted...]
+       cssdb/
+         [...deeper contents omitted...]
+       cssesc/
+         [...deeper contents omitted...]
+       cssnano/
+         [...deeper contents omitted...]
+       cssnano-preset-default/
+         [...deeper contents omitted...]
+       cssnano-util-get-arguments/
+         [...deeper contents omitted...]
+       cssnano-util-get-match/
+         [...deeper contents omitted...]
+       cssnano-util-raw-cache/
+         [...deeper contents omitted...]
+       cssnano-util-same-parent/
+         [...deeper contents omitted...]
+       csso/
+         [...deeper contents omitted...]
+       cssom/
+         [...deeper contents omitted...]
+       cssstyle/
+         [...deeper contents omitted...]
+       cyclist/
+         [...deeper contents omitted...]
+       damerau-levenshtein/
+         [...deeper contents omitted...]
+       dashdash/
+         [...deeper contents omitted...]
+       data-urls/
+         [...deeper contents omitted...]
+       data-view-buffer/
+         [...deeper contents omitted...]
+       data-view-byte-length/
+         [...deeper contents omitted...]
+       data-view-byte-offset/
+         [...deeper contents omitted...]
+       debug/
+         [...deeper contents omitted...]
+       decamelize/
+         [...deeper contents omitted...]
+       decode-uri-component/
+         [...deeper contents omitted...]
+       deep-equal/
+         [...deeper contents omitted...]
+       deep-is/
+         [...deeper contents omitted...]
+       default-gateway/
+         [...deeper contents omitted...]
+       define-data-property/
+         [...deeper contents omitted...]
+       define-properties/
+         [...deeper contents omitted...]
+       define-property/
+         [...deeper contents omitted...]
+       del/
+         [...deeper contents omitted...]
+       delayed-stream/
+         [...deeper contents omitted...]
+       depd/
+         [...deeper contents omitted...]
+       des.js/
+         [...deeper contents omitted...]
+       destroy/
+         [...deeper contents omitted...]
+       detect-newline/
+         [...deeper contents omitted...]
+       detect-node/
+         [...deeper contents omitted...]
+       detect-port-alt/
+         [...deeper contents omitted...]
+       diff-sequences/
+         [...deeper contents omitted...]
+       diffie-hellman/
+         [...deeper contents omitted...]
+       dir-glob/
+         [...deeper contents omitted...]
+       dns-equal/
+         [...deeper contents omitted...]
+       dns-packet/
+         [...deeper contents omitted...]
+       dns-txt/
+         [...deeper contents omitted...]
+       doctrine/
+         [...deeper contents omitted...]
+       dom-converter/
+         [...deeper contents omitted...]
+       dom-serializer/
+         [...deeper contents omitted...]
+       domain-browser/
+         [...deeper contents omitted...]
+       domelementtype/
+         [...deeper contents omitted...]
+       domexception/
+         [...deeper contents omitted...]
+       domhandler/
+         [...deeper contents omitted...]
+       domutils/
+         [...deeper contents omitted...]
+       dot-prop/
+         [...deeper contents omitted...]
+       dotenv/
+         [...deeper contents omitted...]
+       dotenv-expand/
+         [...deeper contents omitted...]
+       dunder-proto/
+         [...deeper contents omitted...]
+       duplexer/
+         [...deeper contents omitted...]
+       duplexify/
+         [...deeper contents omitted...]
+       ecc-jsbn/
+         [...deeper contents omitted...]
+       ee-first/
+         [...deeper contents omitted...]
+       electron-to-chromium/
+         [...deeper contents omitted...]
+       elliptic/
+         [...deeper contents omitted...]
+       emoji-regex/
+         [...deeper contents omitted...]
+       emojis-list/
+         [...deeper contents omitted...]
+       encodeurl/
+         [...deeper contents omitted...]
+       end-of-stream/
+         [...deeper contents omitted...]
+       enhanced-resolve/
+         [...deeper contents omitted...]
+       entities/
+         [...deeper contents omitted...]
+       errno/
+         [...deeper contents omitted...]
+       error-ex/
+         [...deeper contents omitted...]
+       es-abstract/
+         [...deeper contents omitted...]
+       es-array-method-boxes-properly/
+         [...deeper contents omitted...]
+       es-define-property/
+         [...deeper contents omitted...]
+       es-errors/
+         [...deeper contents omitted...]
+       es-object-atoms/
+         [...deeper contents omitted...]
+       es-set-tostringtag/
+         [...deeper contents omitted...]
+       es-to-primitive/
+         [...deeper contents omitted...]
+       escalade/
+         [...deeper contents omitted...]
+       escape-html/
+         [...deeper contents omitted...]
+       escape-string-regexp/
+         [...deeper contents omitted...]
+       escodegen/
+         [...deeper contents omitted...]
+       eslint/
+         [...deeper contents omitted...]
+       eslint-config-react-app/
+         [...deeper contents omitted...]
+       eslint-import-resolver-node/
+         [...deeper contents omitted...]
+       eslint-loader/
+         [...deeper contents omitted...]
+       eslint-module-utils/
+         [...deeper contents omitted...]
+       eslint-plugin-flowtype/
+         [...deeper contents omitted...]
+       eslint-plugin-import/
+         [...deeper contents omitted...]
+       eslint-plugin-jsx-a11y/
+         [...deeper contents omitted...]
+       eslint-plugin-react/
+         [...deeper contents omitted...]
+       eslint-plugin-react-hooks/
+         [...deeper contents omitted...]
+       eslint-scope/
+         [...deeper contents omitted...]
+       eslint-utils/
+         [...deeper contents omitted...]
+       eslint-visitor-keys/
+         [...deeper contents omitted...]
+       espree/
+         [...deeper contents omitted...]
+       esprima/
+         [...deeper contents omitted...]
+       esquery/
+         [...deeper contents omitted...]
+       esrecurse/
+         [...deeper contents omitted...]
+       estraverse/
+         [...deeper contents omitted...]
+       esutils/
+         [...deeper contents omitted...]
+       etag/
+         [...deeper contents omitted...]
+       eventemitter3/
+         [...deeper contents omitted...]
+       events/
+         [...deeper contents omitted...]
+       eventsource/
+         [...deeper contents omitted...]
+       evp_bytestokey/
+         [...deeper contents omitted...]
+       exec-sh/
+         [...deeper contents omitted...]
+       execa/
+         [...deeper contents omitted...]
+       exit/
+         [...deeper contents omitted...]
+       expand-brackets/
+         [...deeper contents omitted...]
+       expect/
+         [...deeper contents omitted...]
+       express/
+         [...deeper contents omitted...]
+       extend/
+         [...deeper contents omitted...]
+       extend-shallow/
+         [...deeper contents omitted...]
+       external-editor/
+         [...deeper contents omitted...]
+       extglob/
+         [...deeper contents omitted...]
+       extsprintf/
+         [...deeper contents omitted...]
+       fast-deep-equal/
+         [...deeper contents omitted...]
+       fast-glob/
+         [...deeper contents omitted...]
+       fast-json-stable-stringify/
+         [...deeper contents omitted...]
+       fast-levenshtein/
+         [...deeper contents omitted...]
+       faye-websocket/
+         [...deeper contents omitted...]
+       fb-watchman/
+         [...deeper contents omitted...]
+       figgy-pudding/
+         [...deeper contents omitted...]
+       figures/
+         [...deeper contents omitted...]
+       file-entry-cache/
+         [...deeper contents omitted...]
+       file-loader/
+         [...deeper contents omitted...]
+       file-uri-to-path/
+         [...deeper contents omitted...]
+       filesize/
+         [...deeper contents omitted...]
+       fill-range/
+         [...deeper contents omitted...]
+       finalhandler/
+         [...deeper contents omitted...]
+       find-cache-dir/
+         [...deeper contents omitted...]
+       find-up/
+         [...deeper contents omitted...]
+       flat-cache/
+         [...deeper contents omitted...]
+       flatted/
+         [...deeper contents omitted...]
+       flatten/
+         [...deeper contents omitted...]
+       flush-write-stream/
+         [...deeper contents omitted...]
+       follow-redirects/
+         [...deeper contents omitted...]
+       for-each/
+         [...deeper contents omitted...]
+       for-in/
+         [...deeper contents omitted...]
+       for-own/
+         [...deeper contents omitted...]
+       forever-agent/
+         [...deeper contents omitted...]
+       fork-ts-checker-webpack-plugin/
+         [...deeper contents omitted...]
+       form-data/
+         [...deeper contents omitted...]
+       forwarded/
+         [...deeper contents omitted...]
+       fragment-cache/
+         [...deeper contents omitted...]
+       fresh/
+         [...deeper contents omitted...]
+       from2/
+         [...deeper contents omitted...]
+       fs-extra/
+         [...deeper contents omitted...]
+       fs-write-stream-atomic/
+         [...deeper contents omitted...]
+       fs.realpath/
+         [...deeper contents omitted...]
+       function-bind/
+         [...deeper contents omitted...]
+       function.prototype.name/
+         [...deeper contents omitted...]
+       functional-red-black-tree/
+         [...deeper contents omitted...]
+       functions-have-names/
+         [...deeper contents omitted...]
+       gensync/
+         [...deeper contents omitted...]
+       get-caller-file/
+         [...deeper contents omitted...]
+       get-intrinsic/
+         [...deeper contents omitted...]
+       get-own-enumerable-property-symbols/
+         [...deeper contents omitted...]
+       get-proto/
+         [...deeper contents omitted...]
+       get-stream/
+         [...deeper contents omitted...]
+       get-symbol-description/
+         [...deeper contents omitted...]
+       get-value/
+         [...deeper contents omitted...]
+       getpass/
+         [...deeper contents omitted...]
+       glob/
+         [...deeper contents omitted...]
+       glob-parent/
+         [...deeper contents omitted...]
+       glob-to-regexp/
+         [...deeper contents omitted...]
+       global-modules/
+         [...deeper contents omitted...]
+       global-prefix/
+         [...deeper contents omitted...]
+       globals/
+         [...deeper contents omitted...]
+       globalthis/
+         [...deeper contents omitted...]
+       globby/
+         [...deeper contents omitted...]
+       gopd/
+         [...deeper contents omitted...]
+       graceful-fs/
+         [...deeper contents omitted...]
+       growly/
+         [...deeper contents omitted...]
+       gzip-size/
+         [...deeper contents omitted...]
+       handle-thing/
+         [...deeper contents omitted...]
+       har-schema/
+         [...deeper contents omitted...]
+       har-validator/
+         [...deeper contents omitted...]
+       harmony-reflect/
+         [...deeper contents omitted...]
+       has/
+         [...deeper contents omitted...]
+       has-ansi/
+         [...deeper contents omitted...]
+       has-bigints/
+         [...deeper contents omitted...]
+       has-flag/
+         [...deeper contents omitted...]
+       has-property-descriptors/
+         [...deeper contents omitted...]
+       has-proto/
+         [...deeper contents omitted...]
+       has-symbols/
+         [...deeper contents omitted...]
+       has-tostringtag/
+         [...deeper contents omitted...]
+       has-value/
+         [...deeper contents omitted...]
+       has-values/
+         [...deeper contents omitted...]
+       hash-base/
+         [...deeper contents omitted...]
+       hash.js/
+         [...deeper contents omitted...]
+       hasown/
+         [...deeper contents omitted...]
+       he/
+         [...deeper contents omitted...]
+       hex-color-regex/
+         [...deeper contents omitted...]
+       hmac-drbg/
+         [...deeper contents omitted...]
+       hosted-git-info/
+         [...deeper contents omitted...]
+       hpack.js/
+         [...deeper contents omitted...]
+       hsl-regex/
+         [...deeper contents omitted...]
+       hsla-regex/
+         [...deeper contents omitted...]
+       html-encoding-sniffer/
+         [...deeper contents omitted...]
+       html-entities/
+         [...deeper contents omitted...]
+       html-escaper/
+         [...deeper contents omitted...]
+       html-minifier/
+         [...deeper contents omitted...]
+       html-webpack-plugin/
+         [...deeper contents omitted...]
+       htmlparser2/
+         [...deeper contents omitted...]
+       http-deceiver/
+         [...deeper contents omitted...]
+       http-errors/
+         [...deeper contents omitted...]
+       http-parser-js/
+         [...deeper contents omitted...]
+       http-proxy/
+         [...deeper contents omitted...]
+       http-proxy-middleware/
+         [...deeper contents omitted...]
+       http-signature/
+         [...deeper contents omitted...]
+       https-browserify/
+         [...deeper contents omitted...]
+       iconv-lite/
+         [...deeper contents omitted...]
+       icss-replace-symbols/
+         [...deeper contents omitted...]
+       icss-utils/
+         [...deeper contents omitted...]
+       identity-obj-proxy/
+         [...deeper contents omitted...]
+       ieee754/
+         [...deeper contents omitted...]
+       iferr/
+         [...deeper contents omitted...]
+       ignore/
+         [...deeper contents omitted...]
+       immer/
+         [...deeper contents omitted...]
+       import-cwd/
+         [...deeper contents omitted...]
+       import-fresh/
+         [...deeper contents omitted...]
+       import-from/
+         [...deeper contents omitted...]
+       import-local/
+         [...deeper contents omitted...]
+       imurmurhash/
+         [...deeper contents omitted...]
+       indexes-of/
+         [...deeper contents omitted...]
+       inflight/
+         [...deeper contents omitted...]
+       inherits/
+         [...deeper contents omitted...]
+       ini/
+         [...deeper contents omitted...]
+       inquirer/
+         [...deeper contents omitted...]
+       internal-ip/
+         [...deeper contents omitted...]
+       internal-slot/
+         [...deeper contents omitted...]
+       invariant/
+         [...deeper contents omitted...]
+       invert-kv/
+         [...deeper contents omitted...]
+       ip/
+         [...deeper contents omitted...]
+       ip-regex/
+         [...deeper contents omitted...]
+       ipaddr.js/
+         [...deeper contents omitted...]
+       is-absolute-url/
+         [...deeper contents omitted...]
+       is-accessor-descriptor/
+         [...deeper contents omitted...]
+       is-arguments/
+         [...deeper contents omitted...]
+       is-array-buffer/
+         [...deeper contents omitted...]
+       is-arrayish/
+         [...deeper contents omitted...]
+       is-async-function/
+         [...deeper contents omitted...]
+       is-bigint/
+         [...deeper contents omitted...]
+       is-binary-path/
+         [...deeper contents omitted...]
+       is-boolean-object/
+         [...deeper contents omitted...]
+       is-buffer/
+         [...deeper contents omitted...]
+       is-callable/
+         [...deeper contents omitted...]
+       is-ci/
+         [...deeper contents omitted...]
+       is-color-stop/
+         [...deeper contents omitted...]
+       is-core-module/
+         [...deeper contents omitted...]
+       is-data-descriptor/
+         [...deeper contents omitted...]
+       is-data-view/
+         [...deeper contents omitted...]
+       is-date-object/
+         [...deeper contents omitted...]
+       is-descriptor/
+         [...deeper contents omitted...]
+       is-directory/
+         [...deeper contents omitted...]
+       is-extendable/
+         [...deeper contents omitted...]
+       is-extglob/
+         [...deeper contents omitted...]
+       is-finalizationregistry/
+         [...deeper contents omitted...]
+       is-fullwidth-code-point/
+         [...deeper contents omitted...]
+       is-generator-fn/
+         [...deeper contents omitted...]
+       is-generator-function/
+         [...deeper contents omitted...]
+       is-glob/
+         [...deeper contents omitted...]
+       is-map/
+         [...deeper contents omitted...]
+       is-number/
+         [...deeper contents omitted...]
+       is-number-object/
+         [...deeper contents omitted...]
+       is-obj/
+         [...deeper contents omitted...]
+       is-path-cwd/
+         [...deeper contents omitted...]
+       is-path-in-cwd/
+         [...deeper contents omitted...]
+       is-path-inside/
+         [...deeper contents omitted...]
+       is-plain-object/
+         [...deeper contents omitted...]
+       is-regex/
+         [...deeper contents omitted...]
+       is-regexp/
+         [...deeper contents omitted...]
+       is-resolvable/
+         [...deeper contents omitted...]
+       is-root/
+         [...deeper contents omitted...]
+       is-set/
+         [...deeper contents omitted...]
+       is-shared-array-buffer/
+         [...deeper contents omitted...]
+       is-stream/
+         [...deeper contents omitted...]
+       is-string/
+         [...deeper contents omitted...]
+       is-symbol/
+         [...deeper contents omitted...]
+       is-typed-array/
+         [...deeper contents omitted...]
+       is-typedarray/
+         [...deeper contents omitted...]
+       is-weakmap/
+         [...deeper contents omitted...]
+       is-weakref/
+         [...deeper contents omitted...]
+       is-weakset/
+         [...deeper contents omitted...]
+       is-windows/
+         [...deeper contents omitted...]
+       is-wsl/
+         [...deeper contents omitted...]
+       isarray/
+         [...deeper contents omitted...]
+       isexe/
+         [...deeper contents omitted...]
+       isobject/
+         [...deeper contents omitted...]
+       isstream/
+         [...deeper contents omitted...]
+       istanbul-lib-coverage/
+         [...deeper contents omitted...]
+       istanbul-lib-instrument/
+         [...deeper contents omitted...]
+       istanbul-lib-report/
+         [...deeper contents omitted...]
+       istanbul-lib-source-maps/
+         [...deeper contents omitted...]
+       istanbul-reports/
+         [...deeper contents omitted...]
+       jest/
+         [...deeper contents omitted...]
+       jest-changed-files/
+         [...deeper contents omitted...]
+       jest-cli/
+         [...deeper contents omitted...]
+       jest-config/
+         [...deeper contents omitted...]
+       jest-diff/
+         [...deeper contents omitted...]
+       jest-docblock/
+         [...deeper contents omitted...]
+       jest-each/
+         [...deeper contents omitted...]
+       jest-environment-jsdom/
+         [...deeper contents omitted...]
+       jest-environment-jsdom-fourteen/
+         [...deeper contents omitted...]
+       jest-environment-node/
+         [...deeper contents omitted...]
+       jest-get-type/
+         [...deeper contents omitted...]
+       jest-haste-map/
+         [...deeper contents omitted...]
+       jest-jasmine2/
+         [...deeper contents omitted...]
+       jest-leak-detector/
+         [...deeper contents omitted...]
+       jest-matcher-utils/
+         [...deeper contents omitted...]
+       jest-message-util/
+         [...deeper contents omitted...]
+       jest-mock/
+         [...deeper contents omitted...]
+       jest-pnp-resolver/
+         [...deeper contents omitted...]
+       jest-regex-util/
+         [...deeper contents omitted...]
+       jest-resolve/
+         [...deeper contents omitted...]
+       jest-resolve-dependencies/
+         [...deeper contents omitted...]
+       jest-runner/
+         [...deeper contents omitted...]
+       jest-runtime/
+         [...deeper contents omitted...]
+       jest-serializer/
+         [...deeper contents omitted...]
+       jest-snapshot/
+         [...deeper contents omitted...]
+       jest-util/
+         [...deeper contents omitted...]
+       jest-validate/
+         [...deeper contents omitted...]
+       jest-watch-typeahead/
+         [...deeper contents omitted...]
+       jest-watcher/
+         [...deeper contents omitted...]
+       jest-worker/
+         [...deeper contents omitted...]
+       js-tokens/
+         [...deeper contents omitted...]
+       js-yaml/
+         [...deeper contents omitted...]
+       jsbn/
+         [...deeper contents omitted...]
+       jsdom/
+         [...deeper contents omitted...]
+       jsesc/
+         [...deeper contents omitted...]
+       json-parse-better-errors/
+         [...deeper contents omitted...]
+       json-parse-even-better-errors/
+         [...deeper contents omitted...]
+       json-schema/
+         [...deeper contents omitted...]
+       json-schema-traverse/
+         [...deeper contents omitted...]
+       json-stable-stringify/
+         [...deeper contents omitted...]
+       json-stable-stringify-without-jsonify/
+         [...deeper contents omitted...]
+       json-stringify-safe/
+         [...deeper contents omitted...]
+       json3/
+         [...deeper contents omitted...]
+       json5/
+         [...deeper contents omitted...]
+       jsonfile/
+         [...deeper contents omitted...]
+       jsonify/
+         [...deeper contents omitted...]
+       jsprim/
+         [...deeper contents omitted...]
+       jsx-ast-utils/
+         [...deeper contents omitted...]
+       killable/
+         [...deeper contents omitted...]
+       kind-of/
+         [...deeper contents omitted...]
+       kleur/
+         [...deeper contents omitted...]
+       last-call-webpack-plugin/
+         [...deeper contents omitted...]
+       lazy-cache/
+         [...deeper contents omitted...]
+       lcid/
+         [...deeper contents omitted...]
+       left-pad/
+         [...deeper contents omitted...]
+       leven/
+         [...deeper contents omitted...]
+       levenary/
+         [...deeper contents omitted...]
+       levn/
+         [...deeper contents omitted...]
+       lines-and-columns/
+         [...deeper contents omitted...]
+       load-json-file/
+         [...deeper contents omitted...]
+       loader-fs-cache/
+         [...deeper contents omitted...]
+       loader-runner/
+         [...deeper contents omitted...]
+       loader-utils/
+         [...deeper contents omitted...]
+       locate-path/
+         [...deeper contents omitted...]
+       lodash/
+         [...deeper contents omitted...]
+       lodash._reinterpolate/
+         [...deeper contents omitted...]
+       lodash.debounce/
+         [...deeper contents omitted...]
+       lodash.memoize/
+         [...deeper contents omitted...]
+       lodash.sortby/
+         [...deeper contents omitted...]
+       lodash.tail/
+         [...deeper contents omitted...]
+       lodash.template/
+         [...deeper contents omitted...]
+       lodash.templatesettings/
+         [...deeper contents omitted...]
+       lodash.unescape/
+         [...deeper contents omitted...]
+       lodash.uniq/
+         [...deeper contents omitted...]
+       loglevel/
+         [...deeper contents omitted...]
+       loose-envify/
+         [...deeper contents omitted...]
+       lower-case/
+         [...deeper contents omitted...]
+       lru-cache/
+         [...deeper contents omitted...]
+       make-dir/
+         [...deeper contents omitted...]
+       makeerror/
+         [...deeper contents omitted...]
+       mamacro/
+         [...deeper contents omitted...]
+       map-age-cleaner/
+         [...deeper contents omitted...]
+       map-cache/
+         [...deeper contents omitted...]
+       map-visit/
+         [...deeper contents omitted...]
+       math-intrinsics/
+         [...deeper contents omitted...]
+       md5.js/
+         [...deeper contents omitted...]
+       mdn-data/
+         [...deeper contents omitted...]
+       media-typer/
+         [...deeper contents omitted...]
+       mem/
+         [...deeper contents omitted...]
+       memory-fs/
+         [...deeper contents omitted...]
+       merge-deep/
+         [...deeper contents omitted...]
+       merge-descriptors/
+         [...deeper contents omitted...]
+       merge-stream/
+         [...deeper contents omitted...]
+       merge2/
+         [...deeper contents omitted...]
+       methods/
+         [...deeper contents omitted...]
+       microevent.ts/
+         [...deeper contents omitted...]
+       micromatch/
+         [...deeper contents omitted...]
+       miller-rabin/
+         [...deeper contents omitted...]
+       mime/
+         [...deeper contents omitted...]
+       mime-db/
+         [...deeper contents omitted...]
+       mime-types/
+         [...deeper contents omitted...]
+       mimic-fn/
+         [...deeper contents omitted...]
+       mini-css-extract-plugin/
+         [...deeper contents omitted...]
+       minimalistic-assert/
+         [...deeper contents omitted...]
+       minimalistic-crypto-utils/
+         [...deeper contents omitted...]
+       minimatch/
+         [...deeper contents omitted...]
+       minimist/
+         [...deeper contents omitted...]
+       mississippi/
+         [...deeper contents omitted...]
+       mixin-deep/
+         [...deeper contents omitted...]
+       mixin-object/
+         [...deeper contents omitted...]
+       mkdirp/
+         [...deeper contents omitted...]
+       move-concurrently/
+         [...deeper contents omitted...]
+       ms/
+         [...deeper contents omitted...]
+       multicast-dns/
+         [...deeper contents omitted...]
+       multicast-dns-service-types/
+         [...deeper contents omitted...]
+       mute-stream/
+         [...deeper contents omitted...]
+       nan/
+         [...deeper contents omitted...]
+       nanomatch/
+         [...deeper contents omitted...]
+       natural-compare/
+         [...deeper contents omitted...]
+       negotiator/
+         [...deeper contents omitted...]
+       neo-async/
+         [...deeper contents omitted...]
+       nice-try/
+         [...deeper contents omitted...]
+       no-case/
+         [...deeper contents omitted...]
+       node-forge/
+         [...deeper contents omitted...]
+       node-int64/
+         [...deeper contents omitted...]
+       node-libs-browser/
+         [...deeper contents omitted...]
+       node-notifier/
+         [...deeper contents omitted...]
+       node-releases/
+         [...deeper contents omitted...]
+       normalize-package-data/
+         [...deeper contents omitted...]
+       normalize-path/
+         [...deeper contents omitted...]
+       normalize-range/
+         [...deeper contents omitted...]
+       normalize-url/
+         [...deeper contents omitted...]
+       npm-run-path/
+         [...deeper contents omitted...]
+       nth-check/
+         [...deeper contents omitted...]
+       num2fraction/
+         [...deeper contents omitted...]
+       number-is-nan/
+         [...deeper contents omitted...]
+       nwsapi/
+         [...deeper contents omitted...]
+       oauth-sign/
+         [...deeper contents omitted...]
+       object-assign/
+         [...deeper contents omitted...]
+       object-copy/
+         [...deeper contents omitted...]
+       object-hash/
+         [...deeper contents omitted...]
+       object-inspect/
+         [...deeper contents omitted...]
+       object-is/
+         [...deeper contents omitted...]
+       object-keys/
+         [...deeper contents omitted...]
+       object-visit/
+         [...deeper contents omitted...]
+       object.assign/
+         [...deeper contents omitted...]
+       object.fromentries/
+         [...deeper contents omitted...]
+       object.getownpropertydescriptors/
+         [...deeper contents omitted...]
+       object.pick/
+         [...deeper contents omitted...]
+       object.values/
+         [...deeper contents omitted...]
+       obuf/
+         [...deeper contents omitted...]
+       on-finished/
+         [...deeper contents omitted...]
+       on-headers/
+         [...deeper contents omitted...]
+       once/
+         [...deeper contents omitted...]
+       onetime/
+         [...deeper contents omitted...]
+       open/
+         [...deeper contents omitted...]
+       opn/
+         [...deeper contents omitted...]
+       optimize-css-assets-webpack-plugin/
+         [...deeper contents omitted...]
+       optionator/
+         [...deeper contents omitted...]
+       os-browserify/
+         [...deeper contents omitted...]
+       os-locale/
+         [...deeper contents omitted...]
+       os-tmpdir/
+         [...deeper contents omitted...]
+       own-keys/
+         [...deeper contents omitted...]
+       p-defer/
+         [...deeper contents omitted...]
+       p-each-series/
+         [...deeper contents omitted...]
+       p-finally/
+         [...deeper contents omitted...]
+       p-is-promise/
+         [...deeper contents omitted...]
+       p-limit/
+         [...deeper contents omitted...]
+       p-locate/
+         [...deeper contents omitted...]
+       p-map/
+         [...deeper contents omitted...]
+       p-reduce/
+         [...deeper contents omitted...]
+       p-try/
+         [...deeper contents omitted...]
+       pako/
+         [...deeper contents omitted...]
+       parallel-transform/
+         [...deeper contents omitted...]
+       param-case/
+         [...deeper contents omitted...]
+       parent-module/
+         [...deeper contents omitted...]
+       parse-asn1/
+         [...deeper contents omitted...]
+       parse-json/
+         [...deeper contents omitted...]
+       parse5/
+         [...deeper contents omitted...]
+       parseurl/
+         [...deeper contents omitted...]
+       pascalcase/
+         [...deeper contents omitted...]
+       path-browserify/
+         [...deeper contents omitted...]
+       path-dirname/
+         [...deeper contents omitted...]
+       path-exists/
+         [...deeper contents omitted...]
+       path-is-absolute/
+         [...deeper contents omitted...]
+       path-is-inside/
+         [...deeper contents omitted...]
+       path-key/
+         [...deeper contents omitted...]
+       path-parse/
+         [...deeper contents omitted...]
+       path-to-regexp/
+         [...deeper contents omitted...]
+       path-type/
+         [...deeper contents omitted...]
+       pbkdf2/
+         [...deeper contents omitted...]
+       performance-now/
+         [...deeper contents omitted...]
+       picocolors/
+         [...deeper contents omitted...]
+       picomatch/
+         [...deeper contents omitted...]
+       pify/
+         [...deeper contents omitted...]
+       pinkie/
+         [...deeper contents omitted...]
+       pinkie-promise/
+         [...deeper contents omitted...]
+       pirates/
+         [...deeper contents omitted...]
+       pkg-dir/
+         [...deeper contents omitted...]
+       pkg-up/
+         [...deeper contents omitted...]
+       pn/
+         [...deeper contents omitted...]
+       pnp-webpack-plugin/
+         [...deeper contents omitted...]
+       portfinder/
+         [...deeper contents omitted...]
+       posix-character-classes/
+         [...deeper contents omitted...]
+       possible-typed-array-names/
+         [...deeper contents omitted...]
+       postcss/
+         [...deeper contents omitted...]
+       postcss-attribute-case-insensitive/
+         [...deeper contents omitted...]
+       postcss-browser-comments/
+         [...deeper contents omitted...]
+       postcss-calc/
+         [...deeper contents omitted...]
+       postcss-color-functional-notation/
+         [...deeper contents omitted...]
+       postcss-color-gray/
+         [...deeper contents omitted...]
+       postcss-color-hex-alpha/
+         [...deeper contents omitted...]
+       postcss-color-mod-function/
+         [...deeper contents omitted...]
+       postcss-color-rebeccapurple/
+         [...deeper contents omitted...]
+       postcss-colormin/
+         [...deeper contents omitted...]
+       postcss-convert-values/
+         [...deeper contents omitted...]
+       postcss-custom-media/
+         [...deeper contents omitted...]
+       postcss-custom-properties/
+         [...deeper contents omitted...]
+       postcss-custom-selectors/
+         [...deeper contents omitted...]
+       postcss-dir-pseudo-class/
+         [...deeper contents omitted...]
+       postcss-discard-comments/
+         [...deeper contents omitted...]
+       postcss-discard-duplicates/
+         [...deeper contents omitted...]
+       postcss-discard-empty/
+         [...deeper contents omitted...]
+       postcss-discard-overridden/
+         [...deeper contents omitted...]
+       postcss-double-position-gradients/
+         [...deeper contents omitted...]
+       postcss-env-function/
+         [...deeper contents omitted...]
+       postcss-flexbugs-fixes/
+         [...deeper contents omitted...]
+       postcss-focus-visible/
+         [...deeper contents omitted...]
+       postcss-focus-within/
+         [...deeper contents omitted...]
+       postcss-font-variant/
+         [...deeper contents omitted...]
+       postcss-gap-properties/
+         [...deeper contents omitted...]
+       postcss-image-set-function/
+         [...deeper contents omitted...]
+       postcss-initial/
+         [...deeper contents omitted...]
+       postcss-lab-function/
+         [...deeper contents omitted...]
+       postcss-load-config/
+         [...deeper contents omitted...]
+       postcss-loader/
+         [...deeper contents omitted...]
+       postcss-logical/
+         [...deeper contents omitted...]
+       postcss-media-minmax/
+         [...deeper contents omitted...]
+       postcss-merge-longhand/
+         [...deeper contents omitted...]
+       postcss-merge-rules/
+         [...deeper contents omitted...]
+       postcss-minify-font-values/
+         [...deeper contents omitted...]
+       postcss-minify-gradients/
+         [...deeper contents omitted...]
+       postcss-minify-params/
+         [...deeper contents omitted...]
+       postcss-minify-selectors/
+         [...deeper contents omitted...]
+       postcss-modules-extract-imports/
+         [...deeper contents omitted...]
+       postcss-modules-local-by-default/
+         [...deeper contents omitted...]
+       postcss-modules-scope/
+         [...deeper contents omitted...]
+       postcss-modules-values/
+         [...deeper contents omitted...]
+       postcss-nesting/
+         [...deeper contents omitted...]
+       postcss-normalize/
+         [...deeper contents omitted...]
+       postcss-normalize-charset/
+         [...deeper contents omitted...]
+       postcss-normalize-display-values/
+         [...deeper contents omitted...]
+       postcss-normalize-positions/
+         [...deeper contents omitted...]
+       postcss-normalize-repeat-style/
+         [...deeper contents omitted...]
+       postcss-normalize-string/
+         [...deeper contents omitted...]
+       postcss-normalize-timing-functions/
+         [...deeper contents omitted...]
+       postcss-normalize-unicode/
+         [...deeper contents omitted...]
+       postcss-normalize-url/
+         [...deeper contents omitted...]
+       postcss-normalize-whitespace/
+         [...deeper contents omitted...]
+       postcss-ordered-values/
+         [...deeper contents omitted...]
+       postcss-overflow-shorthand/
+         [...deeper contents omitted...]
+       postcss-page-break/
+         [...deeper contents omitted...]
+       postcss-place/
+         [...deeper contents omitted...]
+       postcss-preset-env/
+         [...deeper contents omitted...]
+       postcss-pseudo-class-any-link/
+         [...deeper contents omitted...]
+       postcss-reduce-initial/
+         [...deeper contents omitted...]
+       postcss-reduce-transforms/
+         [...deeper contents omitted...]
+       postcss-replace-overflow-wrap/
+         [...deeper contents omitted...]
+       postcss-safe-parser/
+         [...deeper contents omitted...]
+       postcss-selector-matches/
+         [...deeper contents omitted...]
+       postcss-selector-not/
+         [...deeper contents omitted...]
+       postcss-selector-parser/
+         [...deeper contents omitted...]
+       postcss-svgo/
+         [...deeper contents omitted...]
+       postcss-unique-selectors/
+         [...deeper contents omitted...]
+       postcss-value-parser/
+         [...deeper contents omitted...]
+       postcss-values-parser/
+         [...deeper contents omitted...]
+       prelude-ls/
+         [...deeper contents omitted...]
+       pretty-bytes/
+         [...deeper contents omitted...]
+       pretty-error/
+         [...deeper contents omitted...]
+       pretty-format/
+         [...deeper contents omitted...]
+       process/
+         [...deeper contents omitted...]
+       process-nextick-args/
+         [...deeper contents omitted...]
+       progress/
+         [...deeper contents omitted...]
+       promise/
+         [...deeper contents omitted...]
+       promise-inflight/
+         [...deeper contents omitted...]
+       prompts/
+         [...deeper contents omitted...]
+       prop-types/
+         [...deeper contents omitted...]
+       proxy-addr/
+         [...deeper contents omitted...]
+       prr/
+         [...deeper contents omitted...]
+       psl/
+         [...deeper contents omitted...]
+       public-encrypt/
+         [...deeper contents omitted...]
+       pump/
+         [...deeper contents omitted...]
+       pumpify/
+         [...deeper contents omitted...]
+       punycode/
+         [...deeper contents omitted...]
+       q/
+         [...deeper contents omitted...]
+       qs/
+         [...deeper contents omitted...]
+       querystring-es3/
+         [...deeper contents omitted...]
+       querystringify/
+         [...deeper contents omitted...]
+       raf/
+         [...deeper contents omitted...]
+       randombytes/
+         [...deeper contents omitted...]
+       randomfill/
+         [...deeper contents omitted...]
+       range-parser/
+         [...deeper contents omitted...]
+       raw-body/
+         [...deeper contents omitted...]
+       react/
+         [...deeper contents omitted...]
+       react-app-polyfill/
+         [...deeper contents omitted...]
+       react-dev-utils/
+         [...deeper contents omitted...]
+       react-dom/
+         [...deeper contents omitted...]
+       react-error-overlay/
+         [...deeper contents omitted...]
+       react-is/
+         [...deeper contents omitted...]
+       react-scripts/
+         [...deeper contents omitted...]
+       read-pkg/
+         [...deeper contents omitted...]
+       read-pkg-up/
+         [...deeper contents omitted...]
+       readable-stream/
+         [...deeper contents omitted...]
+       readdirp/
+         [...deeper contents omitted...]
+       realpath-native/
+         [...deeper contents omitted...]
+       recursive-readdir/
+         [...deeper contents omitted...]
+       reflect.getprototypeof/
+         [...deeper contents omitted...]
+       regenerate/
+         [...deeper contents omitted...]
+       regenerate-unicode-properties/
+         [...deeper contents omitted...]
+       regenerator-runtime/
+         [...deeper contents omitted...]
+       regenerator-transform/
+         [...deeper contents omitted...]
+       regex-not/
+         [...deeper contents omitted...]
+       regexp.prototype.flags/
+         [...deeper contents omitted...]
+       regexpp/
+         [...deeper contents omitted...]
+       regexpu-core/
+         [...deeper contents omitted...]
+       regjsgen/
+         [...deeper contents omitted...]
+       regjsparser/
+         [...deeper contents omitted...]
+       relateurl/
+         [...deeper contents omitted...]
+       remove-trailing-separator/
+         [...deeper contents omitted...]
+       renderkid/
+         [...deeper contents omitted...]
+       repeat-element/
+         [...deeper contents omitted...]
+       repeat-string/
+         [...deeper contents omitted...]
+       request/
+         [...deeper contents omitted...]
+       request-promise-core/
+         [...deeper contents omitted...]
+       request-promise-native/
+         [...deeper contents omitted...]
+       require-directory/
+         [...deeper contents omitted...]
+       require-main-filename/
+         [...deeper contents omitted...]
+       requireindex/
+         [...deeper contents omitted...]
+       requires-port/
+         [...deeper contents omitted...]
+       resolve/
+         [...deeper contents omitted...]
+       resolve-cwd/
+         [...deeper contents omitted...]
+       resolve-from/
+         [...deeper contents omitted...]
+       resolve-url/
+         [...deeper contents omitted...]
+       restore-cursor/
+         [...deeper contents omitted...]
+       ret/
+         [...deeper contents omitted...]
+       rgb-regex/
+         [...deeper contents omitted...]
+       rgba-regex/
+         [...deeper contents omitted...]
+       rimraf/
+         [...deeper contents omitted...]
+       ripemd160/
+         [...deeper contents omitted...]
+       rsvp/
+         [...deeper contents omitted...]
+       run-async/
+         [...deeper contents omitted...]
+       run-queue/
+         [...deeper contents omitted...]
+       rxjs/
+         [...deeper contents omitted...]
+       safe-array-concat/
+         [...deeper contents omitted...]
+       safe-buffer/
+         [...deeper contents omitted...]
+       safe-push-apply/
+         [...deeper contents omitted...]
+       safe-regex/
+         [...deeper contents omitted...]
+       safe-regex-test/
+         [...deeper contents omitted...]
+       safer-buffer/
+         [...deeper contents omitted...]
+       sane/
+         [...deeper contents omitted...]
+       sass-loader/
+         [...deeper contents omitted...]
+       sax/
+         [...deeper contents omitted...]
+       saxes/
+         [...deeper contents omitted...]
+       scheduler/
+         [...deeper contents omitted...]
+       schema-utils/
+         [...deeper contents omitted...]
+       select-hose/
+         [...deeper contents omitted...]
+       selfsigned/
+         [...deeper contents omitted...]
+       semver/
+         [...deeper contents omitted...]
+       send/
+         [...deeper contents omitted...]
+       serialize-javascript/
+         [...deeper contents omitted...]
+       serve-index/
+         [...deeper contents omitted...]
+       serve-static/
+         [...deeper contents omitted...]
+       set-blocking/
+         [...deeper contents omitted...]
+       set-function-length/
+         [...deeper contents omitted...]
+       set-function-name/
+         [...deeper contents omitted...]
+       set-proto/
+         [...deeper contents omitted...]
+       set-value/
+         [...deeper contents omitted...]
+       setimmediate/
+         [...deeper contents omitted...]
+       setprototypeof/
+         [...deeper contents omitted...]
+       sha.js/
+         [...deeper contents omitted...]
+       shallow-clone/
+         [...deeper contents omitted...]
+       shebang-command/
+         [...deeper contents omitted...]
+       shebang-regex/
+         [...deeper contents omitted...]
+       shell-quote/
+         [...deeper contents omitted...]
+       shellwords/
+         [...deeper contents omitted...]
+       side-channel/
+         [...deeper contents omitted...]
+       side-channel-list/
+         [...deeper contents omitted...]
+       side-channel-map/
+         [...deeper contents omitted...]
+       side-channel-weakmap/
+         [...deeper contents omitted...]
+       signal-exit/
+         [...deeper contents omitted...]
+       simple-swizzle/
+         [...deeper contents omitted...]
+       sisteransi/
+         [...deeper contents omitted...]
+       slash/
+         [...deeper contents omitted...]
+       slice-ansi/
+         [...deeper contents omitted...]
+       snapdragon/
+         [...deeper contents omitted...]
+       snapdragon-node/
+         [...deeper contents omitted...]
+       snapdragon-util/
+         [...deeper contents omitted...]
+       sockjs/
+         [...deeper contents omitted...]
+       sockjs-client/
+         [...deeper contents omitted...]
+       source-list-map/
+         [...deeper contents omitted...]
+       source-map/
+         [...deeper contents omitted...]
+       source-map-resolve/
+         [...deeper contents omitted...]
+       source-map-support/
+         [...deeper contents omitted...]
+       source-map-url/
+         [...deeper contents omitted...]
+       spdx-correct/
+         [...deeper contents omitted...]
+       spdx-exceptions/
+         [...deeper contents omitted...]
+       spdx-expression-parse/
+         [...deeper contents omitted...]
+       spdx-license-ids/
+         [...deeper contents omitted...]
+       spdy/
+         [...deeper contents omitted...]
+       spdy-transport/
+         [...deeper contents omitted...]
+       split-string/
+         [...deeper contents omitted...]
+       sprintf-js/
+         [...deeper contents omitted...]
+       sshpk/
+         [...deeper contents omitted...]
+       ssri/
+         [...deeper contents omitted...]
+       stable/
+         [...deeper contents omitted...]
+       stack-utils/
+         [...deeper contents omitted...]
+       static-extend/
+         [...deeper contents omitted...]
+       statuses/
+         [...deeper contents omitted...]
+       stealthy-require/
+         [...deeper contents omitted...]
+       stream-browserify/
+         [...deeper contents omitted...]
+       stream-each/
+         [...deeper contents omitted...]
+       stream-http/
+         [...deeper contents omitted...]
+       stream-shift/
+         [...deeper contents omitted...]
+       string-length/
+         [...deeper contents omitted...]
+       string-width/
+         [...deeper contents omitted...]
+       string.prototype.trim/
+         [...deeper contents omitted...]
+       string.prototype.trimend/
+         [...deeper contents omitted...]
+       string.prototype.trimstart/
+         [...deeper contents omitted...]
+       string_decoder/
+         [...deeper contents omitted...]
+       stringify-object/
+         [...deeper contents omitted...]
+       strip-ansi/
+         [...deeper contents omitted...]
+       strip-bom/
+         [...deeper contents omitted...]
+       strip-comments/
+         [...deeper contents omitted...]
+       strip-eof/
+         [...deeper contents omitted...]
+       strip-json-comments/
+         [...deeper contents omitted...]
+       style-loader/
+         [...deeper contents omitted...]
+       stylehacks/
+         [...deeper contents omitted...]
+       supports-color/
+         [...deeper contents omitted...]
+       supports-preserve-symlinks-flag/
+         [...deeper contents omitted...]
+       svg-parser/
+         [...deeper contents omitted...]
+       svgo/
+         [...deeper contents omitted...]
+       symbol-tree/
+         [...deeper contents omitted...]
+       table/
+         [...deeper contents omitted...]
+       tapable/
+         [...deeper contents omitted...]
+       terser/
+         [...deeper contents omitted...]
+       terser-webpack-plugin/
+         [...deeper contents omitted...]
+       test-exclude/
+         [...deeper contents omitted...]
+       text-table/
+         [...deeper contents omitted...]
+       throat/
+         [...deeper contents omitted...]
+       through/
+         [...deeper contents omitted...]
+       through2/
+         [...deeper contents omitted...]
+       thunky/
+         [...deeper contents omitted...]
+       timers-browserify/
+         [...deeper contents omitted...]
+       timsort/
+         [...deeper contents omitted...]
+       tmp/
+         [...deeper contents omitted...]
+       tmpl/
+         [...deeper contents omitted...]
+       to-arraybuffer/
+         [...deeper contents omitted...]
+       to-object-path/
+         [...deeper contents omitted...]
+       to-regex/
+         [...deeper contents omitted...]
+       to-regex-range/
+         [...deeper contents omitted...]
+       toidentifier/
+         [...deeper contents omitted...]
+       tough-cookie/
+         [...deeper contents omitted...]
+       tr46/
+         [...deeper contents omitted...]
+       ts-pnp/
+         [...deeper contents omitted...]
+       tslib/
+         [...deeper contents omitted...]
+       tsutils/
+         [...deeper contents omitted...]
+       tty-browserify/
+         [...deeper contents omitted...]
+       tunnel-agent/
+         [...deeper contents omitted...]
+       tweetnacl/
+         [...deeper contents omitted...]
+       type-check/
+         [...deeper contents omitted...]
+       type-is/
+         [...deeper contents omitted...]
+       typed-array-buffer/
+         [...deeper contents omitted...]
+       typed-array-byte-length/
+         [...deeper contents omitted...]
+       typed-array-byte-offset/
+         [...deeper contents omitted...]
+       typed-array-length/
+         [...deeper contents omitted...]
+       typedarray/
+         [...deeper contents omitted...]
+       typescript/
+         [...deeper contents omitted...]
+       uglify-js/
+         [...deeper contents omitted...]
+       unbox-primitive/
+         [...deeper contents omitted...]
+       unicode-canonical-property-names-ecmascript/
+         [...deeper contents omitted...]
+       unicode-match-property-ecmascript/
+         [...deeper contents omitted...]
+       unicode-match-property-value-ecmascript/
+         [...deeper contents omitted...]
+       unicode-property-aliases-ecmascript/
+         [...deeper contents omitted...]
+       union-value/
+         [...deeper contents omitted...]
+       uniq/
+         [...deeper contents omitted...]
+       uniqs/
+         [...deeper contents omitted...]
+       unique-filename/
+         [...deeper contents omitted...]
+       unique-slug/
+         [...deeper contents omitted...]
+       universalify/
+         [...deeper contents omitted...]
+       unpipe/
+         [...deeper contents omitted...]
+       unquote/
+         [...deeper contents omitted...]
+       unset-value/
+         [...deeper contents omitted...]
+       upath/
+         [...deeper contents omitted...]
+       update-browserslist-db/
+         [...deeper contents omitted...]
+       upper-case/
+         [...deeper contents omitted...]
+       uri-js/
+         [...deeper contents omitted...]
+       urix/
+         [...deeper contents omitted...]
+       url/
+         [...deeper contents omitted...]
+       url-loader/
+         [...deeper contents omitted...]
+       url-parse/
+         [...deeper contents omitted...]
+       use/
+         [...deeper contents omitted...]
+       util/
+         [...deeper contents omitted...]
+       util-deprecate/
+         [...deeper contents omitted...]
+       util.promisify/
+         [...deeper contents omitted...]
+       utila/
+         [...deeper contents omitted...]
+       utils-merge/
+         [...deeper contents omitted...]
+       uuid/
+         [...deeper contents omitted...]
+       validate-npm-package-license/
+         [...deeper contents omitted...]
+       vary/
+         [...deeper contents omitted...]
+       vendors/
+         [...deeper contents omitted...]
+       verror/
+         [...deeper contents omitted...]
+       vm-browserify/
+         [...deeper contents omitted...]
+       w3c-hr-time/
+         [...deeper contents omitted...]
+       w3c-xmlserializer/
+         [...deeper contents omitted...]
+       walker/
+         [...deeper contents omitted...]
+       watchpack/
+         [...deeper contents omitted...]
+       watchpack-chokidar2/
+         [...deeper contents omitted...]
+       wbuf/
+         [...deeper contents omitted...]
+       webidl-conversions/
+         [...deeper contents omitted...]
+       webpack/
+         [...deeper contents omitted...]
+       webpack-dev-middleware/
+         [...deeper contents omitted...]
+       webpack-dev-server/
+         [...deeper contents omitted...]
+       webpack-log/
+         [...deeper contents omitted...]
+       webpack-manifest-plugin/
+         [...deeper contents omitted...]
+       webpack-sources/
+         [...deeper contents omitted...]
+       websocket-driver/
+         [...deeper contents omitted...]
+       websocket-extensions/
+         [...deeper contents omitted...]
+       whatwg-encoding/
+         [...deeper contents omitted...]
+       whatwg-fetch/
+         [...deeper contents omitted...]
+       whatwg-mimetype/
+         [...deeper contents omitted...]
+       whatwg-url/
+         [...deeper contents omitted...]
+       which/
+         [...deeper contents omitted...]
+       which-boxed-primitive/
+         [...deeper contents omitted...]
+       which-builtin-type/
+         [...deeper contents omitted...]
+       which-collection/
+         [...deeper contents omitted...]
+       which-module/
+         [...deeper contents omitted...]
+       which-typed-array/
+         [...deeper contents omitted...]
+       word-wrap/
+         [...deeper contents omitted...]
+       workbox-background-sync/
+         [...deeper contents omitted...]
+       workbox-broadcast-update/
+         [...deeper contents omitted...]
+       workbox-build/
+         [...deeper contents omitted...]
+       workbox-cacheable-response/
+         [...deeper contents omitted...]
+       workbox-core/
+         [...deeper contents omitted...]
+       workbox-expiration/
+         [...deeper contents omitted...]
+       workbox-google-analytics/
+         [...deeper contents omitted...]
+       workbox-navigation-preload/
+         [...deeper contents omitted...]
+       workbox-precaching/
+         [...deeper contents omitted...]
+       workbox-range-requests/
+         [...deeper contents omitted...]
+       workbox-routing/
+         [...deeper contents omitted...]
+       workbox-strategies/
+         [...deeper contents omitted...]
+       workbox-streams/
+         [...deeper contents omitted...]
+       workbox-sw/
+         [...deeper contents omitted...]
+       workbox-webpack-plugin/
+         [...deeper contents omitted...]
+       workbox-window/
+         [...deeper contents omitted...]
+       worker-farm/
+         [...deeper contents omitted...]
+       worker-rpc/
+         [...deeper contents omitted...]
+       wrap-ansi/
+         [...deeper contents omitted...]
+       wrappy/
+         [...deeper contents omitted...]
+       write/
+         [...deeper contents omitted...]
+       write-file-atomic/
+         [...deeper contents omitted...]
+       ws/
+         [...deeper contents omitted...]
+       xml-name-validator/
+         [...deeper contents omitted...]
+       xmlchars/
+         [...deeper contents omitted...]
+       xregexp/
+         [...deeper contents omitted...]
+       xtend/
+         [...deeper contents omitted...]
+       y18n/
+         [...deeper contents omitted...]
+       yallist/
+         [...deeper contents omitted...]
+       yaml/
+         [...deeper contents omitted...]
+       yargs/
+         [...deeper contents omitted...]
+       yargs-parser/
+         [...deeper contents omitted...]
      package-lock.json
      package.json
      public/
-       [...deeper contents omitted...]
+       favicon.ico
+       index.html
+       logo192.png
+       logo512.png
+       manifest.json
+       robots.txt
      src/
-       [...deeper contents omitted...]
+       App.css
+       App.test.tsx
+       App.tsx
+       index.css
+       index.tsx
+       logo.svg
+       reportWebVitals.ts
+       setupTests.ts
+     tests/
    docs/
      CONTRIBUTING.md
      requirements.md
@@ -36,22 +2345,34 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Code Sn
    server/
      appsettings.Development.json
      appsettings.json
+     bin/
+       Debug/
+         [...deeper contents omitted...]
      Data.cs
+     migrations/
      Models.cs
      obj/
-       [...deeper contents omitted...]
+       Debug/
+         [...deeper contents omitted...]
+       project.assets.json
+       project.nuget.cache
+       VitalityBuilder.Api.csproj.nuget.dgspec.json
+       VitalityBuilder.Api.csproj.nuget.g.props
+       VitalityBuilder.Api.csproj.nuget.g.targets
      Program.cs
      Properties/
-       [...deeper contents omitted...]
+       launchSettings.json
+     tests/
      VitalityBuilder.Api.csproj
      VitalityBuilder.Api.http
    shared/
      directoryScanner.py
      output/
-       [...deeper contents omitted...]
+       directory.txt
+   vitality-builder.sln
 
 === Python Files ===
 
 File: directoryScanner.py
 Size: 5,057 bytes
-Modified: 2025-02-08 13:38:25
+Modified: 2025-02-08 14:58:34
