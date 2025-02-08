@@ -1,4 +1,6 @@
+using System.Reflection; 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using VitalityBuilder.Api.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,45 +8,43 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container
 builder.Services.AddControllers();
 
-// Database Configuration
+// Configure Swagger/OpenAPI
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Vitality Builder API",
+        Version = "v1",
+        Description = "Character Management System for the Vitality RPG"
+    });
+    
+    // XML Documentation
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+});
+
+// Database configuration
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 
 // Add repository
 builder.Services.AddScoped<ICharacterRepository, CharacterRepository>();
 
-// Add authorization services (even if not using authentication yet)
-builder.Services.AddAuthorization();
-
-// Configure HTTPS properly
-builder.Services.AddHttpsRedirection(options =>
-{
-    options.HttpsPort = 7034; // Match your launchSettings.json
-});
-
-
-
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
-if (app.Environment.IsDevelopment())
+// Configure the HTTP pipeline
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseDeveloperExceptionPage();
-    // Disable HTTPS redirection in development if needed
-    // app.UseHttpsRedirection();
-}
-else
-{
-    app.UseHttpsRedirection();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Vitality API v1");
+    c.RoutePrefix = "api-docs"; // Custom endpoint
+    c.DocumentTitle = "Vitality API Documentation";
+});
 
-app.UseRouting();
-
-// Add authentication middleware (if needed later)
-// app.UseAuthentication();
+app.UseHttpsRedirection();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
