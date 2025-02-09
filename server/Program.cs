@@ -1,50 +1,57 @@
-using System.Reflection; 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using VitalityBuilder.Api.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
-builder.Services.AddControllers();
-
-// Configure Swagger/OpenAPI
+// Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "Vitality Builder API",
-        Version = "v1",
-        Description = "Character Management System for the Vitality RPG"
-    });
-    
-    // XML Documentation
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    c.IncludeXmlComments(xmlPath);
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Vitality Builder API", Version = "v1" });
 });
 
-// Database configuration
-builder.Services.AddDbContext<AppDbContext>(options => 
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
-
-// Add repository
-builder.Services.AddScoped<ICharacterRepository, CharacterRepository>();
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
-// Configure the HTTP pipeline
-app.UseSwagger();
-app.UseSwaggerUI(c =>
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Vitality API v1");
-    c.RoutePrefix = "api-docs"; // Custom endpoint
-    c.DocumentTitle = "Vitality API Documentation";
-});
+    app.UseSwagger();
+    app.UseSwaggerUI(c => 
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Vitality Builder API v1");
+        // Set Swagger UI at the root
+        c.RoutePrefix = string.Empty;
+    });
+}
 
 app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
+
+var summaries = new[]
+{
+    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+};
+
+app.MapGet("/weatherforecast", () =>
+{
+    var forecast = Enumerable.Range(1, 5).Select(index =>
+        new WeatherForecast
+        (
+            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+            Random.Shared.Next(-20, 55),
+            summaries[Random.Shared.Next(summaries.Length)]
+        ))
+        .ToArray();
+    return forecast;
+})
+.WithName("GetWeatherForecast");
 
 app.Run();
+
+record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+{
+    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+}
