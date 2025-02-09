@@ -4,31 +4,50 @@
         <name>VitalityBuilder.Api</name>
     </assembly>
     <members>
-        <member name="T:VitalityBuilder.Api.Controllers.CharactersController">
-            <summary>
-            Manages RPG characters in the Vitality system
-            </summary>
-        </member>
-        <member name="M:VitalityBuilder.Api.Controllers.CharactersController.GetAllCharacters">
-            <summary>
-            Retrieves all characters
-            </summary>
-            <response code="200">Returns list of characters</response>
-        </member>
-        <member name="M:VitalityBuilder.Api.Controllers.CharactersController.CreateCharacter(Character)">
+        <member name="M:VitalityBuilder.Api.CharactersController.CreateCharacter(Character)">
             <summary>
             Creates a new character
             </summary>
-            <param name="character">Character data</param>
+            <param name="character">The character to create</param>
+            <returns>The created character</returns>
             <response code="201">Returns the newly created character</response>
+            <response code="400">If the character data is invalid</response>
         </member>
-        <member name="M:VitalityBuilder.Api.Controllers.CharactersController.GetCharacterById(System.Int32)">
+        <member name="M:VitalityBuilder.Api.CharactersController.GetCharacter(System.Int32)">
             <summary>
-            Gets a specific character by ID
+            Gets a specific character by id
             </summary>
-            <param name="id">Character identifier</param>
+            <param name="id">The character's id</param>
+            <returns>The requested character</returns>
             <response code="200">Returns the requested character</response>
-            <response code="404">Character not found</response>
+            <response code="404">If the character is not found</response>
+        </member>
+        <member name="M:VitalityBuilder.Api.CharactersController.GetCharacters">
+            <summary>
+            Gets all characters
+            </summary>
+            <returns>List of all characters</returns>
+            <response code="200">Returns all characters</response>
+        </member>
+        <member name="M:VitalityBuilder.Api.CharactersController.UpdateCharacter(System.Int32,Character)">
+            <summary>
+            Updates a specific character
+            </summary>
+            <param name="id">The character's id</param>
+            <param name="character">The updated character data</param>
+            <returns>No content</returns>
+            <response code="204">If the character was successfully updated</response>
+            <response code="400">If the character data is invalid</response>
+            <response code="404">If the character is not found</response>
+        </member>
+        <member name="M:VitalityBuilder.Api.CharactersController.DeleteCharacter(System.Int32)">
+            <summary>
+            Deletes a specific character
+            </summary>
+            <param name="id">The character's id</param>
+            <returns>No content</returns>
+            <response code="204">If the character was successfully deleted</response>
+            <response code="404">If the character is not found</response>
         </member>
         <member name="T:VitalityBuilder.Api.Migrations.InitialCreate">
             <inheritdoc />
@@ -40,30 +59,6 @@
             <inheritdoc />
         </member>
         <member name="M:VitalityBuilder.Api.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:VitalityBuilder.Api.Migrations.AddCharacterModel">
-            <inheritdoc />
-        </member>
-        <member name="M:VitalityBuilder.Api.Migrations.AddCharacterModel.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:VitalityBuilder.Api.Migrations.AddCharacterModel.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:VitalityBuilder.Api.Migrations.AddCharacterModel.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:VitalityBuilder.Api.Migrations.InitialSqlServerMigration">
-            <inheritdoc />
-        </member>
-        <member name="M:VitalityBuilder.Api.Migrations.InitialSqlServerMigration.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:VitalityBuilder.Api.Migrations.InitialSqlServerMigration.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:VitalityBuilder.Api.Migrations.InitialSqlServerMigration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>
