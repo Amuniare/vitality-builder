@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VitalityBuilder.Api;
+using VitalityBuilder.Api.Infrastructure; 
+
 
 #nullable disable
 

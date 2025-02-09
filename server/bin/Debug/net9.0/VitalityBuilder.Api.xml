@@ -4,51 +4,6 @@
         <name>VitalityBuilder.Api</name>
     </assembly>
     <members>
-        <member name="M:VitalityBuilder.Api.CharactersController.CreateCharacter(VitalityBuilder.Api.Models.Character)">
-            <summary>
-            Creates a new character
-            </summary>
-            <param name="character">The character to create</param>
-            <returns>The created character</returns>
-            <response code="201">Returns the newly created character</response>
-            <response code="400">If the character data is invalid</response>
-        </member>
-        <member name="M:VitalityBuilder.Api.CharactersController.GetCharacter(System.Int32)">
-            <summary>
-            Gets a specific character by id
-            </summary>
-            <param name="id">The character's id</param>
-            <returns>The requested character</returns>
-            <response code="200">Returns the requested character</response>
-            <response code="404">If the character is not found</response>
-        </member>
-        <member name="M:VitalityBuilder.Api.CharactersController.GetCharacters">
-            <summary>
-            Gets all characters
-            </summary>
-            <returns>List of all characters</returns>
-            <response code="200">Returns all characters</response>
-        </member>
-        <member name="M:VitalityBuilder.Api.CharactersController.UpdateCharacter(System.Int32,VitalityBuilder.Api.Models.Character)">
-            <summary>
-            Updates a specific character
-            </summary>
-            <param name="id">The character's id</param>
-            <param name="character">The updated character data</param>
-            <returns>No content</returns>
-            <response code="204">If the character was successfully updated</response>
-            <response code="400">If the character data is invalid</response>
-            <response code="404">If the character is not found</response>
-        </member>
-        <member name="M:VitalityBuilder.Api.CharactersController.DeleteCharacter(System.Int32)">
-            <summary>
-            Deletes a specific character
-            </summary>
-            <param name="id">The character's id</param>
-            <returns>No content</returns>
-            <response code="204">If the character was successfully deleted</response>
-            <response code="404">If the character is not found</response>
-        </member>
         <member name="T:VitalityBuilder.Api.Migrations.InitialCreate">
             <inheritdoc />
         </member>
@@ -72,6 +27,42 @@
         </member>
         <member name="M:VitalityBuilder.Api.Migrations.RemoveColumnX.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
+        </member>
+        <member name="T:VitalityBuilder.Api.Infrastructure.ArchetypeDbContext">
+            <summary>
+            Database context for handling character archetype-related data and relationships.
+            This context manages the persistence of character archetypes and their associated rule configurations.
+            </summary>
+        </member>
+        <member name="P:VitalityBuilder.Api.Infrastructure.ArchetypeDbContext.CharacterArchetypes">
+            <summary>
+            Database set for character archetypes and their associated components
+            </summary>
+        </member>
+        <member name="T:VitalityBuilder.Api.Infrastructure.JsonValueConverter`1">
+            <summary>
+            Generic JSON value converter for Entity Framework Core
+            </summary>
+        </member>
+        <member name="T:VitalityBuilder.Api.Infrastructure.JsonValueComparer`1">
+            <summary>
+            Generic JSON comparer for Entity Framework Core
+            </summary>
+        </member>
+        <member name="T:VitalityBuilder.Api.Models.DTOs.CharacterArchetypesDto">
+            <summary>
+            Data transfer object for creating or updating character archetypes
+            </summary>
+        </member>
+        <member name="T:VitalityBuilder.Api.Services.CharacterArchetypesService">
+            <summary>
+            Service implementing character archetype management and calculations
+            </summary>
+        </member>
+        <member name="T:VitalityBuilder.Api.Services.ICharacterArchetypesService">
+            <summary>
+            Interface defining core character archetype management operations
+            </summary>
         </member>
     </members>
 </doc>

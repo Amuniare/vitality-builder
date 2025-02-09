@@ -1,25 +1,39 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
-using VitalityBuilder.Api;
+using System.Text.Json.Serialization;
+using VitalityBuilder.Api.Infrastructure; 
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Configure JSON options
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     });
+
+// Configure logging
+builder.Services.AddLogging(logging =>
+{
+    logging.AddConsole();
+    logging.AddDebug();
+});
 
 // Add database context
 builder.Services.AddDbContext<VitalityBuilderContext>(options => 
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     options.UseSqlServer(connectionString);
+    // Add logging for development
+    if (builder.Environment.IsDevelopment())
+    {
+        options.EnableSensitiveDataLogging();
+        options.EnableDetailedErrors();
+    }
 });
 
-// Add Swagger/OpenAPI support
+// Add Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -29,15 +43,11 @@ builder.Services.AddSwaggerGen(options =>
         Title = "Vitality System Character Builder API",
         Description = "An ASP.NET Core Web API for managing Vitality System character creation"
     });
-
-    // Enable XML comments
-    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure middleware
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
@@ -49,7 +59,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
-// Ensure database is created
+// Ensure database exists
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<VitalityBuilderContext>();

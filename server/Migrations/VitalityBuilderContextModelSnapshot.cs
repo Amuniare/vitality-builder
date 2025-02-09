@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VitalityBuilder.Api;
+using VitalityBuilder.Api.Infrastructure; 
+
 
 #nullable disable
 

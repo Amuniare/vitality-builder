@@ -51,30 +51,45 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder
    LICENSE.md
    README.md
    server/
-     AppDbContext.cs
-     appsettings.Development.json
-     appsettings.json
      bin/
        [...deeper contents omitted...]
-     controllers/
-       CharactersController.cs
-     data/
-       ICharacterRepository.cs
-     Data.cs
      Migrations/
        20250209175003_InitialCreate.cs
        20250209175003_InitialCreate.Designer.cs
        20250209175026_RemoveColumnX.cs
        20250209175026_RemoveColumnX.Designer.cs
        VitalityBuilderContextModelSnapshot.cs
-     models/
-       character.cs
-     Models.cs
      obj/
        [...deeper contents omitted...]
-     Program.cs
-     Properties/
-       launchSettings.json
+     src/
+       appsettings.Development.json
+       appsettings.json
+       controllers/
+         CharactersController.cs
+       data/
+         ICharacterRepository.cs
+       Data.cs
+       Infastructure/
+         AppDbContext.cs
+         ArchetypeDbContext.cs
+       models/
+         DTOs/
+           CharacterArchetypesDTOs.cs
+           CharacterDTOs.cs
+         Entities/
+           ArchetypeEnums.cs
+           Character.cs
+           CharacterArchetypes.cs
+           CombatAttributes.cs
+           Expertise.cs
+           SpecialAttack.cs
+           UniquePower.cs
+           UtilityAttributes.cs
+       Program.cs
+       Properties/
+         launchSettings.json
+       services/
+         CharacterArchetypesService.cs
      vitality.db
      VitalityBuilder.Api.csproj
      VitalityBuilder.Api.http
