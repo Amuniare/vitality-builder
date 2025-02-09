@@ -7,7 +7,22 @@ import sys
 
 # Configuration
 Scan_Specified_Directory = 1
-Max_Directory_Depth = 3  # Controls how many levels deep the directory scan will go
+Max_Directory_Depth = 3  # Default depth if no custom rule matches
+CUSTOM_DIRECTORY_DEPTHS = {
+    # Non-code directories (minimal scanning)
+    '.git': 0,          # Show only 1 level of .git
+    'node_modules': 0,  # Skip completely
+    'obj': 0,
+    'bin': 0,
+    '__pycache__': 0,
+    
+    # Code directories (deeper scanning)
+    'src': 4,          # Full source code structure
+    'lib': 4,
+    'app': 4,
+    'docs': 2,         # Documentation content
+    'shared': 3,
+}
 
 @dataclass
 class FileInfo:
@@ -16,6 +31,44 @@ class FileInfo:
     is_dir: bool
     size: int
     modified_time: datetime
+
+def print_directory_tree(
+    directory: Union[str, Path],
+    indent: str = "",
+    file=sys.stdout,
+    remaining_depth: int = Max_Directory_Depth
+) -> None:
+    """
+    Print directory tree with custom depth handling.
+    remaining_depth: How many levels deeper we can scan from current position
+    """
+    try:
+        root = Path(directory)
+        print(f"{indent} {root.name}/", file=file)
+
+        # Determine depth allowance for children
+        dir_name = root.name
+        new_remaining = CUSTOM_DIRECTORY_DEPTHS.get(dir_name, remaining_depth - 1)
+
+        if new_remaining < 0:
+            print(f"{indent}   [...deeper contents omitted...]", file=file)
+            return
+
+        for item in sorted(root.iterdir()):
+            if item.is_dir():
+                print_directory_tree(
+                    item, 
+                    indent + "  ", 
+                    file=file,
+                    remaining_depth=CUSTOM_DIRECTORY_DEPTHS.get(item.name, new_remaining)
+                )
+            else:
+                print(f"{indent}   {item.name}", file=file)
+    except PermissionError:
+        print(f"{indent}  ⚠️ Permission denied", file=file)
+    except Exception as e:
+        print(f"{indent}  ⚠️ Error: {e}", file=file)
+
 
 def get_directory_contents_pathlib(
     directory: Union[str, Path],
@@ -41,34 +94,6 @@ def get_directory_contents_pathlib(
         except (PermissionError, OSError) as e:
             print(f"Error accessing {path}: {e}")
 
-def print_directory_tree(
-    directory: Union[str, Path],
-    indent: str = "",
-    file=sys.stdout,
-    current_depth: int = 0
-) -> None:
-    """
-    Print a directory tree structure to the specified output (console or file).
-    Now respects maximum depth setting.
-    """
-    try:
-        root = Path(directory)
-        print(f"{indent} {root.name}/", file=file)
-
-        # Don't recurse if we've reached maximum depth
-        if current_depth >= Max_Directory_Depth:
-            print(f"{indent}   [...deeper contents omitted...]", file=file)
-            return
-
-        for item in sorted(root.iterdir()):
-            if item.is_dir():
-                print_directory_tree(item, indent + "  ", file=file, current_depth=current_depth + 1)
-            else:
-                print(f"{indent}   {item.name}", file=file)
-    except PermissionError:
-        print(f"{indent}  ⚠️ Permission denied", file=file)
-    except Exception as e:
-        print(f"{indent}  ⚠️ Error: {e}", file=file)
 
 def find_project_root() -> Path:
     """Find the project root directory containing 'vitality-builder'."""

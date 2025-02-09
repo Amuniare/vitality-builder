@@ -10,19 +10,19 @@ The Vitality System Character Builder is a web-based application designed to str
 The application will use a modern three-tier architecture:
 - Frontend: React-based single-page application providing an intuitive user interface
 - Backend: .NET Web API handling business logic and data persistence
-- Database: SQLite database storing character data and system rules
+- Database: SQL Server Developer database storing character data and system rules
 
-                       +-----------------+
-                       |   React Frontend|
-                       +--------+--------+
-                                |
-                       +--------v--------+
-                       |  .NET Web API   |
-                       +--------+--------+
-                                |
-                       +--------v--------+
-                       | SQLite Database |
-                       +-----------------+
+                       +-------------------------------+
+                       |        React Frontend         |
+                       +----------------------+--------+
+                                     |
+                       +-------------v-----------------+
+                       |       .NET Web API            |
+                       +----------------------+--------+
+                                     |
+                       +-------------v-----------------+
+                       | SQL Server Developer Database |
+                       +-------------------------------+
 
 ## Functional Requirements
 
@@ -61,7 +61,7 @@ The system must include a dice rolling feature that supports:
 - Standard d20 rolls
 - Multiple d6 rolls
 - Critical hit calculations
-- Advantage/Disadvantage mechanics
+- Advantage mechanics
 - Display of roll results and modifiers
 
 ## Technical Requirements
@@ -152,7 +152,7 @@ The project will be considered successful when:
    - Set up main solution file
    - Create Web API project
    - Configure Entity Framework Core
-   - Set up SQLite database
+   - Set up SQL Server Developer database
 
 2. Implement core data models:
    - Create base Character model
@@ -260,7 +260,7 @@ Required Software:
         .NET 7 SDK (Minimum)
         ASP.NET Core Runtime
         Entity Framework Core Tools
-        SQLite or SQL Server Express (based on configuration)
+        SQL Server Developer or SQL Server Express (based on configuration)
     Frontend Development:
         Node.js v18+
         npm v9+
@@ -268,7 +268,7 @@ Required Software:
         React v18+
         Vite (for React project setup)
     Database:
-        SQLite3 (for local development)
+        SQL Server Developer3 (for local development)
         Entity Framework Core design tools
     Build Tools:
         Webpack 5+

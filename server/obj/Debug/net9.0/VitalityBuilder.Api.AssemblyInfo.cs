@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VitalityBuilder.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+37c37eff636a4307eeebf85697011adb95863136")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ea395abe6b307697a3cc655784728e6e8249141b")]
 [assembly: System.Reflection.AssemblyProductAttribute("VitalityBuilder.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VitalityBuilder.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

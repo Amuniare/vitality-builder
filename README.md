@@ -35,33 +35,12 @@ vitality-builder/
 
 ### Prerequisites
 - Node.js (v18 or higher)
-- .NET 7.0 SDK
-- SQL Server LocalDB or SQLite
+- .NET 9.0 SDK
+- SQL Server Developer
 
 ### Development Setup
 
-1. Clone the repository:
-```bash
-git clone https://github.com/amuniare/vitality-builder.git
-cd vitality-builder
-```
 
-2. Install frontend dependencies:
-```bash
-cd client
-npm install
-```
-
-3. Start the development server:
-```bash
-npm run dev
-```
-
-4. In a new terminal, start the backend:
-```bash
-cd ../server
-dotnet run
-```
 
 ## Contributing
 
