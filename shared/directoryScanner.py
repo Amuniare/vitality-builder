@@ -10,7 +10,7 @@ Scan_Specified_Directory = 1
 Max_Directory_Depth = 3  # Default depth if no custom rule matches
 CUSTOM_DIRECTORY_DEPTHS = {
     # Non-code directories (minimal scanning)
-    '.git': 0,          # Show only 1 level of .git
+    '.git': 1,          # Show only 1 level of .git
     'node_modules': 0,  # Skip completely
     'obj': 0,
     'bin': 0,
@@ -48,9 +48,9 @@ def print_directory_tree(
 
         # Determine depth allowance for children
         dir_name = root.name
-        new_remaining = CUSTOM_DIRECTORY_DEPTHS.get(dir_name, remaining_depth - 1)
-
-        if new_remaining < 0:
+        child_depth = CUSTOM_DIRECTORY_DEPTHS.get(dir_name, remaining_depth)
+        
+        if child_depth <= 0:
             print(f"{indent}   [...deeper contents omitted...]", file=file)
             return
 
@@ -60,7 +60,7 @@ def print_directory_tree(
                     item, 
                     indent + "  ", 
                     file=file,
-                    remaining_depth=CUSTOM_DIRECTORY_DEPTHS.get(item.name, new_remaining)
+                    remaining_depth=CUSTOM_DIRECTORY_DEPTHS.get(item.name, child_depth - 1)
                 )
             else:
                 print(f"{indent}   {item.name}", file=file)
