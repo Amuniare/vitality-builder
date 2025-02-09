@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VitalityBuilder.Api;
 
@@ -10,9 +11,11 @@ using VitalityBuilder.Api;
 namespace VitalityBuilder.Api.Migrations
 {
     [DbContext(typeof(VitalityBuilderContext))]
-    partial class VitalityBuilderContextModelSnapshot : ModelSnapshot
+    [Migration("20250209175026_RemoveColumnX")]
+    partial class RemoveColumnX
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -18,10 +18,9 @@ namespace VitalityBuilder.Api.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Tier = table.Column<int>(type: "int", nullable: false),
-                    MainPoolPoints = table.Column<int>(type: "int", nullable: false),
-                    CombatPoints = table.Column<int>(type: "int", nullable: false),
-                    UtilityPoints = table.Column<int>(type: "int", nullable: false),
-                    SpecialPoints = table.Column<int>(type: "int", nullable: false)
+                    MainPointPool = table.Column<int>(type: "int", nullable: false),
+                    SpecialAttacksPointPool = table.Column<int>(type: "int", nullable: false),
+                    UtilityPointPool = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

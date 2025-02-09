@@ -11,7 +11,7 @@ using VitalityBuilder.Api;
 namespace VitalityBuilder.Api.Migrations
 {
     [DbContext(typeof(VitalityBuilderContext))]
-    [Migration("20250209135153_InitialCreate")]
+    [Migration("20250209175003_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -32,23 +32,20 @@ namespace VitalityBuilder.Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CombatPoints")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MainPoolPoints")
+                    b.Property<int>("MainPointPool")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SpecialPoints")
+                    b.Property<int>("SpecialAttacksPointPool")
                         .HasColumnType("int");
 
                     b.Property<int>("Tier")
                         .HasColumnType("int");
 
-                    b.Property<int>("UtilityPoints")
+                    b.Property<int>("UtilityPointPool")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

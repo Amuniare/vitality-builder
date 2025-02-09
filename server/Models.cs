@@ -4,10 +4,9 @@ public class Character
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public int Tier { get; set; }
-    public int MainPoolPoints { get; set; }
-    public int CombatPoints { get; set; }
-    public int UtilityPoints { get; set; }
-    public int SpecialPoints { get; set; }
+    public int MainPointPool { get; set; }
+    public int SpecialAttacksPointPool { get; set; }
+    public int UtilityPointPool  { get; set; }
 
     // Combat Attributes
     public CombatAttributes CombatAttributes { get; set; } = new();

@@ -157,7 +157,7 @@ public class CharactersController(VitalityBuilderContext context) : ControllerBa
         }
 
         // Validate main pool points (10 x Tier)
-        if (character.MainPoolPoints > character.Tier * 10)
+        if (character.MainPointPool > character.Tier * 10)
         {
             return false;
         }

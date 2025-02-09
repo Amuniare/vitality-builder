@@ -61,5 +61,17 @@
         <member name="M:VitalityBuilder.Api.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:VitalityBuilder.Api.Migrations.RemoveColumnX">
+            <inheritdoc />
+        </member>
+        <member name="M:VitalityBuilder.Api.Migrations.RemoveColumnX.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:VitalityBuilder.Api.Migrations.RemoveColumnX.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:VitalityBuilder.Api.Migrations.RemoveColumnX.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>
