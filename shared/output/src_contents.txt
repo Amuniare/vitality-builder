@@ -83,7 +83,7 @@ Content:
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
-using VitalityBuilder.Api;
+using VitalityBuilder.Api.Infrastructure; 
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -157,6 +157,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using VitalityBuilder.Api.Models;
+using VitalityBuilder.Api.Infrastructure; 
 
 namespace VitalityBuilder.Api.Controllers
 {
