@@ -1,4 +1,4 @@
-Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Projects\vitality-builder
+Scanning directory: C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder
 
 === Directory Tree ===
  vitality-builder/
@@ -37,59 +37,279 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        03/
          [...deeper contents omitted...]
+       04/
+         [...deeper contents omitted...]
+       05/
+         [...deeper contents omitted...]
        06/
          [...deeper contents omitted...]
        08/
          [...deeper contents omitted...]
+       09/
+         [...deeper contents omitted...]
+       0a/
+         [...deeper contents omitted...]
+       0b/
+         [...deeper contents omitted...]
        0c/
+         [...deeper contents omitted...]
+       0d/
+         [...deeper contents omitted...]
+       0e/
+         [...deeper contents omitted...]
+       0f/
+         [...deeper contents omitted...]
+       10/
+         [...deeper contents omitted...]
+       11/
+         [...deeper contents omitted...]
+       12/
+         [...deeper contents omitted...]
+       13/
+         [...deeper contents omitted...]
+       14/
          [...deeper contents omitted...]
        15/
          [...deeper contents omitted...]
+       16/
+         [...deeper contents omitted...]
+       17/
+         [...deeper contents omitted...]
+       18/
+         [...deeper contents omitted...]
+       19/
+         [...deeper contents omitted...]
+       1a/
+         [...deeper contents omitted...]
+       1b/
+         [...deeper contents omitted...]
+       1c/
+         [...deeper contents omitted...]
        1d/
+         [...deeper contents omitted...]
+       1e/
+         [...deeper contents omitted...]
+       1f/
          [...deeper contents omitted...]
        20/
          [...deeper contents omitted...]
        21/
          [...deeper contents omitted...]
+       22/
+         [...deeper contents omitted...]
+       23/
+         [...deeper contents omitted...]
+       24/
+         [...deeper contents omitted...]
+       26/
+         [...deeper contents omitted...]
+       27/
+         [...deeper contents omitted...]
+       28/
+         [...deeper contents omitted...]
+       29/
+         [...deeper contents omitted...]
        2a/
          [...deeper contents omitted...]
        2b/
          [...deeper contents omitted...]
-       2d/
+       2e/
          [...deeper contents omitted...]
        30/
          [...deeper contents omitted...]
+       33/
+         [...deeper contents omitted...]
+       36/
+         [...deeper contents omitted...]
+       39/
+         [...deeper contents omitted...]
+       3a/
+         [...deeper contents omitted...]
+       3b/
+         [...deeper contents omitted...]
+       3c/
+         [...deeper contents omitted...]
+       3d/
+         [...deeper contents omitted...]
        3f/
+         [...deeper contents omitted...]
+       41/
          [...deeper contents omitted...]
        42/
          [...deeper contents omitted...]
+       44/
+         [...deeper contents omitted...]
+       45/
+         [...deeper contents omitted...]
+       47/
+         [...deeper contents omitted...]
        49/
+         [...deeper contents omitted...]
+       4a/
+         [...deeper contents omitted...]
+       4b/
+         [...deeper contents omitted...]
+       4c/
+         [...deeper contents omitted...]
+       4d/
+         [...deeper contents omitted...]
+       4e/
+         [...deeper contents omitted...]
+       4f/
          [...deeper contents omitted...]
        50/
          [...deeper contents omitted...]
+       51/
+         [...deeper contents omitted...]
+       52/
+         [...deeper contents omitted...]
+       53/
+         [...deeper contents omitted...]
        54/
+         [...deeper contents omitted...]
+       55/
+         [...deeper contents omitted...]
+       56/
+         [...deeper contents omitted...]
+       57/
+         [...deeper contents omitted...]
+       58/
+         [...deeper contents omitted...]
+       59/
+         [...deeper contents omitted...]
+       5a/
+         [...deeper contents omitted...]
+       5b/
+         [...deeper contents omitted...]
+       5c/
+         [...deeper contents omitted...]
+       5d/
+         [...deeper contents omitted...]
+       5e/
+         [...deeper contents omitted...]
+       5f/
+         [...deeper contents omitted...]
+       60/
          [...deeper contents omitted...]
        61/
          [...deeper contents omitted...]
+       62/
+         [...deeper contents omitted...]
+       63/
+         [...deeper contents omitted...]
+       64/
+         [...deeper contents omitted...]
+       65/
+         [...deeper contents omitted...]
+       66/
+         [...deeper contents omitted...]
+       67/
+         [...deeper contents omitted...]
+       69/
+         [...deeper contents omitted...]
+       6a/
+         [...deeper contents omitted...]
+       6b/
+         [...deeper contents omitted...]
+       6c/
+         [...deeper contents omitted...]
+       6d/
+         [...deeper contents omitted...]
+       6e/
+         [...deeper contents omitted...]
+       6f/
+         [...deeper contents omitted...]
+       70/
+         [...deeper contents omitted...]
        71/
+         [...deeper contents omitted...]
+       72/
+         [...deeper contents omitted...]
+       73/
          [...deeper contents omitted...]
        74/
          [...deeper contents omitted...]
+       75/
+         [...deeper contents omitted...]
+       76/
+         [...deeper contents omitted...]
+       77/
+         [...deeper contents omitted...]
+       78/
+         [...deeper contents omitted...]
+       79/
+         [...deeper contents omitted...]
+       7a/
+         [...deeper contents omitted...]
        7b/
+         [...deeper contents omitted...]
+       7c/
+         [...deeper contents omitted...]
+       7d/
+         [...deeper contents omitted...]
+       7e/
+         [...deeper contents omitted...]
+       7f/
+         [...deeper contents omitted...]
+       80/
+         [...deeper contents omitted...]
+       82/
+         [...deeper contents omitted...]
+       83/
+         [...deeper contents omitted...]
+       84/
+         [...deeper contents omitted...]
+       85/
+         [...deeper contents omitted...]
+       87/
+         [...deeper contents omitted...]
+       89/
+         [...deeper contents omitted...]
+       8a/
+         [...deeper contents omitted...]
+       8b/
+         [...deeper contents omitted...]
+       8c/
+         [...deeper contents omitted...]
+       8d/
          [...deeper contents omitted...]
        8e/
          [...deeper contents omitted...]
        8f/
          [...deeper contents omitted...]
+       90/
+         [...deeper contents omitted...]
+       91/
+         [...deeper contents omitted...]
+       92/
+         [...deeper contents omitted...]
+       93/
+         [...deeper contents omitted...]
        94/
          [...deeper contents omitted...]
        95/
          [...deeper contents omitted...]
-       9c/
+       96/
+         [...deeper contents omitted...]
+       97/
+         [...deeper contents omitted...]
+       98/
+         [...deeper contents omitted...]
+       9a/
          [...deeper contents omitted...]
        9d/
          [...deeper contents omitted...]
+       9e/
+         [...deeper contents omitted...]
+       9f/
+         [...deeper contents omitted...]
+       a0/
+         [...deeper contents omitted...]
        a1/
+         [...deeper contents omitted...]
+       a2/
+         [...deeper contents omitted...]
+       a3/
          [...deeper contents omitted...]
        a4/
          [...deeper contents omitted...]
@@ -99,25 +319,91 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        a7/
          [...deeper contents omitted...]
+       a8/
+         [...deeper contents omitted...]
        a9/
          [...deeper contents omitted...]
        aa/
          [...deeper contents omitted...]
-       b4/
+       ab/
+         [...deeper contents omitted...]
+       ac/
+         [...deeper contents omitted...]
+       ad/
+         [...deeper contents omitted...]
+       af/
+         [...deeper contents omitted...]
+       b0/
+         [...deeper contents omitted...]
+       b1/
+         [...deeper contents omitted...]
+       b2/
          [...deeper contents omitted...]
        b5/
          [...deeper contents omitted...]
+       b7/
+         [...deeper contents omitted...]
+       b9/
+         [...deeper contents omitted...]
+       bb/
+         [...deeper contents omitted...]
+       bc/
+         [...deeper contents omitted...]
+       bd/
+         [...deeper contents omitted...]
+       be/
+         [...deeper contents omitted...]
+       bf/
+         [...deeper contents omitted...]
+       c0/
+         [...deeper contents omitted...]
+       c1/
+         [...deeper contents omitted...]
+       c2/
+         [...deeper contents omitted...]
+       c3/
+         [...deeper contents omitted...]
+       c4/
+         [...deeper contents omitted...]
        c5/
+         [...deeper contents omitted...]
+       c6/
+         [...deeper contents omitted...]
+       c7/
+         [...deeper contents omitted...]
+       c8/
+         [...deeper contents omitted...]
+       c9/
+         [...deeper contents omitted...]
+       ca/
          [...deeper contents omitted...]
        cb/
          [...deeper contents omitted...]
        cc/
          [...deeper contents omitted...]
-       d2/
+       ce/
+         [...deeper contents omitted...]
+       d0/
+         [...deeper contents omitted...]
+       d1/
          [...deeper contents omitted...]
        d3/
          [...deeper contents omitted...]
+       d4/
+         [...deeper contents omitted...]
+       d5/
+         [...deeper contents omitted...]
+       d7/
+         [...deeper contents omitted...]
+       d8/
+         [...deeper contents omitted...]
+       d9/
+         [...deeper contents omitted...]
        da/
+         [...deeper contents omitted...]
+       db/
+         [...deeper contents omitted...]
+       dc/
          [...deeper contents omitted...]
        dd/
          [...deeper contents omitted...]
@@ -125,27 +411,70 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        df/
          [...deeper contents omitted...]
+       e0/
+         [...deeper contents omitted...]
+       e1/
+         [...deeper contents omitted...]
+       e2/
+         [...deeper contents omitted...]
+       e3/
+         [...deeper contents omitted...]
+       e4/
+         [...deeper contents omitted...]
+       e5/
+         [...deeper contents omitted...]
        e6/
          [...deeper contents omitted...]
+       e7/
+         [...deeper contents omitted...]
+       e8/
+         [...deeper contents omitted...]
        e9/
+         [...deeper contents omitted...]
+       ea/
          [...deeper contents omitted...]
        eb/
          [...deeper contents omitted...]
        ec/
          [...deeper contents omitted...]
-       f2/
+       ed/
+         [...deeper contents omitted...]
+       ee/
+         [...deeper contents omitted...]
+       ef/
+         [...deeper contents omitted...]
+       f0/
+         [...deeper contents omitted...]
+       f3/
+         [...deeper contents omitted...]
+       f4/
+         [...deeper contents omitted...]
+       f5/
          [...deeper contents omitted...]
        f6/
          [...deeper contents omitted...]
+       f7/
+         [...deeper contents omitted...]
+       f9/
+         [...deeper contents omitted...]
+       fa/
+         [...deeper contents omitted...]
+       fb/
+         [...deeper contents omitted...]
        fc/
          [...deeper contents omitted...]
+       fd/
+         [...deeper contents omitted...]
        fe/
+         [...deeper contents omitted...]
+       ff/
          [...deeper contents omitted...]
        info/
          [...deeper contents omitted...]
        pack/
          [...deeper contents omitted...]
      ORIG_HEAD
+     packed-refs
      refs/
        heads/
          [...deeper contents omitted...]
@@ -155,7 +484,6 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
    .gitignore
    client/
-     assets/
      node_modules/
        .bin/
          [...deeper contents omitted...]
@@ -234,8 +562,6 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        acorn/
          [...deeper contents omitted...]
-       acorn-dynamic-import/
-         [...deeper contents omitted...]
        acorn-globals/
          [...deeper contents omitted...]
        acorn-jsx/
@@ -244,41 +570,37 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        address/
          [...deeper contents omitted...]
+       adjust-sourcemap-loader/
+         [...deeper contents omitted...]
+       agent-base/
+         [...deeper contents omitted...]
        ajv/
          [...deeper contents omitted...]
-       ajv-errors/
+       ajv-formats/
          [...deeper contents omitted...]
        ajv-keywords/
-         [...deeper contents omitted...]
-       alphanum-sort/
-         [...deeper contents omitted...]
-       ansi-colors/
          [...deeper contents omitted...]
        ansi-escapes/
          [...deeper contents omitted...]
        ansi-html/
          [...deeper contents omitted...]
+       ansi-html-community/
+         [...deeper contents omitted...]
        ansi-regex/
          [...deeper contents omitted...]
        ansi-styles/
          [...deeper contents omitted...]
+       any-promise/
+         [...deeper contents omitted...]
        anymatch/
          [...deeper contents omitted...]
-       aproba/
+       arg/
          [...deeper contents omitted...]
        argparse/
          [...deeper contents omitted...]
        aria-query/
          [...deeper contents omitted...]
-       arr-diff/
-         [...deeper contents omitted...]
-       arr-flatten/
-         [...deeper contents omitted...]
-       arr-union/
-         [...deeper contents omitted...]
        array-buffer-byte-length/
-         [...deeper contents omitted...]
-       array-equal/
          [...deeper contents omitted...]
        array-flatten/
          [...deeper contents omitted...]
@@ -286,59 +608,39 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        array-union/
          [...deeper contents omitted...]
-       array-uniq/
+       array.prototype.findlast/
          [...deeper contents omitted...]
-       array-unique/
+       array.prototype.findlastindex/
+         [...deeper contents omitted...]
+       array.prototype.flat/
+         [...deeper contents omitted...]
+       array.prototype.flatmap/
          [...deeper contents omitted...]
        array.prototype.reduce/
          [...deeper contents omitted...]
-       arraybuffer.prototype.slice/
+       array.prototype.tosorted/
          [...deeper contents omitted...]
-       arrify/
+       arraybuffer.prototype.slice/
          [...deeper contents omitted...]
        asap/
          [...deeper contents omitted...]
-       asn1/
-         [...deeper contents omitted...]
-       asn1.js/
-         [...deeper contents omitted...]
-       assert/
-         [...deeper contents omitted...]
-       assert-plus/
-         [...deeper contents omitted...]
-       assign-symbols/
-         [...deeper contents omitted...]
        ast-types-flow/
-         [...deeper contents omitted...]
-       astral-regex/
          [...deeper contents omitted...]
        async/
          [...deeper contents omitted...]
-       async-each/
-         [...deeper contents omitted...]
        async-function/
-         [...deeper contents omitted...]
-       async-limiter/
          [...deeper contents omitted...]
        asynckit/
          [...deeper contents omitted...]
-       atob/
+       at-least-node/
          [...deeper contents omitted...]
        autoprefixer/
          [...deeper contents omitted...]
        available-typed-arrays/
          [...deeper contents omitted...]
-       aws-sign2/
-         [...deeper contents omitted...]
-       aws4/
+       axe-core/
          [...deeper contents omitted...]
        axobject-query/
-         [...deeper contents omitted...]
-       babel-code-frame/
-         [...deeper contents omitted...]
-       babel-eslint/
-         [...deeper contents omitted...]
-       babel-extract-comments/
          [...deeper contents omitted...]
        babel-jest/
          [...deeper contents omitted...]
@@ -358,43 +660,29 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        babel-plugin-polyfill-regenerator/
          [...deeper contents omitted...]
-       babel-plugin-syntax-object-rest-spread/
-         [...deeper contents omitted...]
-       babel-plugin-transform-object-rest-spread/
-         [...deeper contents omitted...]
        babel-plugin-transform-react-remove-prop-types/
+         [...deeper contents omitted...]
+       babel-preset-current-node-syntax/
          [...deeper contents omitted...]
        babel-preset-jest/
          [...deeper contents omitted...]
        babel-preset-react-app/
          [...deeper contents omitted...]
-       babel-runtime/
-         [...deeper contents omitted...]
-       babylon/
-         [...deeper contents omitted...]
        balanced-match/
-         [...deeper contents omitted...]
-       base/
-         [...deeper contents omitted...]
-       base64-js/
          [...deeper contents omitted...]
        batch/
          [...deeper contents omitted...]
-       bcrypt-pbkdf/
+       bfj/
          [...deeper contents omitted...]
        big.js/
          [...deeper contents omitted...]
        binary-extensions/
          [...deeper contents omitted...]
-       bindings/
-         [...deeper contents omitted...]
        bluebird/
-         [...deeper contents omitted...]
-       bn.js/
          [...deeper contents omitted...]
        body-parser/
          [...deeper contents omitted...]
-       bonjour/
+       bonjour-service/
          [...deeper contents omitted...]
        boolbase/
          [...deeper contents omitted...]
@@ -402,43 +690,17 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        braces/
          [...deeper contents omitted...]
-       brorand/
-         [...deeper contents omitted...]
        browser-process-hrtime/
-         [...deeper contents omitted...]
-       browser-resolve/
-         [...deeper contents omitted...]
-       browserify-aes/
-         [...deeper contents omitted...]
-       browserify-cipher/
-         [...deeper contents omitted...]
-       browserify-des/
-         [...deeper contents omitted...]
-       browserify-rsa/
-         [...deeper contents omitted...]
-       browserify-sign/
-         [...deeper contents omitted...]
-       browserify-zlib/
          [...deeper contents omitted...]
        browserslist/
          [...deeper contents omitted...]
        bser/
          [...deeper contents omitted...]
-       buffer/
-         [...deeper contents omitted...]
        buffer-from/
          [...deeper contents omitted...]
-       buffer-indexof/
-         [...deeper contents omitted...]
-       buffer-xor/
-         [...deeper contents omitted...]
-       builtin-status-codes/
+       builtin-modules/
          [...deeper contents omitted...]
        bytes/
-         [...deeper contents omitted...]
-       cacache/
-         [...deeper contents omitted...]
-       cache-base/
          [...deeper contents omitted...]
        call-bind/
          [...deeper contents omitted...]
@@ -446,69 +708,51 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        call-bound/
          [...deeper contents omitted...]
-       call-me-maybe/
-         [...deeper contents omitted...]
-       caller-callsite/
-         [...deeper contents omitted...]
-       caller-path/
-         [...deeper contents omitted...]
        callsites/
          [...deeper contents omitted...]
        camel-case/
          [...deeper contents omitted...]
        camelcase/
          [...deeper contents omitted...]
+       camelcase-css/
+         [...deeper contents omitted...]
        caniuse-api/
          [...deeper contents omitted...]
        caniuse-lite/
          [...deeper contents omitted...]
-       capture-exit/
-         [...deeper contents omitted...]
        case-sensitive-paths-webpack-plugin/
-         [...deeper contents omitted...]
-       caseless/
          [...deeper contents omitted...]
        chalk/
          [...deeper contents omitted...]
-       chardet/
+       char-regex/
+         [...deeper contents omitted...]
+       check-types/
          [...deeper contents omitted...]
        chokidar/
-         [...deeper contents omitted...]
-       chownr/
          [...deeper contents omitted...]
        chrome-trace-event/
          [...deeper contents omitted...]
        ci-info/
          [...deeper contents omitted...]
-       cipher-base/
-         [...deeper contents omitted...]
-       class-utils/
+       cjs-module-lexer/
          [...deeper contents omitted...]
        clean-css/
          [...deeper contents omitted...]
-       cli-cursor/
-         [...deeper contents omitted...]
-       cli-width/
-         [...deeper contents omitted...]
        cliui/
-         [...deeper contents omitted...]
-       clone-deep/
          [...deeper contents omitted...]
        co/
          [...deeper contents omitted...]
        coa/
          [...deeper contents omitted...]
-       code-point-at/
-         [...deeper contents omitted...]
-       collection-visit/
-         [...deeper contents omitted...]
-       color/
+       collect-v8-coverage/
          [...deeper contents omitted...]
        color-convert/
          [...deeper contents omitted...]
        color-name/
          [...deeper contents omitted...]
-       color-string/
+       colord/
+         [...deeper contents omitted...]
+       colorette/
          [...deeper contents omitted...]
        combined-stream/
          [...deeper contents omitted...]
@@ -518,25 +762,15 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        commondir/
          [...deeper contents omitted...]
-       component-emitter/
-         [...deeper contents omitted...]
        compressible/
          [...deeper contents omitted...]
        compression/
          [...deeper contents omitted...]
        concat-map/
          [...deeper contents omitted...]
-       concat-stream/
-         [...deeper contents omitted...]
        confusing-browser-globals/
          [...deeper contents omitted...]
        connect-history-api-fallback/
-         [...deeper contents omitted...]
-       console-browserify/
-         [...deeper contents omitted...]
-       constants-browserify/
-         [...deeper contents omitted...]
-       contains-path/
          [...deeper contents omitted...]
        content-disposition/
          [...deeper contents omitted...]
@@ -548,13 +782,11 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        cookie-signature/
          [...deeper contents omitted...]
-       copy-concurrently/
-         [...deeper contents omitted...]
-       copy-descriptor/
-         [...deeper contents omitted...]
        core-js/
          [...deeper contents omitted...]
        core-js-compat/
+         [...deeper contents omitted...]
+       core-js-pure/
          [...deeper contents omitted...]
        core-util-is/
          [...deeper contents omitted...]
@@ -562,25 +794,19 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        cra-template-typescript/
          [...deeper contents omitted...]
-       create-ecdh/
-         [...deeper contents omitted...]
-       create-hash/
-         [...deeper contents omitted...]
-       create-hmac/
-         [...deeper contents omitted...]
        cross-spawn/
          [...deeper contents omitted...]
-       crypto-browserify/
+       crypto-random-string/
          [...deeper contents omitted...]
        css-blank-pseudo/
-         [...deeper contents omitted...]
-       css-color-names/
          [...deeper contents omitted...]
        css-declaration-sorter/
          [...deeper contents omitted...]
        css-has-pseudo/
          [...deeper contents omitted...]
        css-loader/
+         [...deeper contents omitted...]
+       css-minimizer-webpack-plugin/
          [...deeper contents omitted...]
        css-prefers-color-scheme/
          [...deeper contents omitted...]
@@ -600,13 +826,7 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        cssnano-preset-default/
          [...deeper contents omitted...]
-       cssnano-util-get-arguments/
-         [...deeper contents omitted...]
-       cssnano-util-get-match/
-         [...deeper contents omitted...]
-       cssnano-util-raw-cache/
-         [...deeper contents omitted...]
-       cssnano-util-same-parent/
+       cssnano-utils/
          [...deeper contents omitted...]
        csso/
          [...deeper contents omitted...]
@@ -614,11 +834,7 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        cssstyle/
          [...deeper contents omitted...]
-       cyclist/
-         [...deeper contents omitted...]
        damerau-levenshtein/
-         [...deeper contents omitted...]
-       dashdash/
          [...deeper contents omitted...]
        data-urls/
          [...deeper contents omitted...]
@@ -630,29 +846,25 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        debug/
          [...deeper contents omitted...]
-       decamelize/
+       decimal.js/
          [...deeper contents omitted...]
-       decode-uri-component/
-         [...deeper contents omitted...]
-       deep-equal/
+       dedent/
          [...deeper contents omitted...]
        deep-is/
+         [...deeper contents omitted...]
+       deepmerge/
          [...deeper contents omitted...]
        default-gateway/
          [...deeper contents omitted...]
        define-data-property/
          [...deeper contents omitted...]
+       define-lazy-prop/
+         [...deeper contents omitted...]
        define-properties/
-         [...deeper contents omitted...]
-       define-property/
-         [...deeper contents omitted...]
-       del/
          [...deeper contents omitted...]
        delayed-stream/
          [...deeper contents omitted...]
        depd/
-         [...deeper contents omitted...]
-       des.js/
          [...deeper contents omitted...]
        destroy/
          [...deeper contents omitted...]
@@ -662,25 +874,21 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        detect-port-alt/
          [...deeper contents omitted...]
-       diff-sequences/
+       didyoumean/
          [...deeper contents omitted...]
-       diffie-hellman/
+       diff-sequences/
          [...deeper contents omitted...]
        dir-glob/
          [...deeper contents omitted...]
-       dns-equal/
+       dlv/
          [...deeper contents omitted...]
        dns-packet/
-         [...deeper contents omitted...]
-       dns-txt/
          [...deeper contents omitted...]
        doctrine/
          [...deeper contents omitted...]
        dom-converter/
          [...deeper contents omitted...]
        dom-serializer/
-         [...deeper contents omitted...]
-       domain-browser/
          [...deeper contents omitted...]
        domelementtype/
          [...deeper contents omitted...]
@@ -690,7 +898,7 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        domutils/
          [...deeper contents omitted...]
-       dot-prop/
+       dot-case/
          [...deeper contents omitted...]
        dotenv/
          [...deeper contents omitted...]
@@ -700,15 +908,15 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        duplexer/
          [...deeper contents omitted...]
-       duplexify/
-         [...deeper contents omitted...]
-       ecc-jsbn/
+       eastasianwidth/
          [...deeper contents omitted...]
        ee-first/
          [...deeper contents omitted...]
+       ejs/
+         [...deeper contents omitted...]
        electron-to-chromium/
          [...deeper contents omitted...]
-       elliptic/
+       emittery/
          [...deeper contents omitted...]
        emoji-regex/
          [...deeper contents omitted...]
@@ -716,15 +924,13 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        encodeurl/
          [...deeper contents omitted...]
-       end-of-stream/
-         [...deeper contents omitted...]
        enhanced-resolve/
          [...deeper contents omitted...]
        entities/
          [...deeper contents omitted...]
-       errno/
-         [...deeper contents omitted...]
        error-ex/
+         [...deeper contents omitted...]
+       error-stack-parser/
          [...deeper contents omitted...]
        es-abstract/
          [...deeper contents omitted...]
@@ -734,9 +940,15 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        es-errors/
          [...deeper contents omitted...]
+       es-iterator-helpers/
+         [...deeper contents omitted...]
+       es-module-lexer/
+         [...deeper contents omitted...]
        es-object-atoms/
          [...deeper contents omitted...]
        es-set-tostringtag/
+         [...deeper contents omitted...]
+       es-shim-unscopables/
          [...deeper contents omitted...]
        es-to-primitive/
          [...deeper contents omitted...]
@@ -754,13 +966,13 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        eslint-import-resolver-node/
          [...deeper contents omitted...]
-       eslint-loader/
-         [...deeper contents omitted...]
        eslint-module-utils/
          [...deeper contents omitted...]
        eslint-plugin-flowtype/
          [...deeper contents omitted...]
        eslint-plugin-import/
+         [...deeper contents omitted...]
+       eslint-plugin-jest/
          [...deeper contents omitted...]
        eslint-plugin-jsx-a11y/
          [...deeper contents omitted...]
@@ -768,11 +980,13 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        eslint-plugin-react-hooks/
          [...deeper contents omitted...]
+       eslint-plugin-testing-library/
+         [...deeper contents omitted...]
        eslint-scope/
          [...deeper contents omitted...]
-       eslint-utils/
-         [...deeper contents omitted...]
        eslint-visitor-keys/
+         [...deeper contents omitted...]
+       eslint-webpack-plugin/
          [...deeper contents omitted...]
        espree/
          [...deeper contents omitted...]
@@ -784,6 +998,8 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        estraverse/
          [...deeper contents omitted...]
+       estree-walker/
+         [...deeper contents omitted...]
        esutils/
          [...deeper contents omitted...]
        etag/
@@ -792,31 +1008,13 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        events/
          [...deeper contents omitted...]
-       eventsource/
-         [...deeper contents omitted...]
-       evp_bytestokey/
-         [...deeper contents omitted...]
-       exec-sh/
-         [...deeper contents omitted...]
        execa/
          [...deeper contents omitted...]
        exit/
          [...deeper contents omitted...]
-       expand-brackets/
-         [...deeper contents omitted...]
        expect/
          [...deeper contents omitted...]
        express/
-         [...deeper contents omitted...]
-       extend/
-         [...deeper contents omitted...]
-       extend-shallow/
-         [...deeper contents omitted...]
-       external-editor/
-         [...deeper contents omitted...]
-       extglob/
-         [...deeper contents omitted...]
-       extsprintf/
          [...deeper contents omitted...]
        fast-deep-equal/
          [...deeper contents omitted...]
@@ -826,19 +1024,19 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        fast-levenshtein/
          [...deeper contents omitted...]
+       fast-uri/
+         [...deeper contents omitted...]
+       fastq/
+         [...deeper contents omitted...]
        faye-websocket/
          [...deeper contents omitted...]
        fb-watchman/
-         [...deeper contents omitted...]
-       figgy-pudding/
-         [...deeper contents omitted...]
-       figures/
          [...deeper contents omitted...]
        file-entry-cache/
          [...deeper contents omitted...]
        file-loader/
          [...deeper contents omitted...]
-       file-uri-to-path/
+       filelist/
          [...deeper contents omitted...]
        filesize/
          [...deeper contents omitted...]
@@ -854,19 +1052,11 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        flatted/
          [...deeper contents omitted...]
-       flatten/
-         [...deeper contents omitted...]
-       flush-write-stream/
-         [...deeper contents omitted...]
        follow-redirects/
          [...deeper contents omitted...]
        for-each/
          [...deeper contents omitted...]
-       for-in/
-         [...deeper contents omitted...]
-       for-own/
-         [...deeper contents omitted...]
-       forever-agent/
+       foreground-child/
          [...deeper contents omitted...]
        fork-ts-checker-webpack-plugin/
          [...deeper contents omitted...]
@@ -874,23 +1064,19 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        forwarded/
          [...deeper contents omitted...]
-       fragment-cache/
+       fraction.js/
          [...deeper contents omitted...]
        fresh/
          [...deeper contents omitted...]
-       from2/
-         [...deeper contents omitted...]
        fs-extra/
          [...deeper contents omitted...]
-       fs-write-stream-atomic/
+       fs-monkey/
          [...deeper contents omitted...]
        fs.realpath/
          [...deeper contents omitted...]
        function-bind/
          [...deeper contents omitted...]
        function.prototype.name/
-         [...deeper contents omitted...]
-       functional-red-black-tree/
          [...deeper contents omitted...]
        functions-have-names/
          [...deeper contents omitted...]
@@ -902,15 +1088,13 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        get-own-enumerable-property-symbols/
          [...deeper contents omitted...]
+       get-package-type/
+         [...deeper contents omitted...]
        get-proto/
          [...deeper contents omitted...]
        get-stream/
          [...deeper contents omitted...]
        get-symbol-description/
-         [...deeper contents omitted...]
-       get-value/
-         [...deeper contents omitted...]
-       getpass/
          [...deeper contents omitted...]
        glob/
          [...deeper contents omitted...]
@@ -932,21 +1116,13 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        graceful-fs/
          [...deeper contents omitted...]
-       growly/
+       graphemer/
          [...deeper contents omitted...]
        gzip-size/
          [...deeper contents omitted...]
        handle-thing/
          [...deeper contents omitted...]
-       har-schema/
-         [...deeper contents omitted...]
-       har-validator/
-         [...deeper contents omitted...]
        harmony-reflect/
-         [...deeper contents omitted...]
-       has/
-         [...deeper contents omitted...]
-       has-ansi/
          [...deeper contents omitted...]
        has-bigints/
          [...deeper contents omitted...]
@@ -960,29 +1136,13 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        has-tostringtag/
          [...deeper contents omitted...]
-       has-value/
-         [...deeper contents omitted...]
-       has-values/
-         [...deeper contents omitted...]
-       hash-base/
-         [...deeper contents omitted...]
-       hash.js/
-         [...deeper contents omitted...]
        hasown/
          [...deeper contents omitted...]
        he/
          [...deeper contents omitted...]
-       hex-color-regex/
-         [...deeper contents omitted...]
-       hmac-drbg/
-         [...deeper contents omitted...]
-       hosted-git-info/
+       hoopy/
          [...deeper contents omitted...]
        hpack.js/
-         [...deeper contents omitted...]
-       hsl-regex/
-         [...deeper contents omitted...]
-       hsla-regex/
          [...deeper contents omitted...]
        html-encoding-sniffer/
          [...deeper contents omitted...]
@@ -990,7 +1150,7 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        html-escaper/
          [...deeper contents omitted...]
-       html-minifier/
+       html-minifier-terser/
          [...deeper contents omitted...]
        html-webpack-plugin/
          [...deeper contents omitted...]
@@ -1004,39 +1164,31 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        http-proxy/
          [...deeper contents omitted...]
+       http-proxy-agent/
+         [...deeper contents omitted...]
        http-proxy-middleware/
          [...deeper contents omitted...]
-       http-signature/
+       https-proxy-agent/
          [...deeper contents omitted...]
-       https-browserify/
+       human-signals/
          [...deeper contents omitted...]
        iconv-lite/
          [...deeper contents omitted...]
-       icss-replace-symbols/
-         [...deeper contents omitted...]
        icss-utils/
          [...deeper contents omitted...]
+       idb/
+         [...deeper contents omitted...]
        identity-obj-proxy/
-         [...deeper contents omitted...]
-       ieee754/
-         [...deeper contents omitted...]
-       iferr/
          [...deeper contents omitted...]
        ignore/
          [...deeper contents omitted...]
        immer/
          [...deeper contents omitted...]
-       import-cwd/
-         [...deeper contents omitted...]
        import-fresh/
-         [...deeper contents omitted...]
-       import-from/
          [...deeper contents omitted...]
        import-local/
          [...deeper contents omitted...]
        imurmurhash/
-         [...deeper contents omitted...]
-       indexes-of/
          [...deeper contents omitted...]
        inflight/
          [...deeper contents omitted...]
@@ -1044,27 +1196,9 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        ini/
          [...deeper contents omitted...]
-       inquirer/
-         [...deeper contents omitted...]
-       internal-ip/
-         [...deeper contents omitted...]
        internal-slot/
          [...deeper contents omitted...]
-       invariant/
-         [...deeper contents omitted...]
-       invert-kv/
-         [...deeper contents omitted...]
-       ip/
-         [...deeper contents omitted...]
-       ip-regex/
-         [...deeper contents omitted...]
        ipaddr.js/
-         [...deeper contents omitted...]
-       is-absolute-url/
-         [...deeper contents omitted...]
-       is-accessor-descriptor/
-         [...deeper contents omitted...]
-       is-arguments/
          [...deeper contents omitted...]
        is-array-buffer/
          [...deeper contents omitted...]
@@ -1078,27 +1212,15 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        is-boolean-object/
          [...deeper contents omitted...]
-       is-buffer/
-         [...deeper contents omitted...]
        is-callable/
          [...deeper contents omitted...]
-       is-ci/
-         [...deeper contents omitted...]
-       is-color-stop/
-         [...deeper contents omitted...]
        is-core-module/
-         [...deeper contents omitted...]
-       is-data-descriptor/
          [...deeper contents omitted...]
        is-data-view/
          [...deeper contents omitted...]
        is-date-object/
          [...deeper contents omitted...]
-       is-descriptor/
-         [...deeper contents omitted...]
-       is-directory/
-         [...deeper contents omitted...]
-       is-extendable/
+       is-docker/
          [...deeper contents omitted...]
        is-extglob/
          [...deeper contents omitted...]
@@ -1114,25 +1236,23 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        is-map/
          [...deeper contents omitted...]
+       is-module/
+         [...deeper contents omitted...]
        is-number/
          [...deeper contents omitted...]
        is-number-object/
          [...deeper contents omitted...]
        is-obj/
          [...deeper contents omitted...]
-       is-path-cwd/
-         [...deeper contents omitted...]
-       is-path-in-cwd/
-         [...deeper contents omitted...]
        is-path-inside/
          [...deeper contents omitted...]
-       is-plain-object/
+       is-plain-obj/
+         [...deeper contents omitted...]
+       is-potential-custom-element-name/
          [...deeper contents omitted...]
        is-regex/
          [...deeper contents omitted...]
        is-regexp/
-         [...deeper contents omitted...]
-       is-resolvable/
          [...deeper contents omitted...]
        is-root/
          [...deeper contents omitted...]
@@ -1156,17 +1276,11 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        is-weakset/
          [...deeper contents omitted...]
-       is-windows/
-         [...deeper contents omitted...]
        is-wsl/
          [...deeper contents omitted...]
        isarray/
          [...deeper contents omitted...]
        isexe/
-         [...deeper contents omitted...]
-       isobject/
-         [...deeper contents omitted...]
-       isstream/
          [...deeper contents omitted...]
        istanbul-lib-coverage/
          [...deeper contents omitted...]
@@ -1178,9 +1292,17 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        istanbul-reports/
          [...deeper contents omitted...]
+       iterator.prototype/
+         [...deeper contents omitted...]
+       jackspeak/
+         [...deeper contents omitted...]
+       jake/
+         [...deeper contents omitted...]
        jest/
          [...deeper contents omitted...]
        jest-changed-files/
+         [...deeper contents omitted...]
+       jest-circus/
          [...deeper contents omitted...]
        jest-cli/
          [...deeper contents omitted...]
@@ -1193,8 +1315,6 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
        jest-each/
          [...deeper contents omitted...]
        jest-environment-jsdom/
-         [...deeper contents omitted...]
-       jest-environment-jsdom-fourteen/
          [...deeper contents omitted...]
        jest-environment-node/
          [...deeper contents omitted...]
@@ -1238,17 +1358,17 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        jest-worker/
          [...deeper contents omitted...]
+       jiti/
+         [...deeper contents omitted...]
        js-tokens/
          [...deeper contents omitted...]
        js-yaml/
-         [...deeper contents omitted...]
-       jsbn/
          [...deeper contents omitted...]
        jsdom/
          [...deeper contents omitted...]
        jsesc/
          [...deeper contents omitted...]
-       json-parse-better-errors/
+       json-buffer/
          [...deeper contents omitted...]
        json-parse-even-better-errors/
          [...deeper contents omitted...]
@@ -1256,49 +1376,39 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        json-schema-traverse/
          [...deeper contents omitted...]
-       json-stable-stringify/
-         [...deeper contents omitted...]
        json-stable-stringify-without-jsonify/
-         [...deeper contents omitted...]
-       json-stringify-safe/
-         [...deeper contents omitted...]
-       json3/
          [...deeper contents omitted...]
        json5/
          [...deeper contents omitted...]
        jsonfile/
          [...deeper contents omitted...]
-       jsonify/
+       jsonpath/
          [...deeper contents omitted...]
-       jsprim/
+       jsonpointer/
          [...deeper contents omitted...]
        jsx-ast-utils/
          [...deeper contents omitted...]
-       killable/
+       keyv/
          [...deeper contents omitted...]
        kind-of/
          [...deeper contents omitted...]
        kleur/
          [...deeper contents omitted...]
-       last-call-webpack-plugin/
+       klona/
          [...deeper contents omitted...]
-       lazy-cache/
+       language-subtag-registry/
          [...deeper contents omitted...]
-       lcid/
+       language-tags/
          [...deeper contents omitted...]
-       left-pad/
+       launch-editor/
          [...deeper contents omitted...]
        leven/
          [...deeper contents omitted...]
-       levenary/
-         [...deeper contents omitted...]
        levn/
          [...deeper contents omitted...]
+       lilconfig/
+         [...deeper contents omitted...]
        lines-and-columns/
-         [...deeper contents omitted...]
-       load-json-file/
-         [...deeper contents omitted...]
-       loader-fs-cache/
          [...deeper contents omitted...]
        loader-runner/
          [...deeper contents omitted...]
@@ -1308,25 +1418,15 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        lodash/
          [...deeper contents omitted...]
-       lodash._reinterpolate/
-         [...deeper contents omitted...]
        lodash.debounce/
          [...deeper contents omitted...]
        lodash.memoize/
          [...deeper contents omitted...]
+       lodash.merge/
+         [...deeper contents omitted...]
        lodash.sortby/
          [...deeper contents omitted...]
-       lodash.tail/
-         [...deeper contents omitted...]
-       lodash.template/
-         [...deeper contents omitted...]
-       lodash.templatesettings/
-         [...deeper contents omitted...]
-       lodash.unescape/
-         [...deeper contents omitted...]
        lodash.uniq/
-         [...deeper contents omitted...]
-       loglevel/
          [...deeper contents omitted...]
        loose-envify/
          [...deeper contents omitted...]
@@ -1334,31 +1434,19 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        lru-cache/
          [...deeper contents omitted...]
+       magic-string/
+         [...deeper contents omitted...]
        make-dir/
          [...deeper contents omitted...]
        makeerror/
          [...deeper contents omitted...]
-       mamacro/
-         [...deeper contents omitted...]
-       map-age-cleaner/
-         [...deeper contents omitted...]
-       map-cache/
-         [...deeper contents omitted...]
-       map-visit/
-         [...deeper contents omitted...]
        math-intrinsics/
-         [...deeper contents omitted...]
-       md5.js/
          [...deeper contents omitted...]
        mdn-data/
          [...deeper contents omitted...]
        media-typer/
          [...deeper contents omitted...]
-       mem/
-         [...deeper contents omitted...]
-       memory-fs/
-         [...deeper contents omitted...]
-       merge-deep/
+       memfs/
          [...deeper contents omitted...]
        merge-descriptors/
          [...deeper contents omitted...]
@@ -1368,11 +1456,7 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        methods/
          [...deeper contents omitted...]
-       microevent.ts/
-         [...deeper contents omitted...]
        micromatch/
-         [...deeper contents omitted...]
-       miller-rabin/
          [...deeper contents omitted...]
        mime/
          [...deeper contents omitted...]
@@ -1386,41 +1470,29 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        minimalistic-assert/
          [...deeper contents omitted...]
-       minimalistic-crypto-utils/
-         [...deeper contents omitted...]
        minimatch/
          [...deeper contents omitted...]
        minimist/
          [...deeper contents omitted...]
-       mississippi/
-         [...deeper contents omitted...]
-       mixin-deep/
-         [...deeper contents omitted...]
-       mixin-object/
+       minipass/
          [...deeper contents omitted...]
        mkdirp/
-         [...deeper contents omitted...]
-       move-concurrently/
          [...deeper contents omitted...]
        ms/
          [...deeper contents omitted...]
        multicast-dns/
          [...deeper contents omitted...]
-       multicast-dns-service-types/
+       mz/
          [...deeper contents omitted...]
-       mute-stream/
-         [...deeper contents omitted...]
-       nan/
-         [...deeper contents omitted...]
-       nanomatch/
+       nanoid/
          [...deeper contents omitted...]
        natural-compare/
+         [...deeper contents omitted...]
+       natural-compare-lite/
          [...deeper contents omitted...]
        negotiator/
          [...deeper contents omitted...]
        neo-async/
-         [...deeper contents omitted...]
-       nice-try/
          [...deeper contents omitted...]
        no-case/
          [...deeper contents omitted...]
@@ -1428,13 +1500,7 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        node-int64/
          [...deeper contents omitted...]
-       node-libs-browser/
-         [...deeper contents omitted...]
-       node-notifier/
-         [...deeper contents omitted...]
        node-releases/
-         [...deeper contents omitted...]
-       normalize-package-data/
          [...deeper contents omitted...]
        normalize-path/
          [...deeper contents omitted...]
@@ -1446,35 +1512,25 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        nth-check/
          [...deeper contents omitted...]
-       num2fraction/
-         [...deeper contents omitted...]
-       number-is-nan/
-         [...deeper contents omitted...]
        nwsapi/
          [...deeper contents omitted...]
-       oauth-sign/
-         [...deeper contents omitted...]
        object-assign/
-         [...deeper contents omitted...]
-       object-copy/
          [...deeper contents omitted...]
        object-hash/
          [...deeper contents omitted...]
        object-inspect/
          [...deeper contents omitted...]
-       object-is/
-         [...deeper contents omitted...]
        object-keys/
          [...deeper contents omitted...]
-       object-visit/
-         [...deeper contents omitted...]
        object.assign/
+         [...deeper contents omitted...]
+       object.entries/
          [...deeper contents omitted...]
        object.fromentries/
          [...deeper contents omitted...]
        object.getownpropertydescriptors/
          [...deeper contents omitted...]
-       object.pick/
+       object.groupby/
          [...deeper contents omitted...]
        object.values/
          [...deeper contents omitted...]
@@ -1490,47 +1546,23 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        open/
          [...deeper contents omitted...]
-       opn/
-         [...deeper contents omitted...]
-       optimize-css-assets-webpack-plugin/
-         [...deeper contents omitted...]
        optionator/
          [...deeper contents omitted...]
-       os-browserify/
-         [...deeper contents omitted...]
-       os-locale/
-         [...deeper contents omitted...]
-       os-tmpdir/
-         [...deeper contents omitted...]
        own-keys/
-         [...deeper contents omitted...]
-       p-defer/
-         [...deeper contents omitted...]
-       p-each-series/
-         [...deeper contents omitted...]
-       p-finally/
-         [...deeper contents omitted...]
-       p-is-promise/
          [...deeper contents omitted...]
        p-limit/
          [...deeper contents omitted...]
        p-locate/
          [...deeper contents omitted...]
-       p-map/
-         [...deeper contents omitted...]
-       p-reduce/
+       p-retry/
          [...deeper contents omitted...]
        p-try/
          [...deeper contents omitted...]
-       pako/
-         [...deeper contents omitted...]
-       parallel-transform/
+       package-json-from-dist/
          [...deeper contents omitted...]
        param-case/
          [...deeper contents omitted...]
        parent-module/
-         [...deeper contents omitted...]
-       parse-asn1/
          [...deeper contents omitted...]
        parse-json/
          [...deeper contents omitted...]
@@ -1538,27 +1570,21 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        parseurl/
          [...deeper contents omitted...]
-       pascalcase/
-         [...deeper contents omitted...]
-       path-browserify/
-         [...deeper contents omitted...]
-       path-dirname/
+       pascal-case/
          [...deeper contents omitted...]
        path-exists/
          [...deeper contents omitted...]
        path-is-absolute/
          [...deeper contents omitted...]
-       path-is-inside/
-         [...deeper contents omitted...]
        path-key/
          [...deeper contents omitted...]
        path-parse/
          [...deeper contents omitted...]
+       path-scurry/
+         [...deeper contents omitted...]
        path-to-regexp/
          [...deeper contents omitted...]
        path-type/
-         [...deeper contents omitted...]
-       pbkdf2/
          [...deeper contents omitted...]
        performance-now/
          [...deeper contents omitted...]
@@ -1568,23 +1594,11 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        pify/
          [...deeper contents omitted...]
-       pinkie/
-         [...deeper contents omitted...]
-       pinkie-promise/
-         [...deeper contents omitted...]
        pirates/
          [...deeper contents omitted...]
        pkg-dir/
          [...deeper contents omitted...]
        pkg-up/
-         [...deeper contents omitted...]
-       pn/
-         [...deeper contents omitted...]
-       pnp-webpack-plugin/
-         [...deeper contents omitted...]
-       portfinder/
-         [...deeper contents omitted...]
-       posix-character-classes/
          [...deeper contents omitted...]
        possible-typed-array-names/
          [...deeper contents omitted...]
@@ -1596,13 +1610,11 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        postcss-calc/
          [...deeper contents omitted...]
+       postcss-clamp/
+         [...deeper contents omitted...]
        postcss-color-functional-notation/
          [...deeper contents omitted...]
-       postcss-color-gray/
-         [...deeper contents omitted...]
        postcss-color-hex-alpha/
-         [...deeper contents omitted...]
-       postcss-color-mod-function/
          [...deeper contents omitted...]
        postcss-color-rebeccapurple/
          [...deeper contents omitted...]
@@ -1642,7 +1654,11 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        postcss-image-set-function/
          [...deeper contents omitted...]
+       postcss-import/
+         [...deeper contents omitted...]
        postcss-initial/
+         [...deeper contents omitted...]
+       postcss-js/
          [...deeper contents omitted...]
        postcss-lab-function/
          [...deeper contents omitted...]
@@ -1674,6 +1690,8 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        postcss-modules-values/
          [...deeper contents omitted...]
+       postcss-nested/
+         [...deeper contents omitted...]
        postcss-nesting/
          [...deeper contents omitted...]
        postcss-normalize/
@@ -1696,6 +1714,8 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        postcss-normalize-whitespace/
          [...deeper contents omitted...]
+       postcss-opacity-percentage/
+         [...deeper contents omitted...]
        postcss-ordered-values/
          [...deeper contents omitted...]
        postcss-overflow-shorthand/
@@ -1714,10 +1734,6 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        postcss-replace-overflow-wrap/
          [...deeper contents omitted...]
-       postcss-safe-parser/
-         [...deeper contents omitted...]
-       postcss-selector-matches/
-         [...deeper contents omitted...]
        postcss-selector-not/
          [...deeper contents omitted...]
        postcss-selector-parser/
@@ -1728,8 +1744,6 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        postcss-value-parser/
          [...deeper contents omitted...]
-       postcss-values-parser/
-         [...deeper contents omitted...]
        prelude-ls/
          [...deeper contents omitted...]
        pretty-bytes/
@@ -1738,15 +1752,9 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        pretty-format/
          [...deeper contents omitted...]
-       process/
-         [...deeper contents omitted...]
        process-nextick-args/
          [...deeper contents omitted...]
-       progress/
-         [...deeper contents omitted...]
        promise/
-         [...deeper contents omitted...]
-       promise-inflight/
          [...deeper contents omitted...]
        prompts/
          [...deeper contents omitted...]
@@ -1754,15 +1762,7 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        proxy-addr/
          [...deeper contents omitted...]
-       prr/
-         [...deeper contents omitted...]
        psl/
-         [...deeper contents omitted...]
-       public-encrypt/
-         [...deeper contents omitted...]
-       pump/
-         [...deeper contents omitted...]
-       pumpify/
          [...deeper contents omitted...]
        punycode/
          [...deeper contents omitted...]
@@ -1770,15 +1770,13 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        qs/
          [...deeper contents omitted...]
-       querystring-es3/
-         [...deeper contents omitted...]
        querystringify/
+         [...deeper contents omitted...]
+       queue-microtask/
          [...deeper contents omitted...]
        raf/
          [...deeper contents omitted...]
        randombytes/
-         [...deeper contents omitted...]
-       randomfill/
          [...deeper contents omitted...]
        range-parser/
          [...deeper contents omitted...]
@@ -1796,17 +1794,15 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        react-is/
          [...deeper contents omitted...]
+       react-refresh/
+         [...deeper contents omitted...]
        react-scripts/
          [...deeper contents omitted...]
-       read-pkg/
-         [...deeper contents omitted...]
-       read-pkg-up/
+       read-cache/
          [...deeper contents omitted...]
        readable-stream/
          [...deeper contents omitted...]
        readdirp/
-         [...deeper contents omitted...]
-       realpath-native/
          [...deeper contents omitted...]
        recursive-readdir/
          [...deeper contents omitted...]
@@ -1820,11 +1816,9 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        regenerator-transform/
          [...deeper contents omitted...]
-       regex-not/
+       regex-parser/
          [...deeper contents omitted...]
        regexp.prototype.flags/
-         [...deeper contents omitted...]
-       regexpp/
          [...deeper contents omitted...]
        regexpu-core/
          [...deeper contents omitted...]
@@ -1834,25 +1828,11 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        relateurl/
          [...deeper contents omitted...]
-       remove-trailing-separator/
-         [...deeper contents omitted...]
        renderkid/
-         [...deeper contents omitted...]
-       repeat-element/
-         [...deeper contents omitted...]
-       repeat-string/
-         [...deeper contents omitted...]
-       request/
-         [...deeper contents omitted...]
-       request-promise-core/
-         [...deeper contents omitted...]
-       request-promise-native/
          [...deeper contents omitted...]
        require-directory/
          [...deeper contents omitted...]
-       require-main-filename/
-         [...deeper contents omitted...]
-       requireindex/
+       require-from-string/
          [...deeper contents omitted...]
        requires-port/
          [...deeper contents omitted...]
@@ -1862,27 +1842,21 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        resolve-from/
          [...deeper contents omitted...]
-       resolve-url/
+       resolve-url-loader/
          [...deeper contents omitted...]
-       restore-cursor/
+       resolve.exports/
          [...deeper contents omitted...]
-       ret/
+       retry/
          [...deeper contents omitted...]
-       rgb-regex/
-         [...deeper contents omitted...]
-       rgba-regex/
+       reusify/
          [...deeper contents omitted...]
        rimraf/
          [...deeper contents omitted...]
-       ripemd160/
+       rollup/
          [...deeper contents omitted...]
-       rsvp/
+       rollup-plugin-terser/
          [...deeper contents omitted...]
-       run-async/
-         [...deeper contents omitted...]
-       run-queue/
-         [...deeper contents omitted...]
-       rxjs/
+       run-parallel/
          [...deeper contents omitted...]
        safe-array-concat/
          [...deeper contents omitted...]
@@ -1890,13 +1864,11 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        safe-push-apply/
          [...deeper contents omitted...]
-       safe-regex/
-         [...deeper contents omitted...]
        safe-regex-test/
          [...deeper contents omitted...]
        safer-buffer/
          [...deeper contents omitted...]
-       sane/
+       sanitize.css/
          [...deeper contents omitted...]
        sass-loader/
          [...deeper contents omitted...]
@@ -1922,31 +1894,19 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        serve-static/
          [...deeper contents omitted...]
-       set-blocking/
-         [...deeper contents omitted...]
        set-function-length/
          [...deeper contents omitted...]
        set-function-name/
          [...deeper contents omitted...]
        set-proto/
          [...deeper contents omitted...]
-       set-value/
-         [...deeper contents omitted...]
-       setimmediate/
-         [...deeper contents omitted...]
        setprototypeof/
-         [...deeper contents omitted...]
-       sha.js/
-         [...deeper contents omitted...]
-       shallow-clone/
          [...deeper contents omitted...]
        shebang-command/
          [...deeper contents omitted...]
        shebang-regex/
          [...deeper contents omitted...]
        shell-quote/
-         [...deeper contents omitted...]
-       shellwords/
          [...deeper contents omitted...]
        side-channel/
          [...deeper contents omitted...]
@@ -1958,75 +1918,53 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        signal-exit/
          [...deeper contents omitted...]
-       simple-swizzle/
-         [...deeper contents omitted...]
        sisteransi/
          [...deeper contents omitted...]
        slash/
          [...deeper contents omitted...]
-       slice-ansi/
-         [...deeper contents omitted...]
-       snapdragon/
-         [...deeper contents omitted...]
-       snapdragon-node/
-         [...deeper contents omitted...]
-       snapdragon-util/
-         [...deeper contents omitted...]
        sockjs/
-         [...deeper contents omitted...]
-       sockjs-client/
          [...deeper contents omitted...]
        source-list-map/
          [...deeper contents omitted...]
        source-map/
          [...deeper contents omitted...]
-       source-map-resolve/
+       source-map-js/
+         [...deeper contents omitted...]
+       source-map-loader/
          [...deeper contents omitted...]
        source-map-support/
          [...deeper contents omitted...]
-       source-map-url/
-         [...deeper contents omitted...]
-       spdx-correct/
-         [...deeper contents omitted...]
-       spdx-exceptions/
-         [...deeper contents omitted...]
-       spdx-expression-parse/
-         [...deeper contents omitted...]
-       spdx-license-ids/
+       sourcemap-codec/
          [...deeper contents omitted...]
        spdy/
          [...deeper contents omitted...]
        spdy-transport/
          [...deeper contents omitted...]
-       split-string/
-         [...deeper contents omitted...]
        sprintf-js/
-         [...deeper contents omitted...]
-       sshpk/
-         [...deeper contents omitted...]
-       ssri/
          [...deeper contents omitted...]
        stable/
          [...deeper contents omitted...]
        stack-utils/
          [...deeper contents omitted...]
-       static-extend/
+       stackframe/
+         [...deeper contents omitted...]
+       static-eval/
          [...deeper contents omitted...]
        statuses/
          [...deeper contents omitted...]
-       stealthy-require/
-         [...deeper contents omitted...]
-       stream-browserify/
-         [...deeper contents omitted...]
-       stream-each/
-         [...deeper contents omitted...]
-       stream-http/
-         [...deeper contents omitted...]
-       stream-shift/
-         [...deeper contents omitted...]
        string-length/
          [...deeper contents omitted...]
+       string-natural-compare/
+         [...deeper contents omitted...]
        string-width/
+         [...deeper contents omitted...]
+       string-width-cjs/
+         [...deeper contents omitted...]
+       string.prototype.includes/
+         [...deeper contents omitted...]
+       string.prototype.matchall/
+         [...deeper contents omitted...]
+       string.prototype.repeat/
          [...deeper contents omitted...]
        string.prototype.trim/
          [...deeper contents omitted...]
@@ -2040,11 +1978,13 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        strip-ansi/
          [...deeper contents omitted...]
+       strip-ansi-cjs/
+         [...deeper contents omitted...]
        strip-bom/
          [...deeper contents omitted...]
        strip-comments/
          [...deeper contents omitted...]
-       strip-eof/
+       strip-final-newline/
          [...deeper contents omitted...]
        strip-json-comments/
          [...deeper contents omitted...]
@@ -2052,7 +1992,11 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        stylehacks/
          [...deeper contents omitted...]
+       sucrase/
+         [...deeper contents omitted...]
        supports-color/
+         [...deeper contents omitted...]
+       supports-hyperlinks/
          [...deeper contents omitted...]
        supports-preserve-symlinks-flag/
          [...deeper contents omitted...]
@@ -2062,9 +2006,15 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        symbol-tree/
          [...deeper contents omitted...]
-       table/
+       tailwindcss/
          [...deeper contents omitted...]
        tapable/
+         [...deeper contents omitted...]
+       temp-dir/
+         [...deeper contents omitted...]
+       tempy/
+         [...deeper contents omitted...]
+       terminal-link/
          [...deeper contents omitted...]
        terser/
          [...deeper contents omitted...]
@@ -2074,27 +2024,15 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        text-table/
          [...deeper contents omitted...]
+       thenify/
+         [...deeper contents omitted...]
+       thenify-all/
+         [...deeper contents omitted...]
        throat/
-         [...deeper contents omitted...]
-       through/
-         [...deeper contents omitted...]
-       through2/
          [...deeper contents omitted...]
        thunky/
          [...deeper contents omitted...]
-       timers-browserify/
-         [...deeper contents omitted...]
-       timsort/
-         [...deeper contents omitted...]
-       tmp/
-         [...deeper contents omitted...]
        tmpl/
-         [...deeper contents omitted...]
-       to-arraybuffer/
-         [...deeper contents omitted...]
-       to-object-path/
-         [...deeper contents omitted...]
-       to-regex/
          [...deeper contents omitted...]
        to-regex-range/
          [...deeper contents omitted...]
@@ -2104,19 +2042,21 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        tr46/
          [...deeper contents omitted...]
-       ts-pnp/
+       tryer/
+         [...deeper contents omitted...]
+       ts-interface-checker/
+         [...deeper contents omitted...]
+       tsconfig-paths/
          [...deeper contents omitted...]
        tslib/
          [...deeper contents omitted...]
        tsutils/
          [...deeper contents omitted...]
-       tty-browserify/
-         [...deeper contents omitted...]
-       tunnel-agent/
-         [...deeper contents omitted...]
-       tweetnacl/
-         [...deeper contents omitted...]
        type-check/
+         [...deeper contents omitted...]
+       type-detect/
+         [...deeper contents omitted...]
+       type-fest/
          [...deeper contents omitted...]
        type-is/
          [...deeper contents omitted...]
@@ -2128,13 +2068,15 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        typed-array-length/
          [...deeper contents omitted...]
-       typedarray/
+       typedarray-to-buffer/
          [...deeper contents omitted...]
        typescript/
          [...deeper contents omitted...]
-       uglify-js/
-         [...deeper contents omitted...]
        unbox-primitive/
+         [...deeper contents omitted...]
+       underscore/
+         [...deeper contents omitted...]
+       undici-types/
          [...deeper contents omitted...]
        unicode-canonical-property-names-ecmascript/
          [...deeper contents omitted...]
@@ -2144,15 +2086,7 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        unicode-property-aliases-ecmascript/
          [...deeper contents omitted...]
-       union-value/
-         [...deeper contents omitted...]
-       uniq/
-         [...deeper contents omitted...]
-       uniqs/
-         [...deeper contents omitted...]
-       unique-filename/
-         [...deeper contents omitted...]
-       unique-slug/
+       unique-string/
          [...deeper contents omitted...]
        universalify/
          [...deeper contents omitted...]
@@ -2160,27 +2094,13 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        unquote/
          [...deeper contents omitted...]
-       unset-value/
-         [...deeper contents omitted...]
        upath/
          [...deeper contents omitted...]
        update-browserslist-db/
          [...deeper contents omitted...]
-       upper-case/
-         [...deeper contents omitted...]
        uri-js/
          [...deeper contents omitted...]
-       urix/
-         [...deeper contents omitted...]
-       url/
-         [...deeper contents omitted...]
-       url-loader/
-         [...deeper contents omitted...]
        url-parse/
-         [...deeper contents omitted...]
-       use/
-         [...deeper contents omitted...]
-       util/
          [...deeper contents omitted...]
        util-deprecate/
          [...deeper contents omitted...]
@@ -2192,15 +2112,9 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        uuid/
          [...deeper contents omitted...]
-       validate-npm-package-license/
+       v8-to-istanbul/
          [...deeper contents omitted...]
        vary/
-         [...deeper contents omitted...]
-       vendors/
-         [...deeper contents omitted...]
-       verror/
-         [...deeper contents omitted...]
-       vm-browserify/
          [...deeper contents omitted...]
        w3c-hr-time/
          [...deeper contents omitted...]
@@ -2209,8 +2123,6 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
        walker/
          [...deeper contents omitted...]
        watchpack/
-         [...deeper contents omitted...]
-       watchpack-chokidar2/
          [...deeper contents omitted...]
        wbuf/
          [...deeper contents omitted...]
@@ -2221,8 +2133,6 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
        webpack-dev-middleware/
          [...deeper contents omitted...]
        webpack-dev-server/
-         [...deeper contents omitted...]
-       webpack-log/
          [...deeper contents omitted...]
        webpack-manifest-plugin/
          [...deeper contents omitted...]
@@ -2248,8 +2158,6 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        which-collection/
          [...deeper contents omitted...]
-       which-module/
-         [...deeper contents omitted...]
        which-typed-array/
          [...deeper contents omitted...]
        word-wrap/
@@ -2274,6 +2182,8 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        workbox-range-requests/
          [...deeper contents omitted...]
+       workbox-recipes/
+         [...deeper contents omitted...]
        workbox-routing/
          [...deeper contents omitted...]
        workbox-strategies/
@@ -2286,15 +2196,11 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
          [...deeper contents omitted...]
        workbox-window/
          [...deeper contents omitted...]
-       worker-farm/
-         [...deeper contents omitted...]
-       worker-rpc/
-         [...deeper contents omitted...]
        wrap-ansi/
          [...deeper contents omitted...]
-       wrappy/
+       wrap-ansi-cjs/
          [...deeper contents omitted...]
-       write/
+       wrappy/
          [...deeper contents omitted...]
        write-file-atomic/
          [...deeper contents omitted...]
@@ -2303,10 +2209,6 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
        xml-name-validator/
          [...deeper contents omitted...]
        xmlchars/
-         [...deeper contents omitted...]
-       xregexp/
-         [...deeper contents omitted...]
-       xtend/
          [...deeper contents omitted...]
        y18n/
          [...deeper contents omitted...]
@@ -2317,6 +2219,8 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
        yargs/
          [...deeper contents omitted...]
        yargs-parser/
+         [...deeper contents omitted...]
+       yocto-queue/
          [...deeper contents omitted...]
      package-lock.json
      package.json
@@ -2336,33 +2240,48 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
        logo.svg
        reportWebVitals.ts
        setupTests.ts
-     tests/
    docs/
      CONTRIBUTING.md
      requirements.md
    LICENSE.md
    README.md
    server/
+     AppDbContext.cs
      appsettings.Development.json
      appsettings.json
      bin/
        Debug/
          [...deeper contents omitted...]
+     controllers/
+       CharactersController.cs
+     data/
+       CharacterRepository.cs
+       ICharacterRepository.cs
      Data.cs
-     migrations/
+     Migrations/
+       20250208211038_InitialCreate.cs
+       20250208211038_InitialCreate.Designer.cs
+       20250208211439_AddCharacterModel.cs
+       20250208211439_AddCharacterModel.Designer.cs
+       20250208235804_InitialSqlServerMigration.cs
+       20250208235804_InitialSqlServerMigration.Designer.cs
+       AppDbContextModelSnapshot.cs
+     models/
+       character.cs
      Models.cs
      obj/
        Debug/
          [...deeper contents omitted...]
        project.assets.json
        project.nuget.cache
+       VitalityBuilder.Api.csproj.EntityFrameworkCore.targets
        VitalityBuilder.Api.csproj.nuget.dgspec.json
        VitalityBuilder.Api.csproj.nuget.g.props
        VitalityBuilder.Api.csproj.nuget.g.targets
      Program.cs
      Properties/
        launchSettings.json
-     tests/
+     vitality.db
      VitalityBuilder.Api.csproj
      VitalityBuilder.Api.http
    shared/
@@ -2375,4 +2294,12 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\Visual Studio 2022\Project
 
 File: directoryScanner.py
 Size: 5,057 bytes
-Modified: 2025-02-08 14:58:34
+Modified: 2025-02-08 15:06:55
+
+File: flatted.py
+Size: 3,879 bytes
+Modified: 2025-02-08 15:43:52
+
+File: test.py
+Size: 2,129 bytes
+Modified: 2025-02-08 15:43:52

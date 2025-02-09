@@ -292,7 +292,7 @@ Recommended Development Tools:
         C#
         TSLint
         React Snippets
-    SQLite Browser/DB Browser
+    SQL Developer
     Docker (for containerization)
     Windows Terminal/PowerShell 7+ (Windows)
     Bash/Zsh (Linux/macOS)
