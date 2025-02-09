@@ -5,16 +5,15 @@ namespace VitalityBuilder.Api.Models
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public int Tier { get; set; } = 1;
-        
-        // Combat Attributes
-        public int Focus { get; set; }
-        public int Power { get; set; }
-        public int Mobility { get; set; }
-        public int Endurance { get; set; }
-        
-        // Utility Attributes
-        public int Awareness { get; set; }
-        public int Communication { get; set; }
-        public int Intelligence { get; set; }
+        public int MainPointPool { get; set; }
+        public int SpecialAttacksPointPool { get; set; }
+        public int UtilityPointPool { get; set; }
+
+        // Relationships (EF Core navigation properties)
+        public CombatAttributes CombatAttributes { get; set; } = new();
+        public UtilityAttributes UtilityAttributes { get; set; } = new();
+        public List<Expertise> Expertise { get; set; } = new();
+        public List<SpecialAttack> SpecialAttacks { get; set; } = new();
+        public List<UniquePower> UniquePowers { get; set; } = new();
     }
 }

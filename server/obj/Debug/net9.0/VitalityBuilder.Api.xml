@@ -4,7 +4,7 @@
         <name>VitalityBuilder.Api</name>
     </assembly>
     <members>
-        <member name="M:VitalityBuilder.Api.CharactersController.CreateCharacter(Character)">
+        <member name="M:VitalityBuilder.Api.CharactersController.CreateCharacter(VitalityBuilder.Api.Models.Character)">
             <summary>
             Creates a new character
             </summary>
@@ -29,7 +29,7 @@
             <returns>List of all characters</returns>
             <response code="200">Returns all characters</response>
         </member>
-        <member name="M:VitalityBuilder.Api.CharactersController.UpdateCharacter(System.Int32,Character)">
+        <member name="M:VitalityBuilder.Api.CharactersController.UpdateCharacter(System.Int32,VitalityBuilder.Api.Models.Character)">
             <summary>
             Updates a specific character
             </summary>

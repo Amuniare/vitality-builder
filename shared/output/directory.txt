@@ -62,8 +62,10 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder
        ICharacterRepository.cs
      Data.cs
      Migrations/
-       20250209135153_InitialCreate.cs
-       20250209135153_InitialCreate.Designer.cs
+       20250209175003_InitialCreate.cs
+       20250209175003_InitialCreate.Designer.cs
+       20250209175026_RemoveColumnX.cs
+       20250209175026_RemoveColumnX.Designer.cs
        VitalityBuilderContextModelSnapshot.cs
      models/
        character.cs
@@ -87,3 +89,11 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder
 File: directoryScanner.py
 Size: 5,737 bytes
 Modified: 2025-02-09 10:54:14
+
+File: flatted.py
+Size: 3,879 bytes
+Modified: 2025-02-09 11:10:35
+
+File: test.py
+Size: 2,129 bytes
+Modified: 2025-02-09 11:10:35

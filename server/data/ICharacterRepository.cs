@@ -1,3 +1,4 @@
+using VitalityBuilder.Api.Models; 
 public interface ICharacterRepository
 {
     Task<Character> CreateCharacterAsync(Character character);

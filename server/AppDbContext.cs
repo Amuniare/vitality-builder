@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using VitalityBuilder.Api.Models; 
 
 namespace VitalityBuilder.Api;
 
@@ -17,16 +18,20 @@ public class VitalityBuilderContext(DbContextOptions<VitalityBuilderContext> opt
         {
             entity.HasKey(e => e.Id);
             
+            // One-to-one relationships (required navigation properties)
             entity.HasOne(e => e.CombatAttributes)
                 .WithOne(e => e.Character)
-                .HasForeignKey<CombatAttributes>(e => e.CharacterId)
+                .HasForeignKey<CombatAttributes>(e => e.CharacterId) // Explicit type
+                .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(e => e.UtilityAttributes)
                 .WithOne(e => e.Character)
                 .HasForeignKey<UtilityAttributes>(e => e.CharacterId)
+                .IsRequired()  
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // One-to-many relationships (collection navigations)
             entity.HasMany(e => e.Expertise)
                 .WithOne(e => e.Character)
                 .HasForeignKey(e => e.CharacterId)
