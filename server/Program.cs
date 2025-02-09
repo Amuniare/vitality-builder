@@ -5,6 +5,11 @@ using VitalityBuilder.Api.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add ArchetypeDbContext
+builder.Services.AddDbContext<ArchetypeDbContext>(options => 
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
+
 // Configure JSON options
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

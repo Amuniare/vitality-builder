@@ -5,13 +5,16 @@ using VitalityBuilder.Api.Models;
 
 namespace VitalityBuilder.Api.Infrastructure
 {
+
+
     /// <summary>
     /// Database context for handling character archetype-related data and relationships.
     /// This context manages the persistence of character archetypes and their associated rule configurations.
     /// </summary>
     public class ArchetypeDbContext : DbContext
     {
-        public ArchetypeDbContext(DbContextOptions<ArchetypeDbContext> options) : base(options) { }
+        public ArchetypeDbContext(DbContextOptions<ArchetypeDbContext> options) 
+            : base(options) { }
 
         /// <summary>
         /// Database set for character archetypes and their associated components

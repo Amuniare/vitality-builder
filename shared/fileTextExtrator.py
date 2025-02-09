@@ -46,9 +46,9 @@ def read_file_content(file_path: Path) -> str:
 def main():
     try:
         project_root = find_project_root()
-        target_dir = project_root / "server" / "src"
+        target_dir = project_root / "server"
         output_dir = project_root / "shared" / "output"
-        output_file = output_dir / "src_contents.txt"
+        output_file = output_dir / "server_contents.txt"
 
         # Ensure output directory exists
         output_dir.mkdir(parents=True, exist_ok=True)

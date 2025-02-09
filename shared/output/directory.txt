@@ -53,12 +53,6 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder
    server/
      bin/
        [...deeper contents omitted...]
-     Migrations/
-       20250209175003_InitialCreate.cs
-       20250209175003_InitialCreate.Designer.cs
-       20250209175026_RemoveColumnX.cs
-       20250209175026_RemoveColumnX.Designer.cs
-       VitalityBuilderContextModelSnapshot.cs
      obj/
        [...deeper contents omitted...]
      src/
@@ -69,15 +63,25 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder
        data/
          ICharacterRepository.cs
        Data.cs
-       Infastructure/
+       Infrastructure/
          AppDbContext.cs
          ArchetypeDbContext.cs
+         JsonValueConverter.cs
+       migrations/
        models/
+         Archetypes/
+           AttackTypeArchetype.cs
+           CharacterArchetypes.cs
+           EffectTypeArchetype.cs
+           Enums.cs
+           MovementArchetype.cs
+           SpecialAttackArchetype.cs
+           UniqueAbilityArchetype.cs
+           UtilityArchetype.cs
          DTOs/
            CharacterArchetypesDTOs.cs
            CharacterDTOs.cs
          Entities/
-           ArchetypeEnums.cs
            Character.cs
            CharacterArchetypes.cs
            CombatAttributes.cs
@@ -85,18 +89,28 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder
            SpecialAttack.cs
            UniquePower.cs
            UtilityAttributes.cs
+       obj/
+         [...deeper contents omitted...]
        Program.cs
        Properties/
          launchSettings.json
        services/
+         CharacterArchetypesService.Calculations.cs
          CharacterArchetypesService.cs
+         CharacterArchetypesService.Helpers.cs
+         CharacterArchetypesService.Mapping.cs
+         ICharacterArchetypesServices.cs
      vitality.db
      VitalityBuilder.Api.csproj
      VitalityBuilder.Api.http
    shared/
      directoryScanner.py
+     fileTextExtrator.py
+     input/
      output/
        directory.txt
+       src_contents.txt
+     overwriteFiles.py
    vitality-builder.sln
 
 === Python Files ===
@@ -104,6 +118,14 @@ Scanning directory: C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder
 File: directoryScanner.py
 Size: 5,737 bytes
 Modified: 2025-02-09 10:54:14
+
+File: fileTextExtrator.py
+Size: 3,152 bytes
+Modified: 2025-02-09 15:23:13
+
+File: overwriteFiles.py
+Size: 3,027 bytes
+Modified: 2025-02-09 15:48:24
 
 File: flatted.py
 Size: 3,879 bytes
