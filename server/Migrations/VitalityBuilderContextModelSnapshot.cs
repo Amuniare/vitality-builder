@@ -72,7 +72,8 @@ namespace VitalityBuilder.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CharacterId");
+                    b.HasIndex("CharacterId")
+                        .IsUnique();
 
                     b.ToTable("CharacterArchetypes");
                 });
@@ -274,7 +275,7 @@ namespace VitalityBuilder.Api.Migrations
                     b.ToTable("UtilityArchetype");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.Character", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.Character", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -283,7 +284,9 @@ namespace VitalityBuilder.Api.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("MainPointPool")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("int")
+                        .HasComputedColumnSql("CASE WHEN [Tier] >= 2 THEN ([Tier] - 2) * 15 ELSE 0 END");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -303,7 +306,7 @@ namespace VitalityBuilder.Api.Migrations
                     b.ToTable("Characters");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.CombatAttributes", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.CombatAttributes", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -326,6 +329,9 @@ namespace VitalityBuilder.Api.Migrations
                     b.Property<int>("Power")
                         .HasColumnType("int");
 
+                    b.Property<int>("Total")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CharacterId")
@@ -334,7 +340,7 @@ namespace VitalityBuilder.Api.Migrations
                     b.ToTable("CombatAttributes");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.Expertise", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.Expertise", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -367,7 +373,7 @@ namespace VitalityBuilder.Api.Migrations
                     b.ToTable("Expertise");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.SpecialAttack", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.SpecialAttack", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -380,6 +386,9 @@ namespace VitalityBuilder.Api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CharacterId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Cost")
                         .HasColumnType("int");
 
                     b.Property<string>("EffectType")
@@ -405,7 +414,7 @@ namespace VitalityBuilder.Api.Migrations
                     b.ToTable("SpecialAttacks");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.UniquePower", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.UniquePower", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -438,7 +447,7 @@ namespace VitalityBuilder.Api.Migrations
                     b.ToTable("UniquePowers");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.UtilityAttributes", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.UtilityAttributes", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -479,9 +488,9 @@ namespace VitalityBuilder.Api.Migrations
 
             modelBuilder.Entity("VitalityBuilder.Api.Models.Archetypes.CharacterArchetypes", b =>
                 {
-                    b.HasOne("VitalityBuilder.Api.Models.Character", "Character")
-                        .WithMany()
-                        .HasForeignKey("CharacterId")
+                    b.HasOne("VitalityBuilder.Api.Models.Entities.Character", "Character")
+                        .WithOne("CharacterArchetypes")
+                        .HasForeignKey("VitalityBuilder.Api.Models.Archetypes.CharacterArchetypes", "CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -543,20 +552,20 @@ namespace VitalityBuilder.Api.Migrations
                     b.Navigation("CharacterArchetypes");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.CombatAttributes", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.CombatAttributes", b =>
                 {
-                    b.HasOne("VitalityBuilder.Api.Models.Character", "Character")
+                    b.HasOne("VitalityBuilder.Api.Models.Entities.Character", "Character")
                         .WithOne("CombatAttributes")
-                        .HasForeignKey("VitalityBuilder.Api.Models.CombatAttributes", "CharacterId")
+                        .HasForeignKey("VitalityBuilder.Api.Models.Entities.CombatAttributes", "CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Character");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.Expertise", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.Expertise", b =>
                 {
-                    b.HasOne("VitalityBuilder.Api.Models.Character", "Character")
+                    b.HasOne("VitalityBuilder.Api.Models.Entities.Character", "Character")
                         .WithMany("Expertise")
                         .HasForeignKey("CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -565,9 +574,9 @@ namespace VitalityBuilder.Api.Migrations
                     b.Navigation("Character");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.SpecialAttack", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.SpecialAttack", b =>
                 {
-                    b.HasOne("VitalityBuilder.Api.Models.Character", "Character")
+                    b.HasOne("VitalityBuilder.Api.Models.Entities.Character", "Character")
                         .WithMany("SpecialAttacks")
                         .HasForeignKey("CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -576,9 +585,9 @@ namespace VitalityBuilder.Api.Migrations
                     b.Navigation("Character");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.UniquePower", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.UniquePower", b =>
                 {
-                    b.HasOne("VitalityBuilder.Api.Models.Character", "Character")
+                    b.HasOne("VitalityBuilder.Api.Models.Entities.Character", "Character")
                         .WithMany("UniquePowers")
                         .HasForeignKey("CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -587,11 +596,11 @@ namespace VitalityBuilder.Api.Migrations
                     b.Navigation("Character");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.UtilityAttributes", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.UtilityAttributes", b =>
                 {
-                    b.HasOne("VitalityBuilder.Api.Models.Character", "Character")
+                    b.HasOne("VitalityBuilder.Api.Models.Entities.Character", "Character")
                         .WithOne("UtilityAttributes")
-                        .HasForeignKey("VitalityBuilder.Api.Models.UtilityAttributes", "CharacterId")
+                        .HasForeignKey("VitalityBuilder.Api.Models.Entities.UtilityAttributes", "CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -619,8 +628,10 @@ namespace VitalityBuilder.Api.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.Character", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.Character", b =>
                 {
+                    b.Navigation("CharacterArchetypes");
+
                     b.Navigation("CombatAttributes");
 
                     b.Navigation("Expertise");

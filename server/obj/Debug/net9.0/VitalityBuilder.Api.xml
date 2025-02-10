@@ -4,6 +4,21 @@
         <name>VitalityBuilder.Api</name>
     </assembly>
     <members>
+        <member name="M:VitalityBuilder.Api.Controllers.CharactersController.CreateCharacter(VitalityBuilder.Api.Models.DTOs.CreateCharacterDto)">
+            <summary>
+            Creates a new character with basic attributes
+            </summary>
+        </member>
+        <member name="M:VitalityBuilder.Api.Controllers.CharactersController.UpdateArchetypes(System.Int32,VitalityBuilder.Api.Models.DTOs.CharacterArchetypesDto)">
+            <summary>
+            Updates the archetypes for an existing character
+            </summary>
+        </member>
+        <member name="M:VitalityBuilder.Api.Controllers.CharactersController.GetCharacter(System.Int32)">
+            <summary>
+            Gets a character by ID including all related data
+            </summary>
+        </member>
         <member name="T:VitalityBuilder.Api.Infrastructure.ArchetypeDbContext">
             <summary>
             Database context for handling character archetype-related data and relationships.
@@ -25,6 +40,11 @@
             Generic JSON comparer for Entity Framework Core
             </summary>
         </member>
+        <member name="T:VitalityBuilder.Api.Infrastructure.ValidationExtensions">
+            <summary>
+            Extension methods for registering validation services
+            </summary>
+        </member>
         <member name="T:VitalityBuilder.Api.Migrations.InitialCreate">
             <inheritdoc />
         </member>
@@ -37,6 +57,18 @@
         <member name="M:VitalityBuilder.Api.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:VitalityBuilder.Api.Migrations.FixMainPointPoolComputed">
+            <inheritdoc />
+        </member>
+        <member name="M:VitalityBuilder.Api.Migrations.FixMainPointPoolComputed.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:VitalityBuilder.Api.Migrations.FixMainPointPoolComputed.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:VitalityBuilder.Api.Migrations.FixMainPointPoolComputed.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="T:VitalityBuilder.Api.Models.DTOs.CharacterArchetypesDto">
             <summary>
             Data transfer object for creating or updating character archetypes
@@ -45,6 +77,49 @@
         <member name="T:VitalityBuilder.Api.Services.CharacterArchetypesService">
             <summary>
             Service implementing character archetype management and calculations
+            </summary>
+        </member>
+        <member name="T:VitalityBuilder.Api.Services.CombatService">
+            <summary>
+            Handles combat calculations and attack resolution according to Vitality System rules
+            </summary>
+        </member>
+        <member name="M:VitalityBuilder.Api.Services.CombatService.ResolveAttack(VitalityBuilder.Api.Services.AttackParameters,VitalityBuilder.Api.Services.DefenseParameters)">
+            <summary>
+            Resolves an attack attempt and calculates resulting damage or condition effects
+            </summary>
+            <param name="attack">Attack parameters</param>
+            <param name="defense">Target's defensive stats</param>
+            <returns>Attack resolution results including success and effect values</returns>
+        </member>
+        <member name="M:VitalityBuilder.Api.Services.CombatService.ResolveDamageEffect(VitalityBuilder.Api.Services.AttackParameters,VitalityBuilder.Api.Services.DefenseParameters,System.Boolean)">
+            <summary>
+            Calculates damage for a successful attack
+            </summary>
+        </member>
+        <member name="M:VitalityBuilder.Api.Services.CombatService.ResolveConditionEffect(VitalityBuilder.Api.Services.AttackParameters,VitalityBuilder.Api.Services.DefenseParameters,System.Boolean)">
+            <summary>
+            Calculates and applies condition effects
+            </summary>
+        </member>
+        <member name="T:VitalityBuilder.Api.Services.AttackParameters">
+            <summary>
+            Parameters for the attacking character
+            </summary>
+        </member>
+        <member name="T:VitalityBuilder.Api.Services.DefenseParameters">
+            <summary>
+            Parameters for the defending character
+            </summary>
+        </member>
+        <member name="T:VitalityBuilder.Api.Services.AttackResolution">
+            <summary>
+            Results of an attack resolution
+            </summary>
+        </member>
+        <member name="T:VitalityBuilder.Api.Services.ConditionType">
+            <summary>
+            Types of conditions that can be applied
             </summary>
         </member>
         <member name="T:VitalityBuilder.Api.Services.ICharacterArchetypesService">

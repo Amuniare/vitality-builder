@@ -1,5 +1,5 @@
-using System.ComponentModel.DataAnnotations;
 using VitalityBuilder.Api.Models.Entities;
+using VitalityBuilder.Api.Models.Enums;
 
 namespace VitalityBuilder.Api.Models.Archetypes;
 
@@ -14,5 +14,5 @@ public class CharacterArchetypes
     public UtilityArchetype UtilityArchetype { get; set; } = null!;
     
     public int CharacterId { get; set; }
-    public Character Character { get; set; } = null!;
+    public CharacterEntity Character { get; set; } = null!;
 }

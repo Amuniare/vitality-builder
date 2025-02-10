@@ -8,8 +8,10 @@ server/
     Archetypes/
     DTOs/
     Entities/
+    Validations/
   Properties/
   services/
+  Utilities/
 
 === File Contents ===
 
@@ -42,11 +44,6 @@ Content:
 }
 --------------------------------------------------
 
-File: <WindowsPath.parents> Data.cs
-Content:
-
---------------------------------------------------
-
 File: <WindowsPath.parents> Program.cs
 Content:
 using Microsoft.EntityFrameworkCore;
@@ -57,10 +54,12 @@ using VitalityBuilder.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add ArchetypeDbContext
-builder.Services.AddDbContext<ArchetypeDbContext>(options => 
+builder.Services.AddValidation();
+
+builder.Services.AddDbContext<VitalityBuilderContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+
 
 // Configure JSON options
 builder.Services.AddControllers()
@@ -146,6 +145,7 @@ Content:
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -156,23 +156,13 @@ Content:
 </Project>
 --------------------------------------------------
 
-File: <WindowsPath.parents> VitalityBuilder.Api.http
-Content:
-@VitalityBuilder.Api_HostAddress = http://localhost:5034
-
-GET {{VitalityBuilder.Api_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
-
---------------------------------------------------
-
 File: <WindowsPath.parents> controllers\CharactersController.cs
 Content:
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using FluentValidation;
 using VitalityBuilder.Api.Models.DTOs;
-using VitalityBuilder.Api.Models.Entities;  // Ensure this is the correct namespace
+using VitalityBuilder.Api.Models.Entities;
 using VitalityBuilder.Api.Services;
 using VitalityBuilder.Api.Infrastructure;
 
@@ -185,29 +175,46 @@ public class CharactersController : ControllerBase
     private readonly VitalityBuilderContext _context;
     private readonly ILogger<CharactersController> _logger;
     private readonly ICharacterArchetypesService _archetypeService;
+    private readonly IValidator<CreateCharacterDto> _createCharacterValidator;
+    private readonly IValidator<CharacterArchetypesDto> _archetypesValidator;
 
     public CharactersController(
         VitalityBuilderContext context,
         ILogger<CharactersController> logger,
-        ICharacterArchetypesService archetypeService)
+        ICharacterArchetypesService archetypeService,
+        IValidator<CreateCharacterDto> createCharacterValidator,
+        IValidator<CharacterArchetypesDto> archetypesValidator)
     {
         _context = context;
         _logger = logger;
         _archetypeService = archetypeService;
+        _createCharacterValidator = createCharacterValidator;
+        _archetypesValidator = archetypesValidator;
     }
 
+    /// <summary>
+    /// Creates a new character with basic attributes
+    /// </summary>
     [HttpPost]
-    public async Task<ActionResult<Character>> CreateCharacter(CreateCharacterDto dto)
+    public async Task<ActionResult<Character>> CreateCharacter([FromBody] CreateCharacterDto dto)
     {
         _logger.LogInformation("Received character creation request for {CharacterName}", dto.Name);
 
-        if (string.IsNullOrWhiteSpace(dto.Name))
+        // Validate the DTO
+        var validationResult = await _createCharacterValidator.ValidateAsync(dto);
+        if (!validationResult.IsValid)
         {
-            return BadRequest("Character name is required");
+            return BadRequest(validationResult.Errors);
         }
 
         try 
         {
+            // Validate attribute points against tier limits
+            if (!_validationService.IsValid(dto))
+            {
+                return BadRequest("Attribute points exceed tier limits");
+            }
+
             var character = new Character
             {
                 Name = dto.Name,
@@ -217,7 +224,8 @@ public class CharactersController : ControllerBase
                     Focus = dto.CombatAttributes.Focus,
                     Power = dto.CombatAttributes.Power,
                     Mobility = dto.CombatAttributes.Mobility,
-                    Endurance = dto.CombatAttributes.Endurance
+                    Endurance = dto.CombatAttributes.Endurance,
+                    Total = dto.CombatAttributes.Total
                 },
                 UtilityAttributes = new UtilityAttributes
                 {
@@ -227,7 +235,7 @@ public class CharactersController : ControllerBase
                 }
             };
 
-            Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<Character> entityEntry = _context.Add(character);
+            _context.Add(character);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetCharacter), new { id = character.Id }, character);
@@ -239,25 +247,9 @@ public class CharactersController : ControllerBase
         }
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Character>> GetCharacter(int id)
-    {
-        var character = await _context.Characters
-            .Include(c => c.CombatAttributes)
-            .Include(c => c.UtilityAttributes)
-            .Include(c => c.Expertise)
-            .Include(c => c.SpecialAttacks)
-            .Include(c => c.UniquePowers)
-            .FirstOrDefaultAsync(c => c.Id == id);
-
-        if (character == null)
-        {
-            return NotFound();
-        }
-
-        return character;
-    }
-
+    /// <summary>
+    /// Updates the archetypes for an existing character
+    /// </summary>
     [HttpPut("{id}/archetypes")]
     public async Task<IActionResult> UpdateArchetypes(int id, [FromBody] CharacterArchetypesDto dto)
     {
@@ -266,6 +258,13 @@ public class CharactersController : ControllerBase
             .FirstOrDefaultAsync(c => c.Id == id);
 
         if (character == null) return NotFound();
+
+        // Validate the archetypes DTO
+        var validationResult = await _archetypesValidator.ValidateAsync(dto);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors);
+        }
 
         try
         {
@@ -291,42 +290,45 @@ public class CharactersController : ControllerBase
         }
     }
 
-    [HttpPut("{id}/combat-attributes")]
-    public async Task<IActionResult> UpdateCombatAttributes(int id, [FromBody] CombatAttributesDto dto)
+    /// <summary>
+    /// Gets a character by ID including all related data
+    /// </summary>
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Character>> GetCharacter(int id)
     {
         var character = await _context.Characters
             .Include(c => c.CombatAttributes)
+            .Include(c => c.UtilityAttributes)
+            .Include(c => c.Expertise)
+            .Include(c => c.SpecialAttacks)
+            .Include(c => c.UniquePowers)
             .FirstOrDefaultAsync(c => c.Id == id);
 
-        if (character == null) return NotFound();
-
-        // Validate against tier limits
-        if (!ValidateCombatAttributes(dto, character.Tier))
+        if (character == null)
         {
-            return BadRequest("Attributes exceed tier limits");
+            return NotFound();
         }
 
-        if (character.CombatAttributes != null)
-        {
-            character.CombatAttributes.Focus = dto.Focus;
-            character.CombatAttributes.Power = dto.Power;
-            character.CombatAttributes.Mobility = dto.Mobility;
-            character.CombatAttributes.Endurance = dto.Endurance;
-            character.CombatAttributes.Total = dto.Total;
-        }
-
-        await _context.SaveChangesAsync();
-        return Ok(character);
+        return character;
     }
 
-    private static bool ValidateCombatAttributes(CombatAttributesDto attributes, int tier)
+    private readonly ValidateAttributePointsService _validationService;
+    public CharactersController(
+        VitalityBuilderContext context,
+        ILogger<CharactersController> logger,
+        ICharacterArchetypesService archetypeService,
+        IValidator<CreateCharacterDto> createCharacterValidator,
+        IValidator<CharacterArchetypesDto> archetypesValidator,
+        ValidateAttributePointsService validationService)
     {
-        return attributes.Total <= tier * 2 
-            && attributes.Focus <= tier
-            && attributes.Power <= tier
-            && attributes.Mobility <= tier
-            && attributes.Endurance <= tier;
+        _context = context;
+        _logger = logger;
+        _archetypeService = archetypeService;
+        _createCharacterValidator = createCharacterValidator;
+        _archetypesValidator = archetypesValidator;
+        _validationService = validationService;
     }
+
 }
 --------------------------------------------------
 
@@ -341,19 +343,21 @@ public interface ICharacterRepository
 }
 --------------------------------------------------
 
-File: <WindowsPath.parents> Infrastructure\AppDbContext.cs
+File: <WindowsPath.parents> Infrastructure\VitalityBuilderContext.cs
 Content:
 using Microsoft.EntityFrameworkCore;
-using VitalityBuilder.Api.Infrastructure;
 using VitalityBuilder.Api.Models.Entities;
 using VitalityBuilder.Api.Models.Archetypes;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Text.Json;
 
 namespace VitalityBuilder.Api.Infrastructure;
 
 public class VitalityBuilderContext(DbContextOptions<VitalityBuilderContext> options) : DbContext(options)
 {
+    // Use fully qualified names to resolve ambiguity
     public DbSet<Models.Archetypes.CharacterArchetypes> CharacterArchetypes => Set<Models.Archetypes.CharacterArchetypes>();
-    public DbSet<Character> Characters => Set<Character>();
+    public DbSet<CharacterEntity> Characters => Set<CharacterEntity>();
     public DbSet<CombatAttributes> CombatAttributes => Set<CombatAttributes>();
     public DbSet<UtilityAttributes> UtilityAttributes => Set<UtilityAttributes>();
     public DbSet<Expertise> Expertise => Set<Expertise>();
@@ -362,40 +366,9 @@ public class VitalityBuilderContext(DbContextOptions<VitalityBuilderContext> opt
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);
-
-        // Configure Character relationships
-        modelBuilder.Entity<Character>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            
-            entity.HasOne(e => e.CombatAttributes)
-                .WithOne(e => e.Character)
-                .HasForeignKey<CombatAttributes>(e => e.CharacterId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasOne(e => e.UtilityAttributes)
-                .WithOne(e => e.Character)
-                .HasForeignKey<UtilityAttributes>(e => e.CharacterId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasMany(e => e.Expertise)
-                .WithOne(e => e.Character)
-                .HasForeignKey(e => e.CharacterId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasMany(e => e.SpecialAttacks)
-                .WithOne(e => e.Character)
-                .HasForeignKey(e => e.CharacterId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasMany(e => e.UniquePowers)
-                .WithOne(e => e.Character)
-                .HasForeignKey(e => e.CharacterId)
-                .OnDelete(DeleteBehavior.Cascade);
-        });
+        modelBuilder.Entity<CharacterEntity>()
+            .Property(c => c.MainPointPool)
+            .HasComputedColumnSql("CASE WHEN [Tier] >= 2 THEN ([Tier] - 2) * 15 ELSE 0 END");   
 
         // Configure MovementArchetype
         modelBuilder.Entity<Models.Archetypes.MovementArchetype>(entity =>
@@ -431,268 +404,191 @@ public class VitalityBuilderContext(DbContextOptions<VitalityBuilderContext> opt
             entity.Property(e => e.Restrictions)
                 .HasConversion(new JsonValueConverter<List<string>>())
                 .Metadata.SetValueComparer(new JsonValueComparer<List<string>>());
+        });        
+    }
+
+
+
+    // Configure CharacterArchetypes
+    public VitalityBuilderContext(DbContextOptions<VitalityBuilderContext> options)
+        : base(options) { }
+
+    /// <summary>
+    /// Database set for character archetypes and their associated components
+    /// </summary>
+    public DbSet<CharacterArchetypes> CharacterArchetypes => Set<CharacterArchetypes>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        ConfigureCharacterArchetypes(modelBuilder);
+        ConfigureMovementArchetype(modelBuilder);
+        ConfigureAttackTypeArchetype(modelBuilder);
+        ConfigureEffectTypeArchetype(modelBuilder);
+        ConfigureUniqueAbilityArchetype(modelBuilder);
+        ConfigureSpecialAttackArchetype(modelBuilder);
+        ConfigureUtilityArchetype(modelBuilder);
+    }
+
+    private void ConfigureCharacterArchetypes(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<CharacterArchetypes>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+            // Configure one-to-one relationship with Character
+            entity.HasOne(e => e.Character)
+                .WithOne()
+                .HasForeignKey<CharacterArchetypes>(e => e.CharacterId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure required navigation properties
+            entity.Navigation(e => e.MovementArchetype).IsRequired();
+            entity.Navigation(e => e.AttackTypeArchetype).IsRequired();
+            entity.Navigation(e => e.EffectTypeArchetype).IsRequired();
+            entity.Navigation(e => e.UniqueAbilityArchetype).IsRequired();
+            entity.Navigation(e => e.SpecialAttackArchetype).IsRequired();
+            entity.Navigation(e => e.UtilityArchetype).IsRequired();
+
+            // Configure table name
+            entity.ToTable("CharacterArchetypes");
+        });
+    }
+
+    private void ConfigureMovementArchetype(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<MovementArchetype>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+            entity.Property(e => e.SpeedBonusByTier)
+                .HasConversion(
+                    v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
+                    v => JsonSerializer.Deserialize<Dictionary<int, int>>(v, JsonSerializerOptions.Default)
+                         ?? new Dictionary<int, int>(),
+                    new ValueComparer<Dictionary<int, int>>(
+                        (c1, c2) => c1!.SequenceEqual(c2!),
+                        c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                        c => new Dictionary<int, int>(c)
+                    )
+                );
+
+            entity.Property(e => e.Type)
+                .HasConversion<string>();
+
+            entity.ToTable("MovementArchetypes");
+        });
+    }
+
+    private void ConfigureAttackTypeArchetype(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<AttackTypeArchetype>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+            entity.Property(e => e.Category)
+                .HasConversion<string>();
+
+            entity.ToTable("AttackTypeArchetypes");
+        });
+    }
+
+    private void ConfigureEffectTypeArchetype(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<EffectTypeArchetype>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+            entity.Property(e => e.Category)
+                .HasConversion<string>();
+
+            entity.ToTable("EffectTypeArchetypes");
+        });
+    }
+
+    private void ConfigureUniqueAbilityArchetype(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<UniqueAbilityArchetype>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+            entity.Property(e => e.StatBonuses)
+                .HasConversion(
+                    v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
+                    v => JsonSerializer.Deserialize<Dictionary<string, int>>(v, JsonSerializerOptions.Default)
+                         ?? new Dictionary<string, int>(),
+                    new ValueComparer<Dictionary<string, int>>(
+                        (c1, c2) => c1!.SequenceEqual(c2!),
+                        c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                        c => new Dictionary<string, int>(c)
+                    )
+                );
+
+            entity.Property(e => e.Category)
+                .HasConversion<string>();
+
+            entity.ToTable("UniqueAbilityArchetypes");
+        });
+    }
+
+    private void ConfigureSpecialAttackArchetype(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<SpecialAttackArchetype>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+            entity.Property(e => e.RequiredLimits)
+                .HasConversion(
+                    v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
+                    v => JsonSerializer.Deserialize<List<string>>(v, JsonSerializerOptions.Default)
+                         ?? new List<string>(),
+                    new ValueComparer<List<string>>(
+                        (c1, c2) => c1!.SequenceEqual(c2!),
+                        c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                        c => new List<string>(c)
+                    )
+                );
+
+            entity.Property(e => e.Category)
+                .HasConversion<string>();
+
+            entity.ToTable("SpecialAttackArchetypes");
+        });
+    }
+
+    private void ConfigureUtilityArchetype(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<UtilityArchetype>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+            entity.Property(e => e.Restrictions)
+                .HasConversion(
+                    v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
+                    v => JsonSerializer.Deserialize<List<string>>(v, JsonSerializerOptions.Default)
+                         ?? new List<string>(),
+                    new ValueComparer<List<string>>(
+                        (c1, c2) => c1!.SequenceEqual(c2!),
+                        c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                        c => new List<string>(c)
+                    )
+                );
+
+            entity.Property(e => e.Category)
+                .HasConversion<string>();
+
+            entity.ToTable("UtilityArchetypes");
         });
     }
 }
---------------------------------------------------
-
-File: <WindowsPath.parents> Infrastructure\ArchetypeDbContext.cs
-Content:
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System.Text.Json;
-using VitalityBuilder.Api.Models.Entities;
-
-namespace VitalityBuilder.Api.Infrastructure
-{
-
-
-    /// <summary>
-    /// Database context for handling character archetype-related data and relationships.
-    /// This context manages the persistence of character archetypes and their associated rule configurations.
-    /// </summary>
-    public class ArchetypeDbContext : DbContext
-    {
-        public ArchetypeDbContext(DbContextOptions<ArchetypeDbContext> options) 
-            : base(options) { }
-
-        /// <summary>
-        /// Database set for character archetypes and their associated components
-        /// </summary>
-        public DbSet<CharacterArchetypes> CharacterArchetypes => Set<CharacterArchetypes>();
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
-            ConfigureCharacterArchetypes(modelBuilder);
-            ConfigureMovementArchetype(modelBuilder);
-            ConfigureAttackTypeArchetype(modelBuilder);
-            ConfigureEffectTypeArchetype(modelBuilder);
-            ConfigureUniqueAbilityArchetype(modelBuilder);
-            ConfigureSpecialAttackArchetype(modelBuilder);
-            ConfigureUtilityArchetype(modelBuilder);
-        }
-
-        private void ConfigureCharacterArchetypes(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<CharacterArchetypes>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
-                
-                // Configure one-to-one relationship with Character
-                entity.HasOne(e => e.Character)
-                    .WithOne()
-                    .HasForeignKey<CharacterArchetypes>(e => e.CharacterId)
-                    .OnDelete(DeleteBehavior.Cascade);
-
-                // Configure required navigation properties
-                entity.Navigation(e => e.MovementArchetype).IsRequired();
-                entity.Navigation(e => e.AttackTypeArchetype).IsRequired();
-                entity.Navigation(e => e.EffectTypeArchetype).IsRequired();
-                entity.Navigation(e => e.UniqueAbilityArchetype).IsRequired();
-                entity.Navigation(e => e.SpecialAttackArchetype).IsRequired();
-                entity.Navigation(e => e.UtilityArchetype).IsRequired();
-
-                // Configure table name
-                entity.ToTable("CharacterArchetypes");
-            });
-        }
-
-        private void ConfigureMovementArchetype(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<MovementArchetype>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
-                
-                entity.Property(e => e.SpeedBonusByTier)
-                    .HasConversion(
-                        v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
-                        v => JsonSerializer.Deserialize<Dictionary<int, int>>(v, JsonSerializerOptions.Default) 
-                             ?? new Dictionary<int, int>(),
-                        new ValueComparer<Dictionary<int, int>>(
-                            (c1, c2) => c1!.SequenceEqual(c2!),
-                            c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                            c => new Dictionary<int, int>(c)
-                        )
-                    );
-
-                entity.Property(e => e.Type)
-                    .HasConversion<string>();
-
-                entity.ToTable("MovementArchetypes");
-            });
-        }
-
-        private void ConfigureAttackTypeArchetype(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<AttackTypeArchetype>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
-                
-                entity.Property(e => e.Category)
-                    .HasConversion<string>();
-
-                entity.ToTable("AttackTypeArchetypes");
-            });
-        }
-
-        private void ConfigureEffectTypeArchetype(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<EffectTypeArchetype>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
-                
-                entity.Property(e => e.Category)
-                    .HasConversion<string>();
-
-                entity.ToTable("EffectTypeArchetypes");
-            });
-        }
-
-        private void ConfigureUniqueAbilityArchetype(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<UniqueAbilityArchetype>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
-                
-                entity.Property(e => e.StatBonuses)
-                    .HasConversion(
-                        v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
-                        v => JsonSerializer.Deserialize<Dictionary<string, int>>(v, JsonSerializerOptions.Default) 
-                             ?? new Dictionary<string, int>(),
-                        new ValueComparer<Dictionary<string, int>>(
-                            (c1, c2) => c1!.SequenceEqual(c2!),
-                            c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                            c => new Dictionary<string, int>(c)
-                        )
-                    );
-
-                entity.Property(e => e.Category)
-                    .HasConversion<string>();
-
-                entity.ToTable("UniqueAbilityArchetypes");
-            });
-        }
-
-        private void ConfigureSpecialAttackArchetype(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<SpecialAttackArchetype>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
-                
-                entity.Property(e => e.RequiredLimits)
-                    .HasConversion(
-                        v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
-                        v => JsonSerializer.Deserialize<List<string>>(v, JsonSerializerOptions.Default) 
-                             ?? new List<string>(),
-                        new ValueComparer<List<string>>(
-                            (c1, c2) => c1!.SequenceEqual(c2!),
-                            c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                            c => new List<string>(c)
-                        )
-                    );
-
-                entity.Property(e => e.Category)
-                    .HasConversion<string>();
-
-                entity.ToTable("SpecialAttackArchetypes");
-            });
-        }
-
-        private void ConfigureUtilityArchetype(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<UtilityArchetype>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
-                
-                entity.Property(e => e.Restrictions)
-                    .HasConversion(
-                        v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
-                        v => JsonSerializer.Deserialize<List<string>>(v, JsonSerializerOptions.Default) 
-                             ?? new List<string>(),
-                        new ValueComparer<List<string>>(
-                            (c1, c2) => c1!.SequenceEqual(c2!),
-                            c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                            c => new List<string>(c)
-                        )
-                    );
-
-                entity.Property(e => e.Category)
-                    .HasConversion<string>();
-
-                entity.ToTable("UtilityArchetypes");
-            });
-        }
-    }
-}
---------------------------------------------------
-
-File: <WindowsPath.parents> Infrastructure\JsonValueConverter.cs
-Content:
-using System.Text.Json;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-
-namespace VitalityBuilder.Api.Infrastructure;
-
-/// <summary>
-/// Generic JSON value converter for Entity Framework Core
-/// </summary>
-public class JsonValueConverter<T> : ValueConverter<T, string> where T : class
-{
-    public JsonValueConverter() : base(
-        // Serialize to JSON string
-        v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
-        // Deserialize from JSON string with null handling
-        v => v == null ? null! : JsonSerializer.Deserialize<T>(v, JsonSerializerOptions.Default)!
-    )
-    {
-    }
-}
-
-/// <summary>
-/// Generic JSON comparer for Entity Framework Core
-/// </summary>
-public class JsonValueComparer<T> : ValueComparer<T> where T : class
-{
-    private static bool EqualsJson(T? left, T? right)
-    {
-        if (left == null && right == null)
-            return true;
-        if (left == null || right == null)
-            return false;
-        return JsonSerializer.Serialize(left) == JsonSerializer.Serialize(right);
-    }
-
-    private static int GetHashCodeJson(T value)
-    {
-        if (value == null)
-            return 0;
-        return JsonSerializer.Serialize(value).GetHashCode();
-    }
-
-    private static T GetSnapshotJson(T value)
-    {
-        if (value == null)
-            return null!;
-        var json = JsonSerializer.Serialize(value);
-        return JsonSerializer.Deserialize<T>(json)!;
-    }
-
-    public JsonValueComparer() : base(
-        (l, r) => EqualsJson(l, r),
-        v => GetHashCodeJson(v),
-        v => GetSnapshotJson(v))
-    {
-    }
 }
 --------------------------------------------------
 
@@ -1128,7 +1024,89 @@ namespace VitalityBuilder.Api.Migrations
 
 --------------------------------------------------
 
-File: <WindowsPath.parents> migrations\20250209215104_InitialCreate.Designer.cs
+File: <WindowsPath.parents> migrations\20250210120258_FixMainPointPoolComputed.cs
+Content:
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace VitalityBuilder.Api.Migrations
+{
+    /// <inheritdoc />
+    public partial class FixMainPointPoolComputed : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropIndex(
+                name: "IX_CharacterArchetypes_CharacterId",
+                table: "CharacterArchetypes");
+
+            migrationBuilder.AddColumn<int>(
+                name: "Cost",
+                table: "SpecialAttacks",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
+
+            migrationBuilder.AddColumn<int>(
+                name: "Total",
+                table: "CombatAttributes",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
+
+            migrationBuilder.AlterColumn<int>(
+                name: "MainPointPool",
+                table: "Characters",
+                type: "int",
+                nullable: false,
+                computedColumnSql: "CASE WHEN [Tier] >= 2 THEN ([Tier] - 2) * 15 ELSE 0 END",
+                oldClrType: typeof(int),
+                oldType: "int");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CharacterArchetypes_CharacterId",
+                table: "CharacterArchetypes",
+                column: "CharacterId",
+                unique: true);
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropIndex(
+                name: "IX_CharacterArchetypes_CharacterId",
+                table: "CharacterArchetypes");
+
+            migrationBuilder.DropColumn(
+                name: "Cost",
+                table: "SpecialAttacks");
+
+            migrationBuilder.DropColumn(
+                name: "Total",
+                table: "CombatAttributes");
+
+            migrationBuilder.AlterColumn<int>(
+                name: "MainPointPool",
+                table: "Characters",
+                type: "int",
+                nullable: false,
+                oldClrType: typeof(int),
+                oldType: "int",
+                oldComputedColumnSql: "CASE WHEN [Tier] >= 2 THEN ([Tier] - 2) * 15 ELSE 0 END");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CharacterArchetypes_CharacterId",
+                table: "CharacterArchetypes",
+                column: "CharacterId");
+        }
+    }
+}
+
+--------------------------------------------------
+
+File: <WindowsPath.parents> migrations\20250210120258_FixMainPointPoolComputed.Designer.cs
 Content:
 ﻿// <auto-generated />
 using Microsoft.EntityFrameworkCore;
@@ -1143,8 +1121,8 @@ using VitalityBuilder.Api.Infrastructure;
 namespace VitalityBuilder.Api.Migrations
 {
     [DbContext(typeof(VitalityBuilderContext))]
-    [Migration("20250209215104_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250210120258_FixMainPointPoolComputed")]
+    partial class FixMainPointPoolComputed
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1207,7 +1185,8 @@ namespace VitalityBuilder.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CharacterId");
+                    b.HasIndex("CharacterId")
+                        .IsUnique();
 
                     b.ToTable("CharacterArchetypes");
                 });
@@ -1409,7 +1388,7 @@ namespace VitalityBuilder.Api.Migrations
                     b.ToTable("UtilityArchetype");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.Character", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.Character", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1418,7 +1397,9 @@ namespace VitalityBuilder.Api.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("MainPointPool")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("int")
+                        .HasComputedColumnSql("CASE WHEN [Tier] >= 2 THEN ([Tier] - 2) * 15 ELSE 0 END");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -1438,7 +1419,7 @@ namespace VitalityBuilder.Api.Migrations
                     b.ToTable("Characters");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.CombatAttributes", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.CombatAttributes", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1461,6 +1442,9 @@ namespace VitalityBuilder.Api.Migrations
                     b.Property<int>("Power")
                         .HasColumnType("int");
 
+                    b.Property<int>("Total")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CharacterId")
@@ -1469,7 +1453,7 @@ namespace VitalityBuilder.Api.Migrations
                     b.ToTable("CombatAttributes");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.Expertise", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.Expertise", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1502,7 +1486,7 @@ namespace VitalityBuilder.Api.Migrations
                     b.ToTable("Expertise");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.SpecialAttack", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.SpecialAttack", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1515,6 +1499,9 @@ namespace VitalityBuilder.Api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CharacterId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Cost")
                         .HasColumnType("int");
 
                     b.Property<string>("EffectType")
@@ -1540,7 +1527,7 @@ namespace VitalityBuilder.Api.Migrations
                     b.ToTable("SpecialAttacks");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.UniquePower", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.UniquePower", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1573,7 +1560,7 @@ namespace VitalityBuilder.Api.Migrations
                     b.ToTable("UniquePowers");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.UtilityAttributes", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.UtilityAttributes", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1614,9 +1601,9 @@ namespace VitalityBuilder.Api.Migrations
 
             modelBuilder.Entity("VitalityBuilder.Api.Models.Archetypes.CharacterArchetypes", b =>
                 {
-                    b.HasOne("VitalityBuilder.Api.Models.Character", "Character")
-                        .WithMany()
-                        .HasForeignKey("CharacterId")
+                    b.HasOne("VitalityBuilder.Api.Models.Entities.Character", "Character")
+                        .WithOne("CharacterArchetypes")
+                        .HasForeignKey("VitalityBuilder.Api.Models.Archetypes.CharacterArchetypes", "CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1678,20 +1665,20 @@ namespace VitalityBuilder.Api.Migrations
                     b.Navigation("CharacterArchetypes");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.CombatAttributes", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.CombatAttributes", b =>
                 {
-                    b.HasOne("VitalityBuilder.Api.Models.Character", "Character")
+                    b.HasOne("VitalityBuilder.Api.Models.Entities.Character", "Character")
                         .WithOne("CombatAttributes")
-                        .HasForeignKey("VitalityBuilder.Api.Models.CombatAttributes", "CharacterId")
+                        .HasForeignKey("VitalityBuilder.Api.Models.Entities.CombatAttributes", "CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Character");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.Expertise", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.Expertise", b =>
                 {
-                    b.HasOne("VitalityBuilder.Api.Models.Character", "Character")
+                    b.HasOne("VitalityBuilder.Api.Models.Entities.Character", "Character")
                         .WithMany("Expertise")
                         .HasForeignKey("CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1700,9 +1687,9 @@ namespace VitalityBuilder.Api.Migrations
                     b.Navigation("Character");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.SpecialAttack", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.SpecialAttack", b =>
                 {
-                    b.HasOne("VitalityBuilder.Api.Models.Character", "Character")
+                    b.HasOne("VitalityBuilder.Api.Models.Entities.Character", "Character")
                         .WithMany("SpecialAttacks")
                         .HasForeignKey("CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1711,9 +1698,9 @@ namespace VitalityBuilder.Api.Migrations
                     b.Navigation("Character");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.UniquePower", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.UniquePower", b =>
                 {
-                    b.HasOne("VitalityBuilder.Api.Models.Character", "Character")
+                    b.HasOne("VitalityBuilder.Api.Models.Entities.Character", "Character")
                         .WithMany("UniquePowers")
                         .HasForeignKey("CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1722,11 +1709,11 @@ namespace VitalityBuilder.Api.Migrations
                     b.Navigation("Character");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.UtilityAttributes", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.UtilityAttributes", b =>
                 {
-                    b.HasOne("VitalityBuilder.Api.Models.Character", "Character")
+                    b.HasOne("VitalityBuilder.Api.Models.Entities.Character", "Character")
                         .WithOne("UtilityAttributes")
-                        .HasForeignKey("VitalityBuilder.Api.Models.UtilityAttributes", "CharacterId")
+                        .HasForeignKey("VitalityBuilder.Api.Models.Entities.UtilityAttributes", "CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1754,8 +1741,10 @@ namespace VitalityBuilder.Api.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.Character", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.Character", b =>
                 {
+                    b.Navigation("CharacterArchetypes");
+
                     b.Navigation("CombatAttributes");
 
                     b.Navigation("Expertise");
@@ -1849,7 +1838,8 @@ namespace VitalityBuilder.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CharacterId");
+                    b.HasIndex("CharacterId")
+                        .IsUnique();
 
                     b.ToTable("CharacterArchetypes");
                 });
@@ -2051,7 +2041,7 @@ namespace VitalityBuilder.Api.Migrations
                     b.ToTable("UtilityArchetype");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.Character", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.Character", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -2060,7 +2050,9 @@ namespace VitalityBuilder.Api.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("MainPointPool")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("int")
+                        .HasComputedColumnSql("CASE WHEN [Tier] >= 2 THEN ([Tier] - 2) * 15 ELSE 0 END");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -2080,7 +2072,7 @@ namespace VitalityBuilder.Api.Migrations
                     b.ToTable("Characters");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.CombatAttributes", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.CombatAttributes", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -2103,6 +2095,9 @@ namespace VitalityBuilder.Api.Migrations
                     b.Property<int>("Power")
                         .HasColumnType("int");
 
+                    b.Property<int>("Total")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CharacterId")
@@ -2111,7 +2106,7 @@ namespace VitalityBuilder.Api.Migrations
                     b.ToTable("CombatAttributes");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.Expertise", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.Expertise", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -2144,7 +2139,7 @@ namespace VitalityBuilder.Api.Migrations
                     b.ToTable("Expertise");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.SpecialAttack", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.SpecialAttack", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -2157,6 +2152,9 @@ namespace VitalityBuilder.Api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CharacterId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Cost")
                         .HasColumnType("int");
 
                     b.Property<string>("EffectType")
@@ -2182,7 +2180,7 @@ namespace VitalityBuilder.Api.Migrations
                     b.ToTable("SpecialAttacks");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.UniquePower", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.UniquePower", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -2215,7 +2213,7 @@ namespace VitalityBuilder.Api.Migrations
                     b.ToTable("UniquePowers");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.UtilityAttributes", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.UtilityAttributes", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -2256,9 +2254,9 @@ namespace VitalityBuilder.Api.Migrations
 
             modelBuilder.Entity("VitalityBuilder.Api.Models.Archetypes.CharacterArchetypes", b =>
                 {
-                    b.HasOne("VitalityBuilder.Api.Models.Character", "Character")
-                        .WithMany()
-                        .HasForeignKey("CharacterId")
+                    b.HasOne("VitalityBuilder.Api.Models.Entities.Character", "Character")
+                        .WithOne("CharacterArchetypes")
+                        .HasForeignKey("VitalityBuilder.Api.Models.Archetypes.CharacterArchetypes", "CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2320,20 +2318,20 @@ namespace VitalityBuilder.Api.Migrations
                     b.Navigation("CharacterArchetypes");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.CombatAttributes", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.CombatAttributes", b =>
                 {
-                    b.HasOne("VitalityBuilder.Api.Models.Character", "Character")
+                    b.HasOne("VitalityBuilder.Api.Models.Entities.Character", "Character")
                         .WithOne("CombatAttributes")
-                        .HasForeignKey("VitalityBuilder.Api.Models.CombatAttributes", "CharacterId")
+                        .HasForeignKey("VitalityBuilder.Api.Models.Entities.CombatAttributes", "CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Character");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.Expertise", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.Expertise", b =>
                 {
-                    b.HasOne("VitalityBuilder.Api.Models.Character", "Character")
+                    b.HasOne("VitalityBuilder.Api.Models.Entities.Character", "Character")
                         .WithMany("Expertise")
                         .HasForeignKey("CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2342,9 +2340,9 @@ namespace VitalityBuilder.Api.Migrations
                     b.Navigation("Character");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.SpecialAttack", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.SpecialAttack", b =>
                 {
-                    b.HasOne("VitalityBuilder.Api.Models.Character", "Character")
+                    b.HasOne("VitalityBuilder.Api.Models.Entities.Character", "Character")
                         .WithMany("SpecialAttacks")
                         .HasForeignKey("CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2353,9 +2351,9 @@ namespace VitalityBuilder.Api.Migrations
                     b.Navigation("Character");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.UniquePower", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.UniquePower", b =>
                 {
-                    b.HasOne("VitalityBuilder.Api.Models.Character", "Character")
+                    b.HasOne("VitalityBuilder.Api.Models.Entities.Character", "Character")
                         .WithMany("UniquePowers")
                         .HasForeignKey("CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2364,11 +2362,11 @@ namespace VitalityBuilder.Api.Migrations
                     b.Navigation("Character");
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.UtilityAttributes", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.UtilityAttributes", b =>
                 {
-                    b.HasOne("VitalityBuilder.Api.Models.Character", "Character")
+                    b.HasOne("VitalityBuilder.Api.Models.Entities.Character", "Character")
                         .WithOne("UtilityAttributes")
-                        .HasForeignKey("VitalityBuilder.Api.Models.UtilityAttributes", "CharacterId")
+                        .HasForeignKey("VitalityBuilder.Api.Models.Entities.UtilityAttributes", "CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2396,8 +2394,10 @@ namespace VitalityBuilder.Api.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("VitalityBuilder.Api.Models.Character", b =>
+            modelBuilder.Entity("VitalityBuilder.Api.Models.Entities.Character", b =>
                 {
+                    b.Navigation("CharacterArchetypes");
+
                     b.Navigation("CombatAttributes");
 
                     b.Navigation("Expertise");
@@ -2739,47 +2739,237 @@ public partial class CharacterArchetypesService
 
 --------------------------------------------------
 
+File: <WindowsPath.parents> services\CharacterService.cs
+Content:
+using Microsoft.EntityFrameworkCore;
+using VitalityBuilder.Api.Models.Archetypes;
+using VitalityBuilder.Api.Models.DTOs;
+using VitalityBuilder.Api.Models.Entities;
+
+
+--------------------------------------------------
+
 File: <WindowsPath.parents> services\CombatService.cs
 Content:
-// Create Services/CombatService.cs
+using System;
+using Microsoft.Extensions.Logging;
+
+namespace VitalityBuilder.Api.Services;
+
+/// <summary>
+/// Handles combat calculations and attack resolution according to Vitality System rules
+/// </summary>
 public class CombatService
 {
-    public (bool success, int effect) ResolveAttack(
-        int attackerTier,
-        int attackerFocus,
-        int attackerPower,
-        int targetMobility,
-        int targetEndurance)
-    {
-        // Accuracy Check
-        var accuracyRoll = new Random().Next(1, 21) + attackerTier + attackerFocus;
-        var avoidance = 10 + attackerTier + targetMobility;
-        
-        if(accuracyRoll < avoidance) 
-            return (false, 0);
+    private readonly ILogger<CombatService> _logger;
+    private readonly Random _random;
 
-        // Damage Calculation
-        var damageRoll = Roll3d6() + attackerTier + (int)Math.Ceiling(attackerPower * 1.5);
-        var durability = (int)Math.Ceiling(attackerTier + (targetEndurance * 1.5));
-        
-        return (true, Math.Max(0, damageRoll - durability));
+    public CombatService(ILogger<CombatService> logger)
+    {
+        _logger = logger;
+        _random = new Random();
     }
 
-    private int Roll3d6()
+    /// <summary>
+    /// Resolves an attack attempt and calculates resulting damage or condition effects
+    /// </summary>
+    /// <param name="attack">Attack parameters</param>
+    /// <param name="defense">Target's defensive stats</param>
+    /// <returns>Attack resolution results including success and effect values</returns>
+    public AttackResolution ResolveAttack(AttackParameters attack, DefenseParameters defense)
     {
-        var roll = new Random();
+        var resolution = new AttackResolution();
+
+        // Accuracy check phase
+        var accuracyRoll = RollD20();
+        var accuracyTotal = CalculateAccuracyTotal(accuracyRoll, attack);
+        var targetAvoidance = CalculateAvoidance(defense);
+
+        _logger.LogDebug("Attack roll: {Roll} + {Mods} = {Total} vs Avoidance {Avoid}", 
+            accuracyRoll, attack.AccuracyBonus, accuracyTotal, targetAvoidance);
+
+        // Check for automatic success on natural 20
+        if (accuracyRoll == 20)
+        {
+            resolution.Success = true;
+            resolution.IsCritical = true;
+        }
+        // Otherwise compare total against target's Avoidance
+        else if (accuracyTotal >= targetAvoidance)
+        {
+            resolution.Success = true;
+        }
+        else
+        {
+            resolution.Success = false;
+            return resolution;
+        }
+
+        // Effect roll phase (damage or condition)
+        if (attack.IsDamageAttack)
+        {
+            resolution.Effect = ResolveDamageEffect(attack, defense, resolution.IsCritical);
+        }
+        else
+        {
+            resolution.Effect = ResolveConditionEffect(attack, defense, resolution.IsCritical);
+        }
+
+        return resolution;
+    }
+
+    /// <summary>
+    /// Calculates damage for a successful attack
+    /// </summary>
+    private int ResolveDamageEffect(AttackParameters attack, DefenseParameters defense, bool isCritical)
+    {
+        // Base damage roll is 3d6
+        var damageRoll = Roll3D6();
+        
+        // Calculate total damage including attacker's Power
+        var damageTotal = damageRoll + attack.Tier + 
+            (int)Math.Ceiling(attack.Power * 1.5);
+
+        // Add critical bonus if applicable
+        if (isCritical)
+        {
+            damageTotal += attack.Tier;
+        }
+
+        // Calculate target's Durability
+        var durability = CalculateDurability(defense);
+
+        // Apply damage reduction and ensure minimum 0 damage
+        var finalDamage = Math.Max(0, damageTotal - durability);
+
+        _logger.LogDebug("Damage roll: {Roll} + {Mods} - {DR} = {Final}",
+            damageRoll, (attack.Tier + attack.Power), durability, finalDamage);
+
+        return finalDamage;
+    }
+
+    /// <summary>
+    /// Calculates and applies condition effects
+    /// </summary>
+    private int ResolveConditionEffect(AttackParameters attack, DefenseParameters defense, bool isCritical)
+    {
+        // Condition check is d20 + (Tier × 2)
+        var conditionRoll = RollD20();
+        var conditionTotal = conditionRoll + (attack.Tier * 2);
+
+        if (isCritical)
+        {
+            conditionTotal += attack.Tier;
+        }
+
+        // Get appropriate resistance based on condition type
+        var resistance = GetResistanceValue(attack.ConditionType, defense);
+
+        _logger.LogDebug("Condition roll: {Roll} + {Mods} vs Resistance {Res}",
+            conditionRoll, (attack.Tier * 2), resistance);
+
+        // Return margin of success/failure
+        return conditionTotal - resistance;
+    }
+
+    #region Helper Methods
+
+    private int RollD20() => _random.Next(1, 21);
+
+    private int Roll3D6()
+    {
         int total = 0;
         int diceToRoll = 3;
-        
-        while(diceToRoll-- > 0)
+
+        // Roll 3d6 with explosion on 6s
+        while (diceToRoll > 0)
         {
-            int result = roll.Next(1, 7);
+            int result = _random.Next(1, 7);
             total += result;
-            if(result == 6) diceToRoll++;
+            diceToRoll--;
+
+            // On a 6, add another die
+            if (result == 6)
+            {
+                diceToRoll++;
+            }
         }
-        
+
         return total;
     }
+
+    private int CalculateAccuracyTotal(int roll, AttackParameters attack)
+    {
+        return roll + attack.Tier + attack.Focus + attack.AccuracyBonus;
+    }
+
+    private int CalculateAvoidance(DefenseParameters defense)
+    {
+        return 10 + defense.Tier + defense.Mobility;
+    }
+
+    private int CalculateDurability(DefenseParameters defense)
+    {
+        return defense.Tier + (int)Math.Ceiling(defense.Endurance * 1.5);
+    }
+
+    private int GetResistanceValue(ConditionType type, DefenseParameters defense)
+    {
+        return type switch
+        {
+            ConditionType.Resolve => 10 + defense.Tier + defense.Focus,
+            ConditionType.Stability => 10 + defense.Tier + defense.Power,
+            ConditionType.Vitality => 10 + defense.Tier + defense.Endurance,
+            _ => throw new ArgumentException("Invalid condition type", nameof(type))
+        };
+    }
+
+    #endregion
+}
+
+/// <summary>
+/// Parameters for the attacking character
+/// </summary>
+public class AttackParameters
+{
+    public int Tier { get; set; }
+    public int Focus { get; set; }
+    public int Power { get; set; }
+    public int AccuracyBonus { get; set; }
+    public bool IsDamageAttack { get; set; }
+    public ConditionType ConditionType { get; set; }
+}
+
+/// <summary>
+/// Parameters for the defending character
+/// </summary>
+public class DefenseParameters
+{
+    public int Tier { get; set; }
+    public int Focus { get; set; }
+    public int Power { get; set; }
+    public int Mobility { get; set; }
+    public int Endurance { get; set; }
+}
+
+/// <summary>
+/// Results of an attack resolution
+/// </summary>
+public class AttackResolution
+{
+    public bool Success { get; set; }
+    public bool IsCritical { get; set; }
+    public int Effect { get; set; }
+}
+
+/// <summary>
+/// Types of conditions that can be applied
+/// </summary>
+public enum ConditionType
+{
+    Resolve,
+    Stability,
+    Vitality
 }
 --------------------------------------------------
 
@@ -2803,6 +2993,72 @@ public interface ICharacterArchetypesService
     Dictionary<string, int> CalculateArchetypeBonuses(Models.Archetypes.CharacterArchetypes archetypes, int tier);
 }
 
+--------------------------------------------------
+
+File: <WindowsPath.parents> services\ValidateAttributePointsServices.cs
+Content:
+
+--------------------------------------------------
+
+File: <WindowsPath.parents> Utilities\JsonValueConverter.cs
+Content:
+using System.Text.Json;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+
+namespace VitalityBuilder.Api.Infrastructure;
+
+/// <summary>
+/// Generic JSON value converter for Entity Framework Core
+/// </summary>
+public class JsonValueConverter<T> : ValueConverter<T, string> where T : class
+{
+    public JsonValueConverter() : base(
+        // Serialize to JSON string
+        v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
+        // Deserialize from JSON string with null handling
+        v => v == null ? null! : JsonSerializer.Deserialize<T>(v, JsonSerializerOptions.Default)!
+    )
+    {
+    }
+}
+
+/// <summary>
+/// Generic JSON comparer for Entity Framework Core
+/// </summary>
+public class JsonValueComparer<T> : ValueComparer<T> where T : class
+{
+    private static bool EqualsJson(T? left, T? right)
+    {
+        if (left == null && right == null)
+            return true;
+        if (left == null || right == null)
+            return false;
+        return JsonSerializer.Serialize(left) == JsonSerializer.Serialize(right);
+    }
+
+    private static int GetHashCodeJson(T value)
+    {
+        if (value == null)
+            return 0;
+        return JsonSerializer.Serialize(value).GetHashCode();
+    }
+
+    private static T GetSnapshotJson(T value)
+    {
+        if (value == null)
+            return null!;
+        var json = JsonSerializer.Serialize(value);
+        return JsonSerializer.Deserialize<T>(json)!;
+    }
+
+    public JsonValueComparer() : base(
+        (l, r) => EqualsJson(l, r),
+        v => GetHashCodeJson(v),
+        v => GetSnapshotJson(v))
+    {
+    }
+}
 --------------------------------------------------
 
 File: <WindowsPath.parents> models\Archetypes\AttackTypeArchetype.cs
@@ -2865,7 +3121,7 @@ public class EffectTypeArchetype
 }
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\Archetypes\Enums.cs
+File: <WindowsPath.parents> models\Archetypes\EnumsArchetype.cs
 Content:
 namespace VitalityBuilder.Api.Models.Archetypes;
 
@@ -3009,7 +3265,7 @@ public class UtilityArchetype
 }
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\DTOs\CharacterArchetypesDTOs.cs
+File: <WindowsPath.parents> models\DTOs\ArchetypesDto.cs
 Content:
 // File: Models/DTOs/CharacterArchetypesDto.cs
 using VitalityBuilder.Api.Models.Entities;
@@ -3161,67 +3417,14 @@ public class UtilityAttributesDto
 }
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\Entities\Character.cs
-Content:
-using System.Text.Json.Serialization;
-
-namespace VitalityBuilder.Api.Models.Entities;  // Make sure this is the correct namespace
-
-public class Character
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public int Tier { get; set; } = 1;
-    
-    // Point Pool Calculations
-    public int CombatAP => Tier * 2;
-    public int UtilityAP => Tier;
-    public int MainPointPool => Math.Max(0, (Tier - 2) * 15);
-    public int SpecialAttacksPointPool { get; set; }
-    public int UtilityPointPool { get; set; }
-    
-    // Defense Calculations
-    public int Avoidance => 10 + Tier + (CombatAttributes?.Mobility ?? 0);
-    public double Durability => Math.Ceiling(Tier + (CombatAttributes?.Endurance * 1.5) ?? 0);
-    public int HealthPool => 100;
-
-    // Navigation Properties
-    [JsonIgnore]
-    public virtual CombatAttributes? CombatAttributes { get; set; }
-    [JsonIgnore]
-    public virtual UtilityAttributes? UtilityAttributes { get; set; }
-    [JsonIgnore]
-    public virtual List<Expertise> Expertise { get; set; } = new();
-    [JsonIgnore]
-    public virtual List<SpecialAttack> SpecialAttacks { get; set; } = new();
-    [JsonIgnore]
-    public virtual List<UniquePower> UniquePowers { get; set; } = new();
-    [JsonIgnore]
-    public virtual Models.Archetypes.CharacterArchetypes? CharacterArchetypes { get; set; }
-
-
-    // Calculated Properties
-    [JsonIgnore]
-    public int AvailableMainPoints => MainPointPool - Expertise.Sum(e => e.Cost);
-
-    [JsonIgnore]
-    public int AvailableSpecialAttacksPoints => SpecialAttacksPointPool - SpecialAttacks.Sum(sa => sa.Cost);
-
-    [JsonIgnore]
-    public int AvailableUtilityPoints => UtilityPointPool - UniquePowers.Sum(up => up.Cost);
-
-
-
-}
---------------------------------------------------
-
-File: <WindowsPath.parents> models\Entities\CharacterArchetypes.cs
+File: <WindowsPath.parents> models\Entities\ArchetypeEntity.cs
 Content:
 using System.ComponentModel.DataAnnotations;
+using VitalityBuilder.Api.Models.Archetypes;
 
 namespace VitalityBuilder.Api.Models.Entities;
 
-public class CharacterArchetypes
+public class CharacterArchetypesEntity
 {
     public int Id { get; set; }
     public MovementArchetype MovementArchetype { get; set; } = null!;
@@ -3232,10 +3435,10 @@ public class CharacterArchetypes
     public UtilityArchetype UtilityArchetype { get; set; } = null!;
     
     public int CharacterId { get; set; }
-    public Character Character { get; set; } = null!;
+    public CharacterArchetypesEntity CharacterEntity { get; set; } = null!;
 }
 
-public class MovementArchetype
+public class MovementArchetypeEntity
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -3247,10 +3450,10 @@ public class MovementArchetype
     public float MovementMultiplier { get; set; } = 1.0f;
     
     public int CharacterArchetypesId { get; set; }
-    public CharacterArchetypes CharacterArchetypes { get; set; } = null!;
+    public CharacterArchetypesEntity CharacterArchetypesEntity { get; set; } = null!;
 }
 
-public enum MovementArchetypeType
+public enum MovementArchetypeTypeEntity
 {
     Swift,
     Skirmisher,
@@ -3266,7 +3469,7 @@ public enum MovementArchetypeType
     SuperJump
 }
 
-public class AttackTypeArchetype
+public class AttackTypeArchetypeEntity
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -3277,17 +3480,12 @@ public class AttackTypeArchetype
     public bool HasFreeAOE { get; set; }
     
     public int CharacterArchetypesId { get; set; }
-    public CharacterArchetypes CharacterArchetypes { get; set; } = null!;
+    public CharacterArchetypesEntity CharacterArchetypesEntity { get; set; } = null!;
 }
 
-public enum AttackTypeArchetypeCategory
-{
-    AOESpecialist,
-    DirectSpecialist,
-    SingleTarget
-}
 
-public class EffectTypeArchetype
+
+public class EffectTypeArchetypeEntity
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -3298,17 +3496,12 @@ public class EffectTypeArchetype
     public bool RequiresHybridEffects { get; set; }
     
     public int CharacterArchetypesId { get; set; }
-    public CharacterArchetypes CharacterArchetypes { get; set; } = null!;
+    public CharacterArchetypesEntity CharacterArchetypesEntity { get; set; } = null!;
 }
 
-public enum EffectTypeCategory
-{
-    DamageSpecialist,
-    HybridSpecialist,
-    CrowdControl
-}
 
-public class UniqueAbilityArchetype
+
+public class UniqueAbilityArchetypeEntity
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -3318,17 +3511,12 @@ public class UniqueAbilityArchetype
     public Dictionary<string, int> StatBonuses { get; set; } = new();
     
     public int CharacterArchetypesId { get; set; }
-    public CharacterArchetypes CharacterArchetypes { get; set; } = null!;
+    public CharacterArchetypesEntity CharacterArchetypesEntity { get; set; } = null!;
 }
 
-public enum UniqueAbilityCategory
-{
-    VersatileMaster,
-    Extraordinary,
-    CutAbove
-}
 
-public class SpecialAttackArchetype
+
+public class SpecialAttackArchetypeEntity
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -3340,22 +3528,12 @@ public class SpecialAttackArchetype
     public List<string> RequiredLimits { get; set; } = new();
     
     public int CharacterArchetypesId { get; set; }
-    public CharacterArchetypes CharacterArchetypes { get; set; } = null!;
+    public CharacterArchetypesEntity CharacterArchetypesEntity { get; set; } = null!;
 }
 
-public enum SpecialAttackCategory
-{
-    Normal,
-    Specialist,
-    Paragon,
-    OneTrick,
-    Straightforward,
-    SharedUses,
-    DualNatured,
-    Basic
-}
 
-public class UtilityArchetype
+
+public class UtilityArchetypeEntity
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -3366,18 +3544,70 @@ public class UtilityArchetype
     public List<string> Restrictions { get; set; } = new();
     
     public int CharacterArchetypesId { get; set; }
-    public CharacterArchetypes CharacterArchetypes { get; set; } = null!;
+    public CharacterArchetypesEntity CharacterArchetypesEntity { get; set; } = null!;
 }
 
-public enum UtilityCategory
+--------------------------------------------------
+
+File: <WindowsPath.parents> models\Entities\CharacterEntity.cs
+Content:
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+
+namespace VitalityBuilder.Api.Models.Entities;
+
+public class Character
 {
-    Specialized,
-    Practical,
-    JackOfAllTrades
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public int Tier { get; set; } = 1;
+    
+    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+    public int MainPointPool { get; private set; }
+
+    public int SpecialAttacksPointPool { get; set; }
+    public int UtilityPointPool { get; set; }
+
+    // Navigation Properties
+    [JsonIgnore]
+    public virtual CombatAttributes? CombatAttributes { get; set; }
+    
+    [JsonIgnore]
+    public virtual UtilityAttributes? UtilityAttributes { get; set; }
+    
+    [JsonIgnore]
+    public virtual ICollection<Expertise> Expertise { get; set; } = new List<Expertise>();
+    
+    [JsonIgnore]
+    public virtual ICollection<SpecialAttack> SpecialAttacks { get; set; } = new List<SpecialAttack>();
+    
+    [JsonIgnore]
+    public virtual ICollection<UniquePower> UniquePowers { get; set; } = new List<UniquePower>();
+
+    // Add method for tier updates to encapsulate any future tier-related logic
+    public void UpdateTier(int newTier)
+    {
+        if (newTier < 1) throw new ArgumentException("Tier cannot be less than 1", nameof(newTier));
+        Tier = newTier;
+        // MainPointPool will be automatically recalculated by the database
+    }
+    
+    [JsonIgnore]
+    public virtual Models.Archetypes.CharacterArchetypes? CharacterArchetypes { get; set; }
+
+    // Calculated properties
+    [NotMapped]
+    public int AvailableMainPoints => MainPointPool - (Expertise?.Sum(e => e.Cost) ?? 0);
+
+    [NotMapped]
+    public int AvailableSpecialAttacksPoints => SpecialAttacksPointPool - (SpecialAttacks?.Sum(sa => sa.Cost) ?? 0);
+
+    [NotMapped]
+    public int AvailableUtilityPoints => UtilityPointPool - (UniquePowers?.Sum(up => up.Cost) ?? 0);
 }
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\Entities\CombatAttributes.cs
+File: <WindowsPath.parents> models\Entities\CombatAttributesEntity.cs
 Content:
 namespace VitalityBuilder.Api.Models.Entities;
 
@@ -3397,7 +3627,7 @@ public class CombatAttributes
 
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\Entities\Expertise.cs
+File: <WindowsPath.parents> models\Entities\ExpertiseEntity.cs
 Content:
 namespace VitalityBuilder.Api.Models.Entities;
 public class Expertise
@@ -3413,7 +3643,7 @@ public class Expertise
 }
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\Entities\SpecialAttack.cs
+File: <WindowsPath.parents> models\Entities\SpecialAttackEntity.cs
 Content:
 namespace VitalityBuilder.Api.Models.Entities;
 public class SpecialAttack
@@ -3434,7 +3664,7 @@ public class SpecialAttack
 
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\Entities\UniquePower.cs
+File: <WindowsPath.parents> models\Entities\UniquePowerEntity.cs
 Content:
 namespace VitalityBuilder.Api.Models.Entities;
 public class UniquePower
@@ -3450,7 +3680,7 @@ public class UniquePower
 }
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\Entities\UtilityAttributes.cs
+File: <WindowsPath.parents> models\Entities\UtilityAttributesEntity.cs
 Content:
 namespace VitalityBuilder.Api.Models.Entities;
 public class UtilityAttributes
@@ -3464,5 +3694,324 @@ public class UtilityAttributes
     public Character Character { get; set; } = null!;
 
     
+}
+--------------------------------------------------
+
+File: <WindowsPath.parents> models\Validations\ArchetypeValidators.cs
+Content:
+using FluentValidation;
+using VitalityBuilder.Api.Models.DTOs;
+using VitalityBuilder.Api.Models.Archetypes;
+
+namespace VitalityBuilder.Api.Models.Validations;
+
+public class AttackTypeArchetypeDtoValidator : AbstractValidator<AttackTypeArchetypeDto>
+{
+    public AttackTypeArchetypeDtoValidator()
+    {
+        RuleFor(static x => x.Name)
+            .NotEmpty()
+            .MaximumLength(100);
+
+        RuleFor(static x => x.Category)
+            .IsInEnum()
+            .WithMessage("Invalid attack type category specified");
+
+        RuleFor(static x => x.AccuracyPenalty)
+            .GreaterThanOrEqualTo(0)
+            .When(static x => (int)x.Category == (int)AttackTypeArchetypeCategory.AOESpecialist)
+            .WithMessage("AOE Specialist must have a non-negative accuracy penalty");
+
+        RuleFor(static x => x.EffectPenalty)
+            .GreaterThanOrEqualTo(0)
+            .When(static x => (int)x.Category == (int)AttackTypeArchetypeCategory.DirectSpecialist)
+            .WithMessage("Direct Specialist must have a non-negative effect penalty");
+    }
+}
+
+public class EffectTypeArchetypeDtoValidator : AbstractValidator<EffectTypeArchetypeDto>
+{
+    public EffectTypeArchetypeDtoValidator()
+    {
+        RuleFor(static x => x.Name)
+            .NotEmpty()
+            .MaximumLength(100);
+
+        RuleFor(static x => x.Category)
+            .IsInEnum()
+            .WithMessage("Invalid effect type category specified");
+
+        RuleFor(static x => x.DamagePenalty)
+            .GreaterThanOrEqualTo(0)
+            .When(static x => (int)x.Category == (int)EffectTypeCategory.HybridSpecialist || (int)x.Category == (int)EffectTypeCategory.CrowdControl)
+            .WithMessage("Damage penalty must be non-negative for Hybrid Specialist and Crowd Control");
+
+        RuleFor(static x => x.ConditionPenalty)
+            .GreaterThanOrEqualTo(0)
+            .When(static x => (int)x.Category == (int)EffectTypeCategory.HybridSpecialist)
+            .WithMessage("Condition penalty must be non-negative for Hybrid Specialist");
+    }
+}
+
+public class UniqueAbilityArchetypeDtoValidator : AbstractValidator<UniqueAbilityArchetypeDto>
+{
+    public UniqueAbilityArchetypeDtoValidator()
+    {
+        RuleFor(static x => x.Name)
+            .NotEmpty()
+            .MaximumLength(100);
+
+        RuleFor(static x => x.Category)
+            .IsInEnum()
+            .WithMessage("Invalid unique ability category specified");
+
+        RuleFor(static x => x.ExtraQuickActions)
+            .GreaterThanOrEqualTo(0)
+            .When(static x => (int)x.Category == (int)UniqueAbilityCategory.VersatileMaster)
+            .WithMessage("Extra quick actions must be non-negative for Versatile Master");
+
+        RuleFor(static x => x.ExtraPointPool)
+            .GreaterThanOrEqualTo(0)
+            .When(static x => (int)x.Category == (int)UniqueAbilityCategory.Extraordinary)
+            .WithMessage("Extra point pool must be non-negative for Extraordinary");
+
+        RuleFor(static x => x.StatBonuses)
+            .NotNull()
+            .Must(static x => x.All(static kvp => kvp.Value >= 0))
+            .WithMessage("All stat bonuses must be non-negative");
+    }
+}
+
+public class SpecialAttackArchetypeDtoValidator : AbstractValidator<SpecialAttackArchetypeDto>
+{
+    public SpecialAttackArchetypeDtoValidator()
+    {
+        RuleFor(static x => x.Name)
+            .NotEmpty()
+            .MaximumLength(100);
+
+        RuleFor(static x => x.Category)
+            .IsInEnum()
+            .WithMessage("Invalid special attack category specified");
+
+        RuleFor(static x => x.BasePoints)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("Base points must be non-negative");
+
+        RuleFor(static x => x.MaxSpecialAttacks)
+            .GreaterThanOrEqualTo(1)
+            .WithMessage("Maximum special attacks must be at least 1");
+
+        RuleFor(static x => x.LimitPointMultiplier)
+            .GreaterThanOrEqualTo(0)
+            .When(static x => x.CanTakeLimits)
+            .WithMessage("Limit point multiplier must be non-negative when limits are allowed");
+
+        RuleFor(static x => x.RequiredLimits)
+            .NotNull()
+            .Must(static x => !x.Any(string.IsNullOrWhiteSpace))
+            .When(static x => (int)x.Category == (int)SpecialAttackCategory.Specialist)
+            .WithMessage("Specialist archetype must have at least one required limit");
+    }
+}
+
+public class UtilityArchetypeDtoValidator : AbstractValidator<UtilityArchetypeDto>
+{
+    public UtilityArchetypeDtoValidator()
+    {
+        RuleFor(static x => x.Name)
+            .NotEmpty()
+            .MaximumLength(100);
+
+        RuleFor(static x => x.Category)
+            .IsInEnum()
+            .WithMessage("Invalid utility category specified");
+
+        RuleFor(static x => x.BaseUtilityPool)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("Base utility pool must be non-negative");
+
+        RuleFor(static x => x.TierBonusMultiplier)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("Tier bonus multiplier must be non-negative");
+
+        RuleFor(static x => x.Restrictions)
+            .NotNull()
+            .Must(static x => !x.Any(string.IsNullOrWhiteSpace))
+            .When(static x => (int)x.Category == (int)UtilityCategory.Specialized || (int)x.Category == (int)UtilityCategory.JackOfAllTrades)
+            .WithMessage("Specialized and Jack of All Trades archetypes must have valid restrictions");
+    }
+}
+--------------------------------------------------
+
+File: <WindowsPath.parents> models\Validations\CharacterValidators.cs
+Content:
+using FluentValidation;
+using VitalityBuilder.Api.Models.DTOs;
+
+namespace VitalityBuilder.Api.Models.Validations;
+
+public class CreateCharacterDtoValidator : AbstractValidator<CreateCharacterDto>
+{
+    public CreateCharacterDtoValidator()
+    {
+        RuleFor(x => x.Name)
+            .NotEmpty().WithMessage("Character name is required")
+            .MaximumLength(100).WithMessage("Name cannot exceed 100 characters");
+
+        RuleFor(x => x.Tier)
+            .InclusiveBetween(1, 10)
+            .WithMessage("Tier must be between 1 and 10");
+
+        RuleFor(x => x.CombatAttributes)
+            .NotNull()
+            .SetValidator(new CombatAttributesDtoValidator());
+
+        RuleFor(x => x.UtilityAttributes)
+            .NotNull()
+            .SetValidator(new UtilityAttributesDtoValidator());
+    }
+}
+
+public class CombatAttributesDtoValidator : AbstractValidator<CombatAttributesDto>
+{
+    public CombatAttributesDtoValidator()
+    {
+        RuleFor(x => x.Focus)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("Focus cannot be negative");
+
+        RuleFor(x => x.Power)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("Power cannot be negative");
+
+        RuleFor(x => x.Mobility)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("Mobility cannot be negative");
+
+        RuleFor(x => x.Endurance)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("Endurance cannot be negative");
+
+        RuleFor(x => x.Total)
+            .Must((dto, total) => total >= 0)
+            .WithMessage("Total combat attributes cannot be negative");
+    }
+}
+
+public class UtilityAttributesDtoValidator : AbstractValidator<UtilityAttributesDto>
+{
+    public UtilityAttributesDtoValidator()
+    {
+        RuleFor(x => x.Awareness)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("Awareness cannot be negative");
+
+        RuleFor(x => x.Communication)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("Communication cannot be negative");
+
+        RuleFor(x => x.Intelligence)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("Intelligence cannot be negative");
+
+        RuleFor(x => x.Total)
+            .Must((dto, total) => total >= 0)
+            .WithMessage("Total utility attributes cannot be negative");
+    }
+}
+
+public class CharacterArchetypesDtoValidator : AbstractValidator<CharacterArchetypesDto>
+{
+    public CharacterArchetypesDtoValidator()
+    {
+        RuleFor(x => x.MovementArchetype)
+            .NotNull()
+            .SetValidator(new MovementArchetypeDtoValidator());
+
+        RuleFor(x => x.AttackTypeArchetype)
+            .NotNull()
+            .SetValidator(new AttackTypeArchetypeDtoValidator());
+
+        RuleFor(x => x.EffectTypeArchetype)
+            .NotNull()
+            .SetValidator(new EffectTypeArchetypeDtoValidator());
+
+        RuleFor(x => x.UniqueAbilityArchetype)
+            .NotNull()
+            .SetValidator(new UniqueAbilityArchetypeDtoValidator());
+
+        RuleFor(x => x.SpecialAttackArchetype)
+            .NotNull()
+            .SetValidator(new SpecialAttackArchetypeDtoValidator());
+
+        RuleFor(x => x.UtilityArchetype)
+            .NotNull()
+            .SetValidator(new UtilityArchetypeDtoValidator());
+    }
+}
+
+public class MovementArchetypeDtoValidator : AbstractValidator<MovementArchetypeDto>
+{
+    public MovementArchetypeDtoValidator()
+    {
+        RuleFor(x => x.Name)
+            .NotEmpty()
+            .MaximumLength(100);
+
+        RuleFor(x => x.Type)
+            .IsInEnum()
+            .WithMessage("Invalid movement type specified");
+
+        RuleFor(x => x.SpeedBonusByTier)
+            .NotNull()
+            .Must(x => x.All(kvp => kvp.Key >= 1 && kvp.Key <= 10))
+            .WithMessage("Tier bonuses must be between 1 and 10")
+            .Must(x => x.All(kvp => kvp.Value >= 0))
+            .WithMessage("Speed bonuses must be non-negative");
+
+        RuleFor(x => x.MovementMultiplier)
+            .InclusiveBetween(0.5f, 2.0f)
+            .WithMessage("Movement multiplier must be between 0.5 and 2.0");
+    }
+}
+--------------------------------------------------
+
+File: <WindowsPath.parents> models\Validations\ValidationExtensions.cs
+Content:
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.Extensions.DependencyInjection;
+using VitalityBuilder.Api.Models.DTOs;
+using VitalityBuilder.Api.Models.Validations;
+
+namespace VitalityBuilder.Api.Infrastructure;
+
+/// <summary>
+/// Extension methods for registering validation services
+/// </summary>
+public static class ValidationExtensions
+{
+    public static IServiceCollection AddValidation(this IServiceCollection services)
+    {
+        // Register core character validators
+        services.AddScoped<IValidator<CreateCharacterDto>, CreateCharacterDtoValidator>();
+        services.AddScoped<IValidator<CombatAttributesDto>, CombatAttributesDtoValidator>();
+        services.AddScoped<IValidator<UtilityAttributesDto>, UtilityAttributesDtoValidator>();
+
+        // Register archetype validators
+        services.AddScoped<IValidator<CharacterArchetypesDto>, CharacterArchetypesDtoValidator>();
+        services.AddScoped<IValidator<MovementArchetypeDto>, MovementArchetypeDtoValidator>();
+        services.AddScoped<IValidator<AttackTypeArchetypeDto>, AttackTypeArchetypeDtoValidator>();
+        services.AddScoped<IValidator<EffectTypeArchetypeDto>, EffectTypeArchetypeDtoValidator>();
+        services.AddScoped<IValidator<UniqueAbilityArchetypeDto>, UniqueAbilityArchetypeDtoValidator>();
+        services.AddScoped<IValidator<SpecialAttackArchetypeDto>, SpecialAttackArchetypeDtoValidator>();
+        services.AddScoped<IValidator<UtilityArchetypeDto>, UtilityArchetypeDtoValidator>();
+
+        // Register FluentValidation
+        services.AddFluentValidationAutoValidation();
+
+        return services;
+    }
 }
 --------------------------------------------------

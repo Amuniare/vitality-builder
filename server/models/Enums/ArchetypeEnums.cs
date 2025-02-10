@@ -1,4 +1,4 @@
-namespace VitalityBuilder.Api.Models.Archetypes;
+namespace VitalityBuilder.Api.Models.Enums;
 
 public enum MovementArchetypeType
 {

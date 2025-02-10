@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using VitalityBuilder.Api.Models.Enums;
 
 namespace VitalityBuilder.Api.Models.Archetypes;
 

@@ -1,3 +1,5 @@
+using VitalityBuilder.Api.Models.Enums;
+
 namespace VitalityBuilder.Api.Models.Archetypes;
 
 public class AttackTypeArchetype

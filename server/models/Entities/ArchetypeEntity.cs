@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using VitalityBuilder.Api.Models.Archetypes;
 
 namespace VitalityBuilder.Api.Models.Entities;
 
-public class CharacterArchetypes
+public class CharacterArchetypesEntity
 {
     public int Id { get; set; }
     public MovementArchetype MovementArchetype { get; set; } = null!;
@@ -13,10 +14,10 @@ public class CharacterArchetypes
     public UtilityArchetype UtilityArchetype { get; set; } = null!;
     
     public int CharacterId { get; set; }
-    public Character Character { get; set; } = null!;
+    public CharacterArchetypesEntity CharacterEntity { get; set; } = null!;
 }
 
-public class MovementArchetype
+public class MovementArchetypeEntity
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -28,26 +29,11 @@ public class MovementArchetype
     public float MovementMultiplier { get; set; } = 1.0f;
     
     public int CharacterArchetypesId { get; set; }
-    public CharacterArchetypes CharacterArchetypes { get; set; } = null!;
+    public CharacterArchetypesEntity CharacterArchetypesEntity { get; set; } = null!;
 }
 
-public enum MovementArchetypeType
-{
-    Swift,
-    Skirmisher,
-    ParkourRunner,
-    Behemoth,
-    Bulwark,
-    Vanguard,
-    Mole,
-    Flight,
-    Teleportation,
-    Portal,
-    Swinging,
-    SuperJump
-}
 
-public class AttackTypeArchetype
+public class AttackTypeArchetypeEntity
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -58,17 +44,12 @@ public class AttackTypeArchetype
     public bool HasFreeAOE { get; set; }
     
     public int CharacterArchetypesId { get; set; }
-    public CharacterArchetypes CharacterArchetypes { get; set; } = null!;
+    public CharacterArchetypesEntity CharacterArchetypesEntity { get; set; } = null!;
 }
 
-public enum AttackTypeArchetypeCategory
-{
-    AOESpecialist,
-    DirectSpecialist,
-    SingleTarget
-}
 
-public class EffectTypeArchetype
+
+public class EffectTypeArchetypeEntity
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -79,17 +60,12 @@ public class EffectTypeArchetype
     public bool RequiresHybridEffects { get; set; }
     
     public int CharacterArchetypesId { get; set; }
-    public CharacterArchetypes CharacterArchetypes { get; set; } = null!;
+    public CharacterArchetypesEntity CharacterArchetypesEntity { get; set; } = null!;
 }
 
-public enum EffectTypeCategory
-{
-    DamageSpecialist,
-    HybridSpecialist,
-    CrowdControl
-}
 
-public class UniqueAbilityArchetype
+
+public class UniqueAbilityArchetypeEntity
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -99,17 +75,12 @@ public class UniqueAbilityArchetype
     public Dictionary<string, int> StatBonuses { get; set; } = new();
     
     public int CharacterArchetypesId { get; set; }
-    public CharacterArchetypes CharacterArchetypes { get; set; } = null!;
+    public CharacterArchetypesEntity CharacterArchetypesEntity { get; set; } = null!;
 }
 
-public enum UniqueAbilityCategory
-{
-    VersatileMaster,
-    Extraordinary,
-    CutAbove
-}
 
-public class SpecialAttackArchetype
+
+public class SpecialAttackArchetypeEntity
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -121,22 +92,12 @@ public class SpecialAttackArchetype
     public List<string> RequiredLimits { get; set; } = new();
     
     public int CharacterArchetypesId { get; set; }
-    public CharacterArchetypes CharacterArchetypes { get; set; } = null!;
+    public CharacterArchetypesEntity CharacterArchetypesEntity { get; set; } = null!;
 }
 
-public enum SpecialAttackCategory
-{
-    Normal,
-    Specialist,
-    Paragon,
-    OneTrick,
-    Straightforward,
-    SharedUses,
-    DualNatured,
-    Basic
-}
 
-public class UtilityArchetype
+
+public class UtilityArchetypeEntity
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -147,12 +108,5 @@ public class UtilityArchetype
     public List<string> Restrictions { get; set; } = new();
     
     public int CharacterArchetypesId { get; set; }
-    public CharacterArchetypes CharacterArchetypes { get; set; } = null!;
-}
-
-public enum UtilityCategory
-{
-    Specialized,
-    Practical,
-    JackOfAllTrades
+    public CharacterArchetypesEntity CharacterArchetypesEntity { get; set; } = null!;
 }

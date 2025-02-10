@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using FluentValidation;
 using VitalityBuilder.Api.Models.DTOs;
-using VitalityBuilder.Api.Models.Entities;  // Ensure this is the correct namespace
+using VitalityBuilder.Api.Models.Entities;
 using VitalityBuilder.Api.Services;
 using VitalityBuilder.Api.Infrastructure;
 
@@ -14,29 +15,46 @@ public class CharactersController : ControllerBase
     private readonly VitalityBuilderContext _context;
     private readonly ILogger<CharactersController> _logger;
     private readonly ICharacterArchetypesService _archetypeService;
+    private readonly IValidator<CreateCharacterDto> _createCharacterValidator;
+    private readonly IValidator<CharacterArchetypesDto> _archetypesValidator;
 
     public CharactersController(
         VitalityBuilderContext context,
         ILogger<CharactersController> logger,
-        ICharacterArchetypesService archetypeService)
+        ICharacterArchetypesService archetypeService,
+        IValidator<CreateCharacterDto> createCharacterValidator,
+        IValidator<CharacterArchetypesDto> archetypesValidator)
     {
         _context = context;
         _logger = logger;
         _archetypeService = archetypeService;
+        _createCharacterValidator = createCharacterValidator;
+        _archetypesValidator = archetypesValidator;
     }
 
+    /// <summary>
+    /// Creates a new character with basic attributes
+    /// </summary>
     [HttpPost]
-    public async Task<ActionResult<Character>> CreateCharacter(CreateCharacterDto dto)
+    public async Task<ActionResult<CharacterEntity>> CreateCharacter([FromBody] CreateCharacterDto dto)
     {
         _logger.LogInformation("Received character creation request for {CharacterName}", dto.Name);
 
-        if (string.IsNullOrWhiteSpace(dto.Name))
+        // Validate the DTO
+        var validationResult = await _createCharacterValidator.ValidateAsync(dto);
+        if (!validationResult.IsValid)
         {
-            return BadRequest("Character name is required");
+            return BadRequest(validationResult.Errors);
         }
 
         try 
         {
+            // Validate attribute points against tier limits
+            if (!_validationService.IsValid(dto))
+            {
+                return BadRequest("Attribute points exceed tier limits");
+            }
+
             var character = new Character
             {
                 Name = dto.Name,
@@ -46,7 +64,8 @@ public class CharactersController : ControllerBase
                     Focus = dto.CombatAttributes.Focus,
                     Power = dto.CombatAttributes.Power,
                     Mobility = dto.CombatAttributes.Mobility,
-                    Endurance = dto.CombatAttributes.Endurance
+                    Endurance = dto.CombatAttributes.Endurance,
+                    Total = dto.CombatAttributes.Total
                 },
                 UtilityAttributes = new UtilityAttributes
                 {
@@ -56,9 +75,7 @@ public class CharactersController : ControllerBase
                 }
             };
 
-            
-
-            Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<Character> entityEntry = _context.Add(character);
+            _context.Add(character);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetCharacter), new { id = character.Id }, character);
@@ -70,25 +87,9 @@ public class CharactersController : ControllerBase
         }
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Character>> GetCharacter(int id)
-    {
-        var character = await _context.Characters
-            .Include(c => c.CombatAttributes)
-            .Include(c => c.UtilityAttributes)
-            .Include(c => c.Expertise)
-            .Include(c => c.SpecialAttacks)
-            .Include(c => c.UniquePowers)
-            .FirstOrDefaultAsync(c => c.Id == id);
-
-        if (character == null)
-        {
-            return NotFound();
-        }
-
-        return character;
-    }
-
+    /// <summary>
+    /// Updates the archetypes for an existing character
+    /// </summary>
     [HttpPut("{id}/archetypes")]
     public async Task<IActionResult> UpdateArchetypes(int id, [FromBody] CharacterArchetypesDto dto)
     {
@@ -97,6 +98,13 @@ public class CharactersController : ControllerBase
             .FirstOrDefaultAsync(c => c.Id == id);
 
         if (character == null) return NotFound();
+
+        // Validate the archetypes DTO
+        var validationResult = await _archetypesValidator.ValidateAsync(dto);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors);
+        }
 
         try
         {
@@ -122,40 +130,43 @@ public class CharactersController : ControllerBase
         }
     }
 
-    [HttpPut("{id}/combat-attributes")]
-    public async Task<IActionResult> UpdateCombatAttributes(int id, [FromBody] CombatAttributesDto dto)
+    /// <summary>
+    /// Gets a character by ID including all related data
+    /// </summary>
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Character>> GetCharacter(int id)
     {
         var character = await _context.Characters
             .Include(c => c.CombatAttributes)
+            .Include(c => c.UtilityAttributes)
+            .Include(c => c.Expertise)
+            .Include(c => c.SpecialAttacks)
+            .Include(c => c.UniquePowers)
             .FirstOrDefaultAsync(c => c.Id == id);
 
-        if (character == null) return NotFound();
-
-        // Validate against tier limits
-        if (!ValidateCombatAttributes(dto, character.Tier))
+        if (character == null)
         {
-            return BadRequest("Attributes exceed tier limits");
+            return NotFound();
         }
 
-        if (character.CombatAttributes != null)
-        {
-            character.CombatAttributes.Focus = dto.Focus;
-            character.CombatAttributes.Power = dto.Power;
-            character.CombatAttributes.Mobility = dto.Mobility;
-            character.CombatAttributes.Endurance = dto.Endurance;
-            character.CombatAttributes.Total = dto.Total;
-        }
-
-        await _context.SaveChangesAsync();
-        return Ok(character);
+        return character;
     }
 
-    private static bool ValidateCombatAttributes(CombatAttributesDto attributes, int tier)
+    private readonly ValidateAttributePointsService _validationService;
+    public CharactersController(
+        VitalityBuilderContext context,
+        ILogger<CharactersController> logger,
+        ICharacterArchetypesService archetypeService,
+        IValidator<CreateCharacterDto> createCharacterValidator,
+        IValidator<CharacterArchetypesDto> archetypesValidator,
+        ValidateAttributePointsService validationService)
     {
-        return attributes.Total <= tier * 2 
-            && attributes.Focus <= tier
-            && attributes.Power <= tier
-            && attributes.Mobility <= tier
-            && attributes.Endurance <= tier;
+        _context = context;
+        _logger = logger;
+        _archetypeService = archetypeService;
+        _createCharacterValidator = createCharacterValidator;
+        _archetypesValidator = archetypesValidator;
+        _validationService = validationService;
     }
+
 }

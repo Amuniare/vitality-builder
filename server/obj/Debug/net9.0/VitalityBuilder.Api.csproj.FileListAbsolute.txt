@@ -157,3 +157,6 @@ C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder\server\obj\Debug\net9.
 C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder\server\obj\Debug\net9.0\VitalityBuilder.Api.pdb
 C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder\server\obj\Debug\net9.0\VitalityBuilder.Api.genruntimeconfig.cache
 C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder\server\obj\Debug\net9.0\ref\VitalityBuilder.Api.dll
+C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder\server\bin\Debug\net9.0\FluentValidation.dll
+C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder\server\bin\Debug\net9.0\FluentValidation.AspNetCore.dll
+C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder\server\bin\Debug\net9.0\FluentValidation.DependencyInjectionExtensions.dll

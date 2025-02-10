@@ -11,10 +11,10 @@ namespace VitalityBuilder.Api.Services;
 /// </summary>
 public partial class CharacterArchetypesService : ICharacterArchetypesService
 {
-    private readonly ArchetypeDbContext _context;
+    private readonly VitalityBuilderContext _context;
     private readonly ILogger<CharacterArchetypesService> _logger;
 
-    public CharacterArchetypesService(ArchetypeDbContext context, ILogger<CharacterArchetypesService> logger)
+    public CharacterArchetypesService(VitalityBuilderContext context, ILogger<CharacterArchetypesService> logger)
     {
         _context = context;
         _logger = logger;
