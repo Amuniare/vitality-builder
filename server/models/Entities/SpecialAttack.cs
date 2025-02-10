@@ -10,4 +10,7 @@ public class SpecialAttack
 
     public int CharacterId { get; set; }
     public Character Character { get; set; } = null!;
+    public int Cost { get; set; }
+
+
 }

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using VitalityBuilder.Api.Infrastructure;
-using VitalityBuilder.Api.Models;
+using VitalityBuilder.Api.Models.Entities;
 using VitalityBuilder.Api.Models.Archetypes;
 
 namespace VitalityBuilder.Api.Infrastructure;
@@ -15,42 +15,16 @@ public class VitalityBuilderContext(DbContextOptions<VitalityBuilderContext> opt
     public DbSet<SpecialAttack> SpecialAttacks => Set<SpecialAttack>();
     public DbSet<UniquePower> UniquePowers => Set<UniquePower>();
 
+    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<Character>()
+            .Property(c => c.MainPointPool)
+            .HasComputedColumnSql("CASE WHEN [Tier] >= 2 THEN ([Tier] - 2) * 15 ELSE 0 END");   
 
-        // Configure Character relationships
-        modelBuilder.Entity<Character>(entity =>
-        {
-            entity.HasKey(e => e.Id);
+
             
-            entity.HasOne(e => e.CombatAttributes)
-                .WithOne(e => e.Character)
-                .HasForeignKey<CombatAttributes>(e => e.CharacterId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasOne(e => e.UtilityAttributes)
-                .WithOne(e => e.Character)
-                .HasForeignKey<UtilityAttributes>(e => e.CharacterId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasMany(e => e.Expertise)
-                .WithOne(e => e.Character)
-                .HasForeignKey(e => e.CharacterId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasMany(e => e.SpecialAttacks)
-                .WithOne(e => e.Character)
-                .HasForeignKey(e => e.CharacterId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasMany(e => e.UniquePowers)
-                .WithOne(e => e.Character)
-                .HasForeignKey(e => e.CharacterId)
-                .OnDelete(DeleteBehavior.Cascade);
-        });
 
         // Configure MovementArchetype
         modelBuilder.Entity<Models.Archetypes.MovementArchetype>(entity =>

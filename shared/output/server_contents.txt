@@ -172,7 +172,7 @@ Content:
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VitalityBuilder.Api.Models.DTOs;
-using VitalityBuilder.Api.Models.Entities;  // Make sure this is the correct namespace
+using VitalityBuilder.Api.Models.Entities;  // Ensure this is the correct namespace
 using VitalityBuilder.Api.Services;
 using VitalityBuilder.Api.Infrastructure;
 
@@ -227,7 +227,7 @@ public class CharactersController : ControllerBase
                 }
             };
 
-            _context.Characters.Add(character);
+            Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<Character> entityEntry = _context.Add(character);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetCharacter), new { id = character.Id }, character);
@@ -332,7 +332,7 @@ public class CharactersController : ControllerBase
 
 File: <WindowsPath.parents> data\ICharacterRepository.cs
 Content:
-using VitalityBuilder.Api.Models; 
+using VitalityBuilder.Api.Models.Entities;
 public interface ICharacterRepository
 {
     Task<Character> CreateCharacterAsync(Character character);
@@ -345,7 +345,7 @@ File: <WindowsPath.parents> Infrastructure\AppDbContext.cs
 Content:
 using Microsoft.EntityFrameworkCore;
 using VitalityBuilder.Api.Infrastructure;
-using VitalityBuilder.Api.Models;
+using VitalityBuilder.Api.Models.Entities;
 using VitalityBuilder.Api.Models.Archetypes;
 
 namespace VitalityBuilder.Api.Infrastructure;
@@ -441,7 +441,7 @@ Content:
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Text.Json;
-using VitalityBuilder.Api.Models;
+using VitalityBuilder.Api.Models.Entities;
 
 namespace VitalityBuilder.Api.Infrastructure
 {
@@ -3199,8 +3199,19 @@ public class Character
     [JsonIgnore]
     public virtual Models.Archetypes.CharacterArchetypes? CharacterArchetypes { get; set; }
 
+
+    // Calculated Properties
     [JsonIgnore]
     public int AvailableMainPoints => MainPointPool - Expertise.Sum(e => e.Cost);
+
+    [JsonIgnore]
+    public int AvailableSpecialAttacksPoints => SpecialAttacksPointPool - SpecialAttacks.Sum(sa => sa.Cost);
+
+    [JsonIgnore]
+    public int AvailableUtilityPoints => UtilityPointPool - UniquePowers.Sum(up => up.Cost);
+
+
+
 }
 --------------------------------------------------
 
@@ -3416,7 +3427,11 @@ public class SpecialAttack
 
     public int CharacterId { get; set; }
     public Character Character { get; set; } = null!;
+    public int Cost { get; set; }
+
+
 }
+
 --------------------------------------------------
 
 File: <WindowsPath.parents> models\Entities\UniquePower.cs

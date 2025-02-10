@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Text.Json;
-using VitalityBuilder.Api.Models;
+using VitalityBuilder.Api.Models.Entities;
 
 namespace VitalityBuilder.Api.Infrastructure
 {

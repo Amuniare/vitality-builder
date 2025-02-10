@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VitalityBuilder.Api.Models.DTOs;
-using VitalityBuilder.Api.Models.Entities;  // Make sure this is the correct namespace
+using VitalityBuilder.Api.Models.Entities;  // Ensure this is the correct namespace
 using VitalityBuilder.Api.Services;
 using VitalityBuilder.Api.Infrastructure;
 
@@ -56,7 +56,9 @@ public class CharactersController : ControllerBase
                 }
             };
 
-            _context.Characters.Add(character);
+            
+
+            Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<Character> entityEntry = _context.Add(character);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetCharacter), new { id = character.Id }, character);

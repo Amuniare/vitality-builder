@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>VitalityBuilder.Api</name>
+    </assembly>
+    <members>
+        <member name="T:VitalityBuilder.Api.Infrastructure.ArchetypeDbContext">
+            <summary>
+            Database context for handling character archetype-related data and relationships.
+            This context manages the persistence of character archetypes and their associated rule configurations.
+            </summary>
+        </member>
+        <member name="P:VitalityBuilder.Api.Infrastructure.ArchetypeDbContext.CharacterArchetypes">
+            <summary>
+            Database set for character archetypes and their associated components
+            </summary>
+        </member>
+        <member name="T:VitalityBuilder.Api.Infrastructure.JsonValueConverter`1">
+            <summary>
+            Generic JSON value converter for Entity Framework Core
+            </summary>
+        </member>
+        <member name="T:VitalityBuilder.Api.Infrastructure.JsonValueComparer`1">
+            <summary>
+            Generic JSON comparer for Entity Framework Core
+            </summary>
+        </member>
+        <member name="T:VitalityBuilder.Api.Migrations.InitialCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:VitalityBuilder.Api.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:VitalityBuilder.Api.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:VitalityBuilder.Api.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:VitalityBuilder.Api.Models.DTOs.CharacterArchetypesDto">
+            <summary>
+            Data transfer object for creating or updating character archetypes
+            </summary>
+        </member>
+        <member name="T:VitalityBuilder.Api.Services.CharacterArchetypesService">
+            <summary>
+            Service implementing character archetype management and calculations
+            </summary>
+        </member>
+        <member name="T:VitalityBuilder.Api.Services.ICharacterArchetypesService">
+            <summary>
+            Interface defining core character archetype management operations
+            </summary>
+        </member>
+    </members>
+</doc>
