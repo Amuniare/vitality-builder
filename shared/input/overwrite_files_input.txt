@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VitalityBuilder.Api.Models.DTOs;
-using VitalityBuilder.Api.Models.Entities;  // This contains Character class
 using VitalityBuilder.Api.Services;
 using VitalityBuilder.Api.Infrastructure;
+using VitalityBuilder.Api.Models.Entities;
 
 namespace VitalityBuilder.Api.Controllers;
 
@@ -15,7 +15,7 @@ public class CharactersController(
     ICharacterArchetypesService archetypeService) : ControllerBase
 {
     [HttpPost]
-    public async Task<ActionResult<Models.Entities.Character>> CreateCharacter(CreateCharacterDto dto)
+    public async Task<ActionResult<Character>> CreateCharacter(CreateCharacterDto dto)
     {
         logger.LogInformation("Received character creation request for {CharacterName}", dto.Name);
 
@@ -26,18 +26,18 @@ public class CharactersController(
 
         try 
         {
-            var character = new Models.Entities.Character
+            var character = new Character
             {
                 Name = dto.Name,
                 Tier = dto.Tier,
-                CombatAttributes = new Models.Entities.CombatAttributes
+                CombatAttributes = new CombatAttributes
                 {
                     Focus = dto.CombatAttributes.Focus,
                     Power = dto.CombatAttributes.Power,
                     Mobility = dto.CombatAttributes.Mobility,
                     Endurance = dto.CombatAttributes.Endurance
                 },
-                UtilityAttributes = new Models.Entities.UtilityAttributes
+                UtilityAttributes = new UtilityAttributes
                 {
                     Awareness = dto.UtilityAttributes.Awareness,
                     Communication = dto.UtilityAttributes.Communication,
@@ -58,7 +58,7 @@ public class CharactersController(
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Models.Entities.Character>> GetCharacter(int id)
+    public async Task<ActionResult<Character>> GetCharacter(int id)
     {
         var character = await context.Characters
             .Include(c => c.CombatAttributes)

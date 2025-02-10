@@ -41,48 +41,30 @@ public partial class CharacterArchetypesService
         return baseSpeed;
     }
 
-    public int CalculateSpecialAttackPoints(Models.Archetypes.SpecialAttackArchetype archetype, int tier)
+    public int CalculateSpecialAttackPoints(SpecialAttackArchetype archetype, int tier)
     {
         return archetype.Category switch
         {
-            // Normal gets points based on limits
-            Models.Archetypes.SpecialAttackCategory.Normal => CalculateNormalArchetypePoints(tier),
-            
-            // Paragon gets 10 × Tier points but can't take limits
-            Models.Archetypes.SpecialAttackCategory.Paragon => 10 * tier,
-            
-            // One Trick gets 20 × Tier points for a single powerful attack
-            Models.Archetypes.SpecialAttackCategory.OneTrick => 20 * tier,
-            
-            // Dual-Natured gets 15 × Tier points for two balanced attacks
-            Models.Archetypes.SpecialAttackCategory.DualNatured => 15 * tier,
-            
-            // Basic gets 10 × Tier points for enhancing base attacks
-            Models.Archetypes.SpecialAttackCategory.Basic => 10 * tier,
-            
-            // Specialist gains enhanced points from required limits
-            Models.Archetypes.SpecialAttackCategory.Specialist => CalculateSpecialistPoints(tier, archetype.RequiredLimits),
-            
+            SpecialAttackCategory.Paragon => 10 * tier,
+            SpecialAttackCategory.OneTrick => 20 * tier,
+            SpecialAttackCategory.DualNatured => 15 * tier,
+            SpecialAttackCategory.Basic => 10 * tier,
+            SpecialAttackCategory.Specialist => CalculateSpecialistPoints(tier, archetype.RequiredLimits),
             _ => 0
         };
     }
 
-    public int CalculateUtilityPoints(Models.Archetypes.UtilityArchetype archetype, int tier)
+    public int CalculateUtilityPoints(UtilityArchetype archetype, int tier)
     {
         return archetype.Category switch
         {
-            // Standard points: 5 × (Tier - 1)
-            Models.Archetypes.UtilityCategory.Practical => 5 * (tier - 1),
-            
-            // Specialized gets double tier bonus but restricted options
-            Models.Archetypes.UtilityCategory.Specialized => 5 * (tier - 2),
-            
-            // Jack of All Trades gets fewer points but applies tier to all checks
-            Models.Archetypes.UtilityCategory.JackOfAllTrades => 5 * (tier - 2),
-            
+            UtilityCategory.Specialized => 5 * (tier - 2),
+            UtilityCategory.Practical => 5 * (tier - 1),
+            UtilityCategory.JackOfAllTrades => 5 * (tier - 2),
             _ => 0
         };
     }
+
 
     public Dictionary<string, int> CalculateArchetypeBonuses(Models.Archetypes.CharacterArchetypes archetypes, int tier)
     {

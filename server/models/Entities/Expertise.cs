@@ -1,5 +1,4 @@
-namespace VitalityBuilder.Api.Models;
-
+namespace VitalityBuilder.Api.Models.Entities;
 public class Expertise
 {
     public int Id { get; set; }

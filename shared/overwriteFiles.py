@@ -56,7 +56,7 @@ def main():
     try:
         project_root = find_project_root()
         input_file = project_root / "shared" / "input" / "overwrite_files_input.txt"
-        target_dir = project_root / "server" / "src"
+        target_dir = project_root / "server"
 
         if not input_file.exists():
             raise RuntimeError(f"Input file not found: {input_file}")

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 using VitalityBuilder.Api.Infrastructure; 
+using VitalityBuilder.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,9 @@ builder.Services.AddDbContext<VitalityBuilderContext>(options =>
         options.EnableDetailedErrors();
     }
 });
+
+// Add services
+builder.Services.AddScoped<ICharacterArchetypesService, CharacterArchetypesService>();
 
 // Add Swagger
 builder.Services.AddEndpointsApiExplorer();

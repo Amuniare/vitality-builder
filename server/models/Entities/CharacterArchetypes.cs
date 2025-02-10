@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace VitalityBuilder.Api.Models;
+namespace VitalityBuilder.Api.Models.Entities;
 
 public class CharacterArchetypes
 {

@@ -1,4 +1,6 @@
 // File: Models/DTOs/CharacterArchetypesDto.cs
+using VitalityBuilder.Api.Models.Entities;
+
 namespace VitalityBuilder.Api.Models.DTOs;
 
 /// <summary>

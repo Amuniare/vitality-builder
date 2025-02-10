@@ -10,11 +10,14 @@ def find_project_root() -> Path:
         raise RuntimeError("Could not find project root ('vitality-builder' directory)")
     return current
 
-def generate_directory_tree(start_path: Path) -> str:
+def generate_directory_tree(start_path: Path, skip_dirs: list) -> str:
     """Generate a directory tree string starting from start_path."""
     tree = []
 
     def recurse(path: Path, indent: str = "") -> None:
+        if path.name in skip_dirs:
+            return  # Skip specified directories
+
         try:
             # Add current directory name
             tree.append(f"{indent}{path.name}/")
@@ -22,8 +25,6 @@ def generate_directory_tree(start_path: Path) -> str:
             for item in sorted(path.iterdir()):
                 if item.is_dir():
                     recurse(item, indent + "  ")
-                else:
-                    tree.append(f"{indent}  {item.name}")
         except PermissionError:
             tree.append(f"{indent}  ⚠️ Permission denied")
         except Exception as e:
@@ -49,16 +50,21 @@ def main():
         target_dir = project_root / "server"
         output_dir = project_root / "shared" / "output"
         output_file = output_dir / "server_contents.txt"
+        skip_dirs = ["bin", "obj", ".git", ".vs", "node_modules", "packages", "dist", "output"]
 
         # Ensure output directory exists
         output_dir.mkdir(parents=True, exist_ok=True)
 
         # Generate directory tree
-        directory_tree = generate_directory_tree(target_dir)
+        directory_tree = generate_directory_tree(target_dir, skip_dirs)
 
         # Collect file contents
         file_contents = []
         for file_path in target_dir.rglob('*'):
+            # Skip unwanted directories
+            if any(skip_dir in file_path.parts for skip_dir in skip_dirs):
+                continue
+
             if file_path.is_file():
                 relative_path = file_path.relative_to(target_dir)
                 content = read_file_content(file_path)
@@ -71,7 +77,7 @@ def main():
             f.write("\n\n=== File Contents ===\n")
 
             for path, content in file_contents:
-                f.write(f"\nFile: {path}\n")
+                f.write(f"\nFile: {file_path.parents} {path}\n")
                 f.write("Content:\n")
                 f.write(content)
                 f.write("\n" + "-" * 50 + "\n")

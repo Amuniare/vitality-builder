@@ -1,5 +1,4 @@
-namespace VitalityBuilder.Api.Models;
-public class UtilityAttributes
+namespace VitalityBuilder.Api.Models.Entities;public class UtilityAttributes
 {
     public int Id { get; set; }
     public int Awareness { get; set; }
@@ -8,4 +7,6 @@ public class UtilityAttributes
 
     public int CharacterId { get; set; }
     public Character Character { get; set; } = null!;
+
+    
 }

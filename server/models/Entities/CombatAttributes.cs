@@ -1,4 +1,4 @@
-namespace VitalityBuilder.Api.Models;
+namespace VitalityBuilder.Api.Models.Entities;
 
 public class CombatAttributes
 {
@@ -10,4 +10,6 @@ public class CombatAttributes
 
     public int CharacterId { get; set; }
     public Character Character { get; set; } = null!;
+    public int Total { get; internal set; }
 }
+
