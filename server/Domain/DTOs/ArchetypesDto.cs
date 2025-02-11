@@ -1,11 +1,8 @@
-// File: Models/DTOs/CharacterArchetypesDto.cs
-using VitalityBuilder.Api.Models.Entities;
+using VitalityBuilder.Api.Models.Enums;
 
 namespace VitalityBuilder.Api.Models.DTOs;
 
-/// <summary>
-/// Data transfer object for creating or updating character archetypes
-/// </summary>
+
 public class CharacterArchetypesDto
 {
     public MovementArchetypeDto MovementArchetype { get; set; } = null!;

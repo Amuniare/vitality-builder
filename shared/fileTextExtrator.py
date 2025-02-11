@@ -11,7 +11,7 @@ def find_project_root() -> Path:
     return current
 
 def generate_directory_tree(start_path: Path, skip_dirs: list) -> str:
-    """Generate a directory tree string starting from start_path."""
+    """Generate a directory tree string starting from start_path, including files."""
     tree = []
 
     def recurse(path: Path, indent: str = "") -> None:
@@ -25,6 +25,9 @@ def generate_directory_tree(start_path: Path, skip_dirs: list) -> str:
             for item in sorted(path.iterdir()):
                 if item.is_dir():
                     recurse(item, indent + "  ")
+                else:
+                    # Add file name with indentation
+                    tree.append(f"{indent}  {item.name}")
         except PermissionError:
             tree.append(f"{indent}  ⚠️ Permission denied")
         except Exception as e:
@@ -61,14 +64,13 @@ def main():
         # Collect file contents
         file_contents = []
         for file_path in target_dir.rglob('*'):
-            # Skip unwanted directories
-            if any(skip_dir in file_path.parts for skip_dir in skip_dirs):
+            # Skip unwanted directories and directories themselves (only process files)
+            if any(skip_dir in file_path.parts for skip_dir in skip_dirs) or file_path.is_dir():
                 continue
 
-            if file_path.is_file():
-                relative_path = file_path.relative_to(target_dir)
-                content = read_file_content(file_path)
-                file_contents.append((relative_path, content))
+            relative_path = file_path.relative_to(target_dir)
+            content = read_file_content(file_path)
+            file_contents.append((relative_path, content))
 
         # Write to output file
         with open(output_file, 'w', encoding='utf-8') as f:
@@ -77,7 +79,9 @@ def main():
             f.write("\n\n=== File Contents ===\n")
 
             for path, content in file_contents:
-                f.write(f"\nFile: {file_path.parents} {path}\n")
+                # Convert path to Windows-style string
+                win_path = str(path).replace('/', '\\')
+                f.write(f"\nFile: server\\{win_path}\n")
                 f.write("Content:\n")
                 f.write(content)
                 f.write("\n" + "-" * 50 + "\n")

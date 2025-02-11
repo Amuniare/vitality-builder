@@ -42,5 +42,13 @@ public class CharacterEntity
     [JsonIgnore]
     public virtual Models.Archetypes.CharacterArchetypes? CharacterArchetypes { get; set; }
 
+    // Calculated properties
+    [NotMapped]
+    public int AvailableMainPoints => MainPointPool - (Expertise?.Sum(e => e.Cost) ?? 0);
 
+    [NotMapped]
+    public int AvailableSpecialAttacksPoints => SpecialAttacksPointPool - (SpecialAttacks?.Sum(sa => sa.Cost) ?? 0);
+
+    [NotMapped]
+    public int AvailableUtilityPoints => UtilityPointPool - (UniquePowers?.Sum(up => up.Cost) ?? 0);
 }

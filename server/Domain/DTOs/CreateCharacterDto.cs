@@ -1,3 +1,5 @@
+using VitalityBuilder.Api.Models.DTOs;
+
 namespace VitalityBuilder.Api.Models.DTOs;
 
 public class CreateCharacterDto

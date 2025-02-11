@@ -9,7 +9,7 @@ public class CombatAttributes
     public int Endurance { get; set; }
 
     public int CharacterId { get; set; }
-    public Character Character { get; set; } = null!;
+    public CharacterEntity Character { get; set; } = null!;
     public int Total { get; internal set; }
 }
 

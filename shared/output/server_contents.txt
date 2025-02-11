@@ -1,21 +1,66 @@
 === Directory Tree ===
 server/
+  appsettings.Development.json
+  appsettings.json
   controllers/
-  data/
-  Infrastructure/
-  migrations/
-  models/
-    Archetypes/
+    CharactersController.cs
+  Domain/
     DTOs/
+      ArchetypesDto.cs
+      CharacterDTOs.cs
+      CombatAttributesDto.cs
+      CreateCharacterDto.cs
+      UtilityAttributesDto.cs
     Entities/
+      ArchetypeEntity.cs
+      CharacterEntity.cs
+      CombatAttributesEntity.cs
+      ExpertiseEntity.cs
+      SpecialAttackEntity.cs
+      UniquePowerEntity.cs
+      UtilityAttributesEntity.cs
+    Enums/
+      ArchetypeEnums.cs
     Validations/
+      ArchetypeValidators.cs
+      CharacterValidators.cs
+  Infrastructure/
+    Database/
+      EntityConfigurations/
+      VitalityBuilderContext.cs
+    Logging/
+      LoggingConfiguration.cs
+    Validation/
+      ValidationExtensions.cs
+  Interfaces/
+    Repositories/
+      ICharacterRepository.cs
+    Services/
+      ICalculationService.cs
+      ICharacterArchetypesServices.cs
+      ICharacterCreationService.cs
+      ICharacterManagementService.cs
+      ICharacterStatCalculator.cs
+      ICombatService.cs
+  migrations/
+    20250209215104_InitialCreate.cs
+    20250210120258_FixMainPointPoolComputed.cs
+    20250210120258_FixMainPointPoolComputed.Designer.cs
+    VitalityBuilderContextModelSnapshot.cs
+  Program.cs
   Properties/
-  services/
+    launchSettings.json
   Utilities/
+    Extensions/
+      JsonValueConverter.cs
+    Helpers/
+      ValidationHelper.cs
+  vitality.db
+  VitalityBuilder.Api.csproj
 
 === File Contents ===
 
-File: <WindowsPath.parents> appsettings.Development.json
+File: server\appsettings.Development.json
 Content:
 {
   "Logging": {
@@ -28,7 +73,7 @@ Content:
 
 --------------------------------------------------
 
-File: <WindowsPath.parents> appsettings.json
+File: server\appsettings.json
 Content:
 {
   "ConnectionStrings": {
@@ -44,7 +89,7 @@ Content:
 }
 --------------------------------------------------
 
-File: <WindowsPath.parents> Program.cs
+File: server\Program.cs
 Content:
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -56,9 +101,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddValidation();
 
-builder.Services.AddDbContext<VitalityBuilderContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-);
 
 
 // Configure JSON options
@@ -128,12 +170,12 @@ using (var scope = app.Services.CreateScope())
 app.Run();
 --------------------------------------------------
 
-File: <WindowsPath.parents> vitality.db
+File: server\vitality.db
 Content:
 [Binary or non-UTF-8 file content omitted]
 --------------------------------------------------
 
-File: <WindowsPath.parents> VitalityBuilder.Api.csproj
+File: server\VitalityBuilder.Api.csproj
 Content:
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
@@ -156,7 +198,7 @@ Content:
 </Project>
 --------------------------------------------------
 
-File: <WindowsPath.parents> controllers\CharactersController.cs
+File: server\controllers\CharactersController.cs
 Content:
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -165,6 +207,7 @@ using VitalityBuilder.Api.Models.DTOs;
 using VitalityBuilder.Api.Models.Entities;
 using VitalityBuilder.Api.Services;
 using VitalityBuilder.Api.Infrastructure;
+
 
 namespace VitalityBuilder.Api.Controllers;
 
@@ -178,25 +221,12 @@ public class CharactersController : ControllerBase
     private readonly IValidator<CreateCharacterDto> _createCharacterValidator;
     private readonly IValidator<CharacterArchetypesDto> _archetypesValidator;
 
-    public CharactersController(
-        VitalityBuilderContext context,
-        ILogger<CharactersController> logger,
-        ICharacterArchetypesService archetypeService,
-        IValidator<CreateCharacterDto> createCharacterValidator,
-        IValidator<CharacterArchetypesDto> archetypesValidator)
-    {
-        _context = context;
-        _logger = logger;
-        _archetypeService = archetypeService;
-        _createCharacterValidator = createCharacterValidator;
-        _archetypesValidator = archetypesValidator;
-    }
 
     /// <summary>
     /// Creates a new character with basic attributes
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<Character>> CreateCharacter([FromBody] CreateCharacterDto dto)
+    public async Task<ActionResult<CharacterEntity>> CreateCharacter([FromBody] CreateCharacterDto dto)
     {
         _logger.LogInformation("Received character creation request for {CharacterName}", dto.Name);
 
@@ -215,7 +245,7 @@ public class CharactersController : ControllerBase
                 return BadRequest("Attribute points exceed tier limits");
             }
 
-            var character = new Character
+            var character = new CharacterEntity
             {
                 Name = dto.Name,
                 Tier = dto.Tier,
@@ -294,7 +324,7 @@ public class CharactersController : ControllerBase
     /// Gets a character by ID including all related data
     /// </summary>
     [HttpGet("{id}")]
-    public async Task<ActionResult<Character>> GetCharacter(int id)
+    public async Task<ActionResult<CharacterEntity>> GetCharacter(int id)
     {
         var character = await _context.Characters
             .Include(c => c.CombatAttributes)
@@ -329,270 +359,15 @@ public class CharactersController : ControllerBase
         _validationService = validationService;
     }
 
+
+    
+    
+
 }
+
 --------------------------------------------------
 
-File: <WindowsPath.parents> data\ICharacterRepository.cs
-Content:
-using VitalityBuilder.Api.Models.Entities;
-public interface ICharacterRepository
-{
-    Task<Character> CreateCharacterAsync(Character character);
-    Task<List<Character>> GetAllCharactersAsync();
-    Task<Character?> GetCharacterByIdAsync(int id);
-}
---------------------------------------------------
-
-File: <WindowsPath.parents> Infrastructure\VitalityBuilderContext.cs
-Content:
-using Microsoft.EntityFrameworkCore;
-using VitalityBuilder.Api.Models.Entities;
-using VitalityBuilder.Api.Models.Archetypes;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System.Text.Json;
-
-namespace VitalityBuilder.Api.Infrastructure;
-
-public class VitalityBuilderContext(DbContextOptions<VitalityBuilderContext> options) : DbContext(options)
-{
-    // Use fully qualified names to resolve ambiguity
-    public DbSet<Models.Archetypes.CharacterArchetypes> CharacterArchetypes => Set<Models.Archetypes.CharacterArchetypes>();
-    public DbSet<CharacterEntity> Characters => Set<CharacterEntity>();
-    public DbSet<CombatAttributes> CombatAttributes => Set<CombatAttributes>();
-    public DbSet<UtilityAttributes> UtilityAttributes => Set<UtilityAttributes>();
-    public DbSet<Expertise> Expertise => Set<Expertise>();
-    public DbSet<SpecialAttack> SpecialAttacks => Set<SpecialAttack>();
-    public DbSet<UniquePower> UniquePowers => Set<UniquePower>();
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<CharacterEntity>()
-            .Property(c => c.MainPointPool)
-            .HasComputedColumnSql("CASE WHEN [Tier] >= 2 THEN ([Tier] - 2) * 15 ELSE 0 END");   
-
-        // Configure MovementArchetype
-        modelBuilder.Entity<Models.Archetypes.MovementArchetype>(entity =>
-        {
-            entity.Property(e => e.SpeedBonusByTier)
-                .HasConversion(new JsonValueConverter<Dictionary<int, int>>())
-                .Metadata.SetValueComparer(new JsonValueComparer<Dictionary<int, int>>());
-        });
-
-        // Configure SpecialAttack
-        modelBuilder.Entity<SpecialAttack>(entity =>
-        {
-            entity.Property(e => e.Limits)
-                .HasConversion(new JsonValueConverter<List<string>>())
-                .Metadata.SetValueComparer(new JsonValueComparer<List<string>>());
-
-            entity.Property(e => e.Upgrades)
-                .HasConversion(new JsonValueConverter<List<string>>())
-                .Metadata.SetValueComparer(new JsonValueComparer<List<string>>());
-        });
-
-        // Configure UniqueAbilityArchetype
-        modelBuilder.Entity<Models.Archetypes.UniqueAbilityArchetype>(entity =>
-        {
-            entity.Property(e => e.StatBonuses)
-                .HasConversion(new JsonValueConverter<Dictionary<string, int>>())
-                .Metadata.SetValueComparer(new JsonValueComparer<Dictionary<string, int>>());
-        });
-
-        // Configure UtilityArchetype
-        modelBuilder.Entity<Models.Archetypes.UtilityArchetype>(entity =>
-        {
-            entity.Property(e => e.Restrictions)
-                .HasConversion(new JsonValueConverter<List<string>>())
-                .Metadata.SetValueComparer(new JsonValueComparer<List<string>>());
-        });        
-    }
-
-
-
-    // Configure CharacterArchetypes
-    public VitalityBuilderContext(DbContextOptions<VitalityBuilderContext> options)
-        : base(options) { }
-
-    /// <summary>
-    /// Database set for character archetypes and their associated components
-    /// </summary>
-    public DbSet<CharacterArchetypes> CharacterArchetypes => Set<CharacterArchetypes>();
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
-
-        ConfigureCharacterArchetypes(modelBuilder);
-        ConfigureMovementArchetype(modelBuilder);
-        ConfigureAttackTypeArchetype(modelBuilder);
-        ConfigureEffectTypeArchetype(modelBuilder);
-        ConfigureUniqueAbilityArchetype(modelBuilder);
-        ConfigureSpecialAttackArchetype(modelBuilder);
-        ConfigureUtilityArchetype(modelBuilder);
-    }
-
-    private void ConfigureCharacterArchetypes(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<CharacterArchetypes>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-            // Configure one-to-one relationship with Character
-            entity.HasOne(e => e.Character)
-                .WithOne()
-                .HasForeignKey<CharacterArchetypes>(e => e.CharacterId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // Configure required navigation properties
-            entity.Navigation(e => e.MovementArchetype).IsRequired();
-            entity.Navigation(e => e.AttackTypeArchetype).IsRequired();
-            entity.Navigation(e => e.EffectTypeArchetype).IsRequired();
-            entity.Navigation(e => e.UniqueAbilityArchetype).IsRequired();
-            entity.Navigation(e => e.SpecialAttackArchetype).IsRequired();
-            entity.Navigation(e => e.UtilityArchetype).IsRequired();
-
-            // Configure table name
-            entity.ToTable("CharacterArchetypes");
-        });
-    }
-
-    private void ConfigureMovementArchetype(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<MovementArchetype>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-            entity.Property(e => e.SpeedBonusByTier)
-                .HasConversion(
-                    v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
-                    v => JsonSerializer.Deserialize<Dictionary<int, int>>(v, JsonSerializerOptions.Default)
-                         ?? new Dictionary<int, int>(),
-                    new ValueComparer<Dictionary<int, int>>(
-                        (c1, c2) => c1!.SequenceEqual(c2!),
-                        c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                        c => new Dictionary<int, int>(c)
-                    )
-                );
-
-            entity.Property(e => e.Type)
-                .HasConversion<string>();
-
-            entity.ToTable("MovementArchetypes");
-        });
-    }
-
-    private void ConfigureAttackTypeArchetype(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<AttackTypeArchetype>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-            entity.Property(e => e.Category)
-                .HasConversion<string>();
-
-            entity.ToTable("AttackTypeArchetypes");
-        });
-    }
-
-    private void ConfigureEffectTypeArchetype(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<EffectTypeArchetype>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-            entity.Property(e => e.Category)
-                .HasConversion<string>();
-
-            entity.ToTable("EffectTypeArchetypes");
-        });
-    }
-
-    private void ConfigureUniqueAbilityArchetype(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<UniqueAbilityArchetype>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-            entity.Property(e => e.StatBonuses)
-                .HasConversion(
-                    v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
-                    v => JsonSerializer.Deserialize<Dictionary<string, int>>(v, JsonSerializerOptions.Default)
-                         ?? new Dictionary<string, int>(),
-                    new ValueComparer<Dictionary<string, int>>(
-                        (c1, c2) => c1!.SequenceEqual(c2!),
-                        c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                        c => new Dictionary<string, int>(c)
-                    )
-                );
-
-            entity.Property(e => e.Category)
-                .HasConversion<string>();
-
-            entity.ToTable("UniqueAbilityArchetypes");
-        });
-    }
-
-    private void ConfigureSpecialAttackArchetype(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<SpecialAttackArchetype>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-            entity.Property(e => e.RequiredLimits)
-                .HasConversion(
-                    v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
-                    v => JsonSerializer.Deserialize<List<string>>(v, JsonSerializerOptions.Default)
-                         ?? new List<string>(),
-                    new ValueComparer<List<string>>(
-                        (c1, c2) => c1!.SequenceEqual(c2!),
-                        c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                        c => new List<string>(c)
-                    )
-                );
-
-            entity.Property(e => e.Category)
-                .HasConversion<string>();
-
-            entity.ToTable("SpecialAttackArchetypes");
-        });
-    }
-
-    private void ConfigureUtilityArchetype(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<UtilityArchetype>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-            entity.Property(e => e.Restrictions)
-                .HasConversion(
-                    v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
-                    v => JsonSerializer.Deserialize<List<string>>(v, JsonSerializerOptions.Default)
-                         ?? new List<string>(),
-                    new ValueComparer<List<string>>(
-                        (c1, c2) => c1!.SequenceEqual(c2!),
-                        c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                        c => new List<string>(c)
-                    )
-                );
-
-            entity.Property(e => e.Category)
-                .HasConversion<string>();
-
-            entity.ToTable("UtilityArchetypes");
-        });
-    }
-}
-}
---------------------------------------------------
-
-File: <WindowsPath.parents> migrations\20250209215104_InitialCreate.cs
+File: server\migrations\20250209215104_InitialCreate.cs
 Content:
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -1024,7 +799,7 @@ namespace VitalityBuilder.Api.Migrations
 
 --------------------------------------------------
 
-File: <WindowsPath.parents> migrations\20250210120258_FixMainPointPoolComputed.cs
+File: server\migrations\20250210120258_FixMainPointPoolComputed.cs
 Content:
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -1106,7 +881,7 @@ namespace VitalityBuilder.Api.Migrations
 
 --------------------------------------------------
 
-File: <WindowsPath.parents> migrations\20250210120258_FixMainPointPoolComputed.Designer.cs
+File: server\migrations\20250210120258_FixMainPointPoolComputed.Designer.cs
 Content:
 ﻿// <auto-generated />
 using Microsoft.EntityFrameworkCore;
@@ -1762,7 +1537,7 @@ namespace VitalityBuilder.Api.Migrations
 
 --------------------------------------------------
 
-File: <WindowsPath.parents> migrations\VitalityBuilderContextModelSnapshot.cs
+File: server\migrations\VitalityBuilderContextModelSnapshot.cs
 Content:
 ﻿// <auto-generated />
 using Microsoft.EntityFrameworkCore;
@@ -2415,7 +2190,7 @@ namespace VitalityBuilder.Api.Migrations
 
 --------------------------------------------------
 
-File: <WindowsPath.parents> Properties\launchSettings.json
+File: server\Properties\launchSettings.json
 Content:
 ﻿{
   "profiles": {
@@ -2433,574 +2208,7 @@ Content:
 }
 --------------------------------------------------
 
-File: <WindowsPath.parents> services\CharacterArchetypesService.Calculations.cs
-Content:
-using VitalityBuilder.Api.Models;
-using VitalityBuilder.Api.Models.Archetypes;
-
-namespace VitalityBuilder.Api.Services;
-
-public partial class CharacterArchetypesService
-{
-    public int CalculateMovementSpeed(Models.Archetypes.MovementArchetype archetype, int tier, int mobility)
-    {
-        // Base movement is the higher of (6) or (mobility + tier)
-        var baseSpeed = Math.Max(6, mobility + tier);
-        
-        // Apply archetype-specific modifiers
-        switch (archetype.Type)
-        {
-            case Models.Archetypes.MovementArchetypeType.Swift:
-                // Swift characters get bonus speed based on tier level
-                baseSpeed += (tier + 1) / 2;
-                break;
-            case Models.Archetypes.MovementArchetypeType.Flight:
-            case Models.Archetypes.MovementArchetypeType.Teleportation:
-            case Models.Archetypes.MovementArchetypeType.Portal:
-                baseSpeed = AdjustSpecialMovementSpeedForType(archetype.Type, baseSpeed);
-                break;
-        }
-
-        // Apply any tier-specific bonuses configured for this archetype
-        if (archetype.SpeedBonusByTier.TryGetValue(tier, out int bonus))
-        {
-            baseSpeed += bonus;
-        }
-
-        // Apply movement multiplier (e.g., for effects like swimming)
-        return (int)(baseSpeed * archetype.MovementMultiplier);
-    }
-
-    private int AdjustSpecialMovementSpeedForType(Models.Archetypes.MovementArchetypeType type, int baseSpeed)
-    {
-        // Implement the logic for adjusting special movement speed here
-        // For now, let's just return the baseSpeed as a placeholder
-        return baseSpeed;
-    }
-
-    public int CalculateSpecialAttackPoints(SpecialAttackArchetype archetype, int tier)
-    {
-        return archetype.Category switch
-        {
-            SpecialAttackCategory.Paragon => 10 * tier,
-            SpecialAttackCategory.OneTrick => 20 * tier,
-            SpecialAttackCategory.DualNatured => 15 * tier,
-            SpecialAttackCategory.Basic => 10 * tier,
-            SpecialAttackCategory.Specialist => CalculateSpecialistPoints(tier, archetype.RequiredLimits),
-            _ => 0
-        };
-    }
-
-    public int CalculateUtilityPoints(UtilityArchetype archetype, int tier)
-    {
-        return archetype.Category switch
-        {
-            UtilityCategory.Specialized => 5 * (tier - 2),
-            UtilityCategory.Practical => 5 * (tier - 1),
-            UtilityCategory.JackOfAllTrades => 5 * (tier - 2),
-            _ => 0
-        };
-    }
-
-
-    public Dictionary<string, int> CalculateArchetypeBonuses(Models.Archetypes.CharacterArchetypes archetypes, int tier)
-    {
-        var bonuses = new Dictionary<string, int>();
-
-        // Add movement archetype bonuses
-        if (archetypes.MovementArchetype.Type == Models.Archetypes.MovementArchetypeType.Swift)
-        {
-            bonuses["MovementSpeed"] = (tier + 1) / 2;
-        }
-
-        // Add attack type bonuses/penalties
-        if (archetypes.AttackTypeArchetype.Category == Models.Archetypes.AttackTypeArchetypeCategory.AOESpecialist)
-        {
-            bonuses["AOEAccuracy"] = -tier;
-        }
-        else if (archetypes.AttackTypeArchetype.Category == Models.Archetypes.AttackTypeArchetypeCategory.DirectSpecialist)
-        {
-            bonuses["DirectEffect"] = -tier;
-        }
-
-        // Add effect type bonuses/penalties
-        if (archetypes.EffectTypeArchetype.Category == Models.Archetypes.EffectTypeCategory.HybridSpecialist)
-        {
-            bonuses["DamageRoll"] = -tier;
-            bonuses["ConditionRoll"] = -tier;
-        }
-        else if (archetypes.EffectTypeArchetype.Category == Models.Archetypes.EffectTypeCategory.CrowdControl)
-        {
-            bonuses["DamageRoll"] = -tier;
-        }
-
-        // Add Cut Above archetype bonuses
-        if (archetypes.UniqueAbilityArchetype.Category == Models.Archetypes.UniqueAbilityCategory.CutAbove)
-        {
-            var bonus = tier switch
-            {
-                <= 4 => 1,
-                <= 7 => 2,
-                _ => 3
-            };
-            
-            bonuses["AllStats"] = bonus;
-        }
-
-        return bonuses;
-    }
-}
---------------------------------------------------
-
-File: <WindowsPath.parents> services\CharacterArchetypesService.cs
-Content:
-using Microsoft.Extensions.Logging;
-using VitalityBuilder.Api.Infrastructure;
-using VitalityBuilder.Api.Models;
-using VitalityBuilder.Api.Models.Archetypes;
-using VitalityBuilder.Api.Models.DTOs;
-
-namespace VitalityBuilder.Api.Services;
-
-/// <summary>
-/// Service implementing character archetype management and calculations
-/// </summary>
-public partial class CharacterArchetypesService : ICharacterArchetypesService
-{
-    private readonly ArchetypeDbContext _context;
-    private readonly ILogger<CharacterArchetypesService> _logger;
-
-    public CharacterArchetypesService(ArchetypeDbContext context, ILogger<CharacterArchetypesService> logger)
-    {
-        _context = context;
-        _logger = logger;
-    }
-
-    public async Task<Models.Archetypes.CharacterArchetypes> CreateArchetypesAsync(CharacterArchetypesDto dto, int characterId)
-    {
-        _logger.LogInformation("Creating archetypes for character {CharacterId}", characterId);
-
-        try
-        {
-            var archetypes = new Models.Archetypes.CharacterArchetypes
-            {
-                CharacterId = characterId,
-                MovementArchetype = MapMovementArchetype(dto.MovementArchetype),
-                AttackTypeArchetype = MapAttackTypeArchetype(dto.AttackTypeArchetype),
-                EffectTypeArchetype = MapEffectTypeArchetype(dto.EffectTypeArchetype),
-                UniqueAbilityArchetype = MapUniqueAbilityArchetype(dto.UniqueAbilityArchetype),
-                SpecialAttackArchetype = MapSpecialAttackArchetype(dto.SpecialAttackArchetype),
-                UtilityArchetype = MapUtilityArchetype(dto.UtilityArchetype)
-            };
-
-            _context.Set<Models.Archetypes.CharacterArchetypes>().Add(archetypes);
-            await _context.SaveChangesAsync();
-
-            _logger.LogInformation("Successfully created archetypes for character {CharacterId}", characterId);
-            return archetypes;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error creating archetypes for character {CharacterId}", characterId);
-            throw;
-        }
-    }
-
-}
-
---------------------------------------------------
-
-File: <WindowsPath.parents> services\CharacterArchetypesService.Helpers.cs
-Content:
-using VitalityBuilder.Api.Models.Archetypes;
-
-namespace VitalityBuilder.Api.Services;
-
-public partial class CharacterArchetypesService
-{
-    private static int CalculateNormalArchetypePoints(int tier) => tier * 10;
-
-    private static int CalculateSpecialistPoints(int tier, List<string> requiredLimits)
-    {
-        float limitMultiplier = tier / 3.0f;
-        int limitPoints = requiredLimits.Sum(GetLimitBaseValue);
-        return (int)(limitPoints * limitMultiplier);
-    }
-
-    private static int GetLimitBaseValue(string limitName) => limitName switch
-    {
-        "Reload" => 20,
-        "Stockpile" => 40,
-        "Cooldown2" => 20,
-        "Cooldown3" => 30,
-        "Reserves3" => 10,
-        "Reserves2" => 20,
-        "Reserves1" => 40,
-        "Finite5" => 10,
-        "Finite3" => 20,
-        "Finite2" => 30,
-        "Finite1" => 50,
-        "Charger" => 10,
-        "Slowed" => 10,
-        "Unreliable20" => 200,
-        "Unreliable15" => 80,
-        "Unreliable10" => 40,
-        "Unreliable5" => 20,
-        _ => 0
-    };
-
-    private static int AdjustSpecialMovementSpeed(MovementArchetypeType type, int baseSpeed) => type switch
-    {
-        MovementArchetypeType.Flight => baseSpeed,
-        MovementArchetypeType.Teleportation => baseSpeed - 2, // Teleport has reduced range
-        MovementArchetypeType.Portal => baseSpeed,
-        _ => baseSpeed
-    };
-}
-
---------------------------------------------------
-
-File: <WindowsPath.parents> services\CharacterArchetypesService.Mapping.cs
-Content:
-using VitalityBuilder.Api.Models.Archetypes;
-using VitalityBuilder.Api.Models.DTOs;
-
-namespace VitalityBuilder.Api.Services;
-
-public partial class CharacterArchetypesService 
-{
-    private static MovementArchetype MapMovementArchetype(MovementArchetypeDto dto) => 
-        new()
-        {
-            Name = dto.Name,
-            Type = (MovementArchetypeType)dto.Type,
-            SpeedBonusByTier = dto.SpeedBonusByTier,
-            IgnoresOpportunityAttacks = dto.IgnoresOpportunityAttacks,
-            IgnoresDifficultTerrain = dto.IgnoresDifficultTerrain,
-            IsImmuneToProne = dto.IsImmuneToProne,
-            MovementMultiplier = dto.MovementMultiplier
-        };
-
-    private static AttackTypeArchetype MapAttackTypeArchetype(AttackTypeArchetypeDto dto) => 
-        new()
-        {
-            Name = dto.Name,
-            Category = (AttackTypeArchetypeCategory)dto.Category,
-            AccuracyPenalty = dto.AccuracyPenalty,
-            EffectPenalty = dto.EffectPenalty,
-            BypassesAccuracyChecks = dto.BypassesAccuracyChecks,
-            HasFreeAOE = dto.HasFreeAOE
-        };
-
-    private static EffectTypeArchetype MapEffectTypeArchetype(EffectTypeArchetypeDto dto) =>
-        new()
-        {
-            Name = dto.Name,
-            Category = (EffectTypeCategory)dto.Category,
-            HasAccessToAdvancedConditions = dto.HasAccessToAdvancedConditions,
-            DamagePenalty = dto.DamagePenalty,
-            ConditionPenalty = dto.ConditionPenalty,
-            RequiresHybridEffects = dto.RequiresHybridEffects
-        };
-
-    private static UniqueAbilityArchetype MapUniqueAbilityArchetype(UniqueAbilityArchetypeDto dto) =>
-        new()
-        {
-            Name = dto.Name,
-            Category = (UniqueAbilityCategory)dto.Category,
-            ExtraQuickActions = dto.ExtraQuickActions,
-            ExtraPointPool = dto.ExtraPointPool,
-            StatBonuses = dto.StatBonuses
-        };
-
-    private static SpecialAttackArchetype MapSpecialAttackArchetype(SpecialAttackArchetypeDto dto) =>
-        new()
-        {
-            Name = dto.Name,
-            Category = (SpecialAttackCategory)dto.Category,
-            BasePoints = dto.BasePoints,
-            MaxSpecialAttacks = dto.MaxSpecialAttacks,
-            LimitPointMultiplier = dto.LimitPointMultiplier,
-            CanTakeLimits = dto.CanTakeLimits,
-            RequiredLimits = dto.RequiredLimits
-        };
-
-    private static UtilityArchetype MapUtilityArchetype(UtilityArchetypeDto dto) =>
-        new()
-        {
-            Name = dto.Name,
-            Category = (UtilityCategory)dto.Category,
-            BaseUtilityPool = dto.BaseUtilityPool,
-            CanPurchaseExpertise = dto.CanPurchaseExpertise,
-            TierBonusMultiplier = dto.TierBonusMultiplier,
-            Restrictions = dto.Restrictions
-        };
-}
-
---------------------------------------------------
-
-File: <WindowsPath.parents> services\CharacterService.cs
-Content:
-using Microsoft.EntityFrameworkCore;
-using VitalityBuilder.Api.Models.Archetypes;
-using VitalityBuilder.Api.Models.DTOs;
-using VitalityBuilder.Api.Models.Entities;
-
-
---------------------------------------------------
-
-File: <WindowsPath.parents> services\CombatService.cs
-Content:
-using System;
-using Microsoft.Extensions.Logging;
-
-namespace VitalityBuilder.Api.Services;
-
-/// <summary>
-/// Handles combat calculations and attack resolution according to Vitality System rules
-/// </summary>
-public class CombatService
-{
-    private readonly ILogger<CombatService> _logger;
-    private readonly Random _random;
-
-    public CombatService(ILogger<CombatService> logger)
-    {
-        _logger = logger;
-        _random = new Random();
-    }
-
-    /// <summary>
-    /// Resolves an attack attempt and calculates resulting damage or condition effects
-    /// </summary>
-    /// <param name="attack">Attack parameters</param>
-    /// <param name="defense">Target's defensive stats</param>
-    /// <returns>Attack resolution results including success and effect values</returns>
-    public AttackResolution ResolveAttack(AttackParameters attack, DefenseParameters defense)
-    {
-        var resolution = new AttackResolution();
-
-        // Accuracy check phase
-        var accuracyRoll = RollD20();
-        var accuracyTotal = CalculateAccuracyTotal(accuracyRoll, attack);
-        var targetAvoidance = CalculateAvoidance(defense);
-
-        _logger.LogDebug("Attack roll: {Roll} + {Mods} = {Total} vs Avoidance {Avoid}", 
-            accuracyRoll, attack.AccuracyBonus, accuracyTotal, targetAvoidance);
-
-        // Check for automatic success on natural 20
-        if (accuracyRoll == 20)
-        {
-            resolution.Success = true;
-            resolution.IsCritical = true;
-        }
-        // Otherwise compare total against target's Avoidance
-        else if (accuracyTotal >= targetAvoidance)
-        {
-            resolution.Success = true;
-        }
-        else
-        {
-            resolution.Success = false;
-            return resolution;
-        }
-
-        // Effect roll phase (damage or condition)
-        if (attack.IsDamageAttack)
-        {
-            resolution.Effect = ResolveDamageEffect(attack, defense, resolution.IsCritical);
-        }
-        else
-        {
-            resolution.Effect = ResolveConditionEffect(attack, defense, resolution.IsCritical);
-        }
-
-        return resolution;
-    }
-
-    /// <summary>
-    /// Calculates damage for a successful attack
-    /// </summary>
-    private int ResolveDamageEffect(AttackParameters attack, DefenseParameters defense, bool isCritical)
-    {
-        // Base damage roll is 3d6
-        var damageRoll = Roll3D6();
-        
-        // Calculate total damage including attacker's Power
-        var damageTotal = damageRoll + attack.Tier + 
-            (int)Math.Ceiling(attack.Power * 1.5);
-
-        // Add critical bonus if applicable
-        if (isCritical)
-        {
-            damageTotal += attack.Tier;
-        }
-
-        // Calculate target's Durability
-        var durability = CalculateDurability(defense);
-
-        // Apply damage reduction and ensure minimum 0 damage
-        var finalDamage = Math.Max(0, damageTotal - durability);
-
-        _logger.LogDebug("Damage roll: {Roll} + {Mods} - {DR} = {Final}",
-            damageRoll, (attack.Tier + attack.Power), durability, finalDamage);
-
-        return finalDamage;
-    }
-
-    /// <summary>
-    /// Calculates and applies condition effects
-    /// </summary>
-    private int ResolveConditionEffect(AttackParameters attack, DefenseParameters defense, bool isCritical)
-    {
-        // Condition check is d20 + (Tier × 2)
-        var conditionRoll = RollD20();
-        var conditionTotal = conditionRoll + (attack.Tier * 2);
-
-        if (isCritical)
-        {
-            conditionTotal += attack.Tier;
-        }
-
-        // Get appropriate resistance based on condition type
-        var resistance = GetResistanceValue(attack.ConditionType, defense);
-
-        _logger.LogDebug("Condition roll: {Roll} + {Mods} vs Resistance {Res}",
-            conditionRoll, (attack.Tier * 2), resistance);
-
-        // Return margin of success/failure
-        return conditionTotal - resistance;
-    }
-
-    #region Helper Methods
-
-    private int RollD20() => _random.Next(1, 21);
-
-    private int Roll3D6()
-    {
-        int total = 0;
-        int diceToRoll = 3;
-
-        // Roll 3d6 with explosion on 6s
-        while (diceToRoll > 0)
-        {
-            int result = _random.Next(1, 7);
-            total += result;
-            diceToRoll--;
-
-            // On a 6, add another die
-            if (result == 6)
-            {
-                diceToRoll++;
-            }
-        }
-
-        return total;
-    }
-
-    private int CalculateAccuracyTotal(int roll, AttackParameters attack)
-    {
-        return roll + attack.Tier + attack.Focus + attack.AccuracyBonus;
-    }
-
-    private int CalculateAvoidance(DefenseParameters defense)
-    {
-        return 10 + defense.Tier + defense.Mobility;
-    }
-
-    private int CalculateDurability(DefenseParameters defense)
-    {
-        return defense.Tier + (int)Math.Ceiling(defense.Endurance * 1.5);
-    }
-
-    private int GetResistanceValue(ConditionType type, DefenseParameters defense)
-    {
-        return type switch
-        {
-            ConditionType.Resolve => 10 + defense.Tier + defense.Focus,
-            ConditionType.Stability => 10 + defense.Tier + defense.Power,
-            ConditionType.Vitality => 10 + defense.Tier + defense.Endurance,
-            _ => throw new ArgumentException("Invalid condition type", nameof(type))
-        };
-    }
-
-    #endregion
-}
-
-/// <summary>
-/// Parameters for the attacking character
-/// </summary>
-public class AttackParameters
-{
-    public int Tier { get; set; }
-    public int Focus { get; set; }
-    public int Power { get; set; }
-    public int AccuracyBonus { get; set; }
-    public bool IsDamageAttack { get; set; }
-    public ConditionType ConditionType { get; set; }
-}
-
-/// <summary>
-/// Parameters for the defending character
-/// </summary>
-public class DefenseParameters
-{
-    public int Tier { get; set; }
-    public int Focus { get; set; }
-    public int Power { get; set; }
-    public int Mobility { get; set; }
-    public int Endurance { get; set; }
-}
-
-/// <summary>
-/// Results of an attack resolution
-/// </summary>
-public class AttackResolution
-{
-    public bool Success { get; set; }
-    public bool IsCritical { get; set; }
-    public int Effect { get; set; }
-}
-
-/// <summary>
-/// Types of conditions that can be applied
-/// </summary>
-public enum ConditionType
-{
-    Resolve,
-    Stability,
-    Vitality
-}
---------------------------------------------------
-
-File: <WindowsPath.parents> services\ICharacterArchetypesServices.cs
-Content:
-using VitalityBuilder.Api.Models;
-using VitalityBuilder.Api.Models.Archetypes;
-using VitalityBuilder.Api.Models.DTOs;
-
-namespace VitalityBuilder.Api.Services;
-
-/// <summary>
-/// Interface defining core character archetype management operations
-/// </summary>
-public interface ICharacterArchetypesService
-{
-    Task<Models.Archetypes.CharacterArchetypes> CreateArchetypesAsync(CharacterArchetypesDto dto, int characterId);
-    int CalculateMovementSpeed(Models.Archetypes.MovementArchetype archetype, int tier, int mobility);
-    int CalculateSpecialAttackPoints(Models.Archetypes.SpecialAttackArchetype archetype, int tier);
-    int CalculateUtilityPoints(Models.Archetypes.UtilityArchetype archetype, int tier);
-    Dictionary<string, int> CalculateArchetypeBonuses(Models.Archetypes.CharacterArchetypes archetypes, int tier);
-}
-
---------------------------------------------------
-
-File: <WindowsPath.parents> services\ValidateAttributePointsServices.cs
-Content:
-
---------------------------------------------------
-
-File: <WindowsPath.parents> Utilities\JsonValueConverter.cs
+File: server\Utilities\Extensions\JsonValueConverter.cs
 Content:
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -3061,220 +2269,321 @@ public class JsonValueComparer<T> : ValueComparer<T> where T : class
 }
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\Archetypes\AttackTypeArchetype.cs
+File: server\Utilities\Helpers\ValidationHelper.cs
 Content:
-namespace VitalityBuilder.Api.Models.Archetypes;
 
-public class AttackTypeArchetype
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public AttackTypeArchetypeCategory Category { get; set; }
-    public int AccuracyPenalty { get; set; }
-    public int EffectPenalty { get; set; }
-    public bool BypassesAccuracyChecks { get; set; }
-    public bool HasFreeAOE { get; set; }
-    
-    public int CharacterArchetypesId { get; set; }
-    public CharacterArchetypes CharacterArchetypes { get; set; } = null!;
-}
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\Archetypes\CharacterArchetypes.cs
+File: server\Interfaces\Repositories\ICharacterRepository.cs
 Content:
-using System.ComponentModel.DataAnnotations;
 using VitalityBuilder.Api.Models.Entities;
-
-namespace VitalityBuilder.Api.Models.Archetypes;
-
-public class CharacterArchetypes
+public interface ICharacterRepository
 {
-    public int Id { get; set; }
-    public MovementArchetype MovementArchetype { get; set; } = null!;
-    public AttackTypeArchetype AttackTypeArchetype { get; set; } = null!;
-    public EffectTypeArchetype EffectTypeArchetype { get; set; } = null!;
-    public UniqueAbilityArchetype UniqueAbilityArchetype { get; set; } = null!;
-    public SpecialAttackArchetype SpecialAttackArchetype { get; set; } = null!;
-    public UtilityArchetype UtilityArchetype { get; set; } = null!;
-    
-    public int CharacterId { get; set; }
-    public Character Character { get; set; } = null!;
+    Task<Character> CreateCharacterAsync(Character character);
+    Task<List<Character>> GetAllCharactersAsync();
+    Task<Character?> GetCharacterByIdAsync(int id);
 }
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\Archetypes\EffectTypeArchetype.cs
+File: server\Interfaces\Services\ICalculationService.cs
 Content:
-namespace VitalityBuilder.Api.Models.Archetypes;
 
-public class EffectTypeArchetype
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public EffectTypeCategory Category { get; set; }
-    public bool HasAccessToAdvancedConditions { get; set; }
-    public int DamagePenalty { get; set; }
-    public int ConditionPenalty { get; set; }
-    public bool RequiresHybridEffects { get; set; }
-    
-    public int CharacterArchetypesId { get; set; }
-    public CharacterArchetypes CharacterArchetypes { get; set; } = null!;
-}
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\Archetypes\EnumsArchetype.cs
+File: server\Interfaces\Services\ICharacterArchetypesServices.cs
 Content:
-namespace VitalityBuilder.Api.Models.Archetypes;
+using VitalityBuilder.Api.Models;
+using VitalityBuilder.Api.Models.Archetypes;
+using VitalityBuilder.Api.Models.DTOs;
 
-public enum MovementArchetypeType
+namespace VitalityBuilder.Api.Services;
+
+/// <summary>
+/// Interface defining core character archetype management operations
+/// </summary>
+public interface ICharacterArchetypesService
 {
-    Swift,
-    Skirmisher,
-    ParkourRunner,
-    Behemoth,
-    Bulwark,
-    Vanguard,
-    Mole,
-    Flight,
-    Teleportation,
-    Portal,
-    Swinging,
-    SuperJump
-}
-
-public enum AttackTypeArchetypeCategory
-{
-    AOESpecialist,
-    DirectSpecialist,
-    SingleTarget
-}
-
-public enum EffectTypeCategory
-{
-    DamageSpecialist,
-    HybridSpecialist,
-    CrowdControl
-}
-
-public enum UniqueAbilityCategory
-{
-    VersatileMaster,
-    Extraordinary,
-    CutAbove
-}
-
-public enum SpecialAttackCategory
-{
-    Normal,
-    Specialist,
-    Paragon,
-    OneTrick,
-    Straightforward,
-    SharedUses,
-    DualNatured,
-    Basic
-}
-
-public enum UtilityCategory
-{
-    Specialized,
-    Practical,
-    JackOfAllTrades
-}
---------------------------------------------------
-
-File: <WindowsPath.parents> models\Archetypes\MovementArchetype.cs
-Content:
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace VitalityBuilder.Api.Models.Archetypes;
-
-public class MovementArchetype
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public MovementArchetypeType Type { get; set; }
-    
-    [Column(TypeName = "nvarchar(max)")]
-    public Dictionary<int, int> SpeedBonusByTier { get; set; } = new();
-    
-    public bool IgnoresOpportunityAttacks { get; set; }
-    public bool IgnoresDifficultTerrain { get; set; }
-    public bool IsImmuneToProne { get; set; }
-    public float MovementMultiplier { get; set; } = 1.0f;
-    
-    public int CharacterArchetypesId { get; set; }
-    public CharacterArchetypes CharacterArchetypes { get; set; } = null!;
-}
---------------------------------------------------
-
-File: <WindowsPath.parents> models\Archetypes\SpecialAttackArchetype.cs
-Content:
-namespace VitalityBuilder.Api.Models.Archetypes;
-
-public class SpecialAttackArchetype
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public SpecialAttackCategory Category { get; set; }
-    public int BasePoints { get; set; }
-    public int MaxSpecialAttacks { get; set; }
-    public float LimitPointMultiplier { get; set; }
-    public bool CanTakeLimits { get; set; }
-    public List<string> RequiredLimits { get; set; } = new();
-    
-    public int CharacterArchetypesId { get; set; }
-    public CharacterArchetypes CharacterArchetypes { get; set; } = null!;
+    Task<Models.Archetypes.CharacterArchetypes> CreateArchetypesAsync(CharacterArchetypesDto dto, int characterId);
+    int CalculateMovementSpeed(Models.Archetypes.MovementArchetype archetype, int tier, int mobility);
+    int CalculateSpecialAttackPoints(Models.Archetypes.SpecialAttackArchetype archetype, int tier);
+    int CalculateUtilityPoints(Models.Archetypes.UtilityArchetype archetype, int tier);
+    Dictionary<string, int> CalculateArchetypeBonuses(Models.Archetypes.CharacterArchetypes archetypes, int tier);
 }
 
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\Archetypes\UniqueAbilityArchetype.cs
+File: server\Interfaces\Services\ICharacterCreationService.cs
 Content:
-namespace VitalityBuilder.Api.Models.Archetypes;
 
-public class UniqueAbilityArchetype
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public UniqueAbilityCategory Category { get; set; }
-    public int ExtraQuickActions { get; set; }
-    public int ExtraPointPool { get; set; }
-    public Dictionary<string, int> StatBonuses { get; set; } = new();
-    
-    public int CharacterArchetypesId { get; set; }
-    public CharacterArchetypes CharacterArchetypes { get; set; } = null!;
-}
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\Archetypes\UtilityArchetype.cs
+File: server\Interfaces\Services\ICharacterManagementService.cs
 Content:
-namespace VitalityBuilder.Api.Models.Archetypes;
 
-public class UtilityArchetype
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public UtilityCategory Category { get; set; }
-    public int BaseUtilityPool { get; set; }
-    public bool CanPurchaseExpertise { get; set; }
-    public float TierBonusMultiplier { get; set; }
-    public List<string> Restrictions { get; set; } = new();
-    
-    public int CharacterArchetypesId { get; set; }
-    public CharacterArchetypes CharacterArchetypes { get; set; } = null!;
-}
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\DTOs\ArchetypesDto.cs
+File: server\Interfaces\Services\ICharacterStatCalculator.cs
 Content:
-// File: Models/DTOs/CharacterArchetypesDto.cs
+
+--------------------------------------------------
+
+File: server\Interfaces\Services\ICombatService.cs
+Content:
+
+--------------------------------------------------
+
+File: server\Infrastructure\Database\VitalityBuilderContext.cs
+Content:
+using Microsoft.EntityFrameworkCore;
 using VitalityBuilder.Api.Models.Entities;
+using VitalityBuilder.Api.Models.Archetypes;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Text.Json;
+
+namespace VitalityBuilder.Api.Infrastructure;
+
+public class VitalityBuilderContext(DbContextOptions<VitalityBuilderContext> options) : DbContext(options)
+{
+    // Use fully qualified names to resolve ambiguity
+    public DbSet<Models.Archetypes.CharacterArchetypes> CharacterArchetypes => Set<Models.Archetypes.CharacterArchetypes>();
+    public DbSet<CharacterEntity> Characters => Set<CharacterEntity>();
+    public DbSet<CombatAttributes> CombatAttributes => Set<CombatAttributes>();
+    public DbSet<UtilityAttributes> UtilityAttributes => Set<UtilityAttributes>();
+    public DbSet<Expertise> Expertise => Set<Expertise>();
+    public DbSet<SpecialAttack> SpecialAttacks => Set<SpecialAttack>();
+    public DbSet<UniquePower> UniquePowers => Set<UniquePower>();
+
+    
+    /// <summary>
+    /// Database set for character archetypes and their associated components
+    /// </summary>
+    public DbSet<CharacterArchetypes> CharacterArchetypesEntity => Set<CharacterArchetypes>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        ConfigureCharacterArchetypes(modelBuilder);
+        ConfigureMovementArchetype(modelBuilder);
+        ConfigureAttackTypeArchetype(modelBuilder);
+        ConfigureEffectTypeArchetype(modelBuilder);
+        ConfigureUniqueAbilityArchetype(modelBuilder);
+        ConfigureSpecialAttackArchetype(modelBuilder);
+        ConfigureUtilityArchetype(modelBuilder);
+    }
+
+    private void ConfigureCharacterArchetypes(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<CharacterArchetypes>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+            // Configure one-to-one relationship with Character
+            entity.HasOne(e => e.Character)
+                .WithOne()
+                .HasForeignKey<CharacterArchetypes>(e => e.CharacterId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure required navigation properties
+            entity.Navigation(e => e.MovementArchetype).IsRequired();
+            entity.Navigation(e => e.AttackTypeArchetype).IsRequired();
+            entity.Navigation(e => e.EffectTypeArchetype).IsRequired();
+            entity.Navigation(e => e.UniqueAbilityArchetype).IsRequired();
+            entity.Navigation(e => e.SpecialAttackArchetype).IsRequired();
+            entity.Navigation(e => e.UtilityArchetype).IsRequired();
+
+            // Configure table name
+            entity.ToTable("CharacterArchetypes");
+        });
+    }
+
+    private void ConfigureMovementArchetype(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<MovementArchetype>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+            entity.Property(e => e.SpeedBonusByTier)
+                .HasConversion(
+                    v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
+                    v => JsonSerializer.Deserialize<Dictionary<int, int>>(v, JsonSerializerOptions.Default)
+                         ?? new Dictionary<int, int>(),
+                    new ValueComparer<Dictionary<int, int>>(
+                        (c1, c2) => c1!.SequenceEqual(c2!),
+                        c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                        c => new Dictionary<int, int>(c)
+                    )
+                );
+
+            entity.Property(e => e.Type)
+                .HasConversion<string>();
+
+            entity.ToTable("MovementArchetypes");
+        });
+    }
+
+    private void ConfigureAttackTypeArchetype(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<AttackTypeArchetype>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+            entity.Property(e => e.Category)
+                .HasConversion<string>();
+
+            entity.ToTable("AttackTypeArchetypes");
+        });
+    }
+
+    private void ConfigureEffectTypeArchetype(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<EffectTypeArchetype>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+            entity.Property(e => e.Category)
+                .HasConversion<string>();
+
+            entity.ToTable("EffectTypeArchetypes");
+        });
+    }
+
+    private void ConfigureUniqueAbilityArchetype(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<UniqueAbilityArchetype>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+            entity.Property(e => e.StatBonuses)
+                .HasConversion(
+                    v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
+                    v => JsonSerializer.Deserialize<Dictionary<string, int>>(v, JsonSerializerOptions.Default)
+                         ?? new Dictionary<string, int>(),
+                    new ValueComparer<Dictionary<string, int>>(
+                        (c1, c2) => c1!.SequenceEqual(c2!),
+                        c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                        c => new Dictionary<string, int>(c)
+                    )
+                );
+
+            entity.Property(e => e.Category)
+                .HasConversion<string>();
+
+            entity.ToTable("UniqueAbilityArchetypes");
+        });
+    }
+
+    private void ConfigureSpecialAttackArchetype(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<SpecialAttackArchetype>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+            entity.Property(e => e.RequiredLimits)
+                .HasConversion(
+                    v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
+                    v => JsonSerializer.Deserialize<List<string>>(v, JsonSerializerOptions.Default)
+                         ?? new List<string>(),
+                    new ValueComparer<List<string>>(
+                        (c1, c2) => c1!.SequenceEqual(c2!),
+                        c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                        c => new List<string>(c)
+                    )
+                );
+
+            entity.Property(e => e.Category)
+                .HasConversion<string>();
+
+            entity.ToTable("SpecialAttackArchetypes");
+        });
+    }
+
+    private void ConfigureUtilityArchetype(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<UtilityArchetype>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+            entity.Property(e => e.Restrictions)
+                .HasConversion(
+                    v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
+                    v => JsonSerializer.Deserialize<List<string>>(v, JsonSerializerOptions.Default)
+                         ?? new List<string>(),
+                    new ValueComparer<List<string>>(
+                        (c1, c2) => c1!.SequenceEqual(c2!),
+                        c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                        c => new List<string>(c)
+                    )
+                );
+
+            entity.Property(e => e.Category)
+                .HasConversion<string>();
+
+            entity.ToTable("UtilityArchetypes");
+        });
+    }
+}
+
+--------------------------------------------------
+
+File: server\Infrastructure\Logging\LoggingConfiguration.cs
+Content:
+
+--------------------------------------------------
+
+File: server\Infrastructure\Validation\ValidationExtensions.cs
+Content:
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.Extensions.DependencyInjection;
+using VitalityBuilder.Api.Models.DTOs;
+using VitalityBuilder.Api.Models.Validations;
+
+namespace VitalityBuilder.Api.Infrastructure;
+
+/// <summary>
+/// Extension methods for registering validation services
+/// </summary>
+public static class ValidationExtensions
+{
+    public static IServiceCollection AddValidation(this IServiceCollection services)
+    {
+        // Register core character validators
+        services.AddScoped<IValidator<CreateCharacterDto>, CreateCharacterDtoValidator>();
+        services.AddScoped<IValidator<CombatAttributesDto>, CombatAttributesDtoValidator>();
+        services.AddScoped<IValidator<UtilityAttributesDto>, UtilityAttributesDtoValidator>();
+
+        // Register archetype validators
+        services.AddScoped<IValidator<CharacterArchetypesDto>, CharacterArchetypesDtoValidator>();
+        services.AddScoped<IValidator<MovementArchetypeDto>, MovementArchetypeDtoValidator>();
+        services.AddScoped<IValidator<AttackTypeArchetypeDto>, AttackTypeArchetypeDtoValidator>();
+        services.AddScoped<IValidator<EffectTypeArchetypeDto>, EffectTypeArchetypeDtoValidator>();
+        services.AddScoped<IValidator<UniqueAbilityArchetypeDto>, UniqueAbilityArchetypeDtoValidator>();
+        services.AddScoped<IValidator<SpecialAttackArchetypeDto>, SpecialAttackArchetypeDtoValidator>();
+        services.AddScoped<IValidator<UtilityArchetypeDto>, UtilityArchetypeDtoValidator>();
+
+        // Register FluentValidation
+        services.AddFluentValidationAutoValidation();
+
+        return services;
+    }
+}
+--------------------------------------------------
+
+File: server\Domain\DTOs\ArchetypesDto.cs
+Content:
+using VitalityBuilder.Api.Models.Enums;
 
 namespace VitalityBuilder.Api.Models.DTOs;
 
-/// <summary>
-/// Data transfer object for creating or updating character archetypes
-/// </summary>
+
 public class CharacterArchetypesDto
 {
     public MovementArchetypeDto MovementArchetype { get; set; } = null!;
@@ -3347,7 +2656,7 @@ public class UtilityArchetypeDto
 }
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\DTOs\CharacterDTOs.cs
+File: server\Domain\DTOs\CharacterDTOs.cs
 Content:
 namespace VitalityBuilder.Api.Models.DTOs
     {
@@ -3377,7 +2686,7 @@ namespace VitalityBuilder.Api.Models.DTOs
 
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\DTOs\CombatAttributesDto.cs
+File: server\Domain\DTOs\CombatAttributesDto.cs
 Content:
 namespace VitalityBuilder.Api.Models.DTOs;
 
@@ -3391,8 +2700,10 @@ public class CombatAttributesDto
 }
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\DTOs\CreateCharacterDto.cs
+File: server\Domain\DTOs\CreateCharacterDto.cs
 Content:
+using VitalityBuilder.Api.Models.DTOs;
+
 namespace VitalityBuilder.Api.Models.DTOs;
 
 public class CreateCharacterDto
@@ -3404,7 +2715,7 @@ public class CreateCharacterDto
 }
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\DTOs\UtilityAttributesDto.cs
+File: server\Domain\DTOs\UtilityAttributesDto.cs
 Content:
 namespace VitalityBuilder.Api.Models.DTOs;
 
@@ -3417,10 +2728,11 @@ public class UtilityAttributesDto
 }
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\Entities\ArchetypeEntity.cs
+File: server\Domain\Entities\ArchetypeEntity.cs
 Content:
 using System.ComponentModel.DataAnnotations;
 using VitalityBuilder.Api.Models.Archetypes;
+using VitalityBuilder.Api.Models.Enums;
 
 namespace VitalityBuilder.Api.Models.Entities;
 
@@ -3453,21 +2765,6 @@ public class MovementArchetypeEntity
     public CharacterArchetypesEntity CharacterArchetypesEntity { get; set; } = null!;
 }
 
-public enum MovementArchetypeTypeEntity
-{
-    Swift,
-    Skirmisher,
-    ParkourRunner,
-    Behemoth,
-    Bulwark,
-    Vanguard,
-    Mole,
-    Flight,
-    Teleportation,
-    Portal,
-    Swinging,
-    SuperJump
-}
 
 public class AttackTypeArchetypeEntity
 {
@@ -3549,14 +2846,14 @@ public class UtilityArchetypeEntity
 
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\Entities\CharacterEntity.cs
+File: server\Domain\Entities\CharacterEntity.cs
 Content:
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace VitalityBuilder.Api.Models.Entities;
 
-public class Character
+public class CharacterEntity
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -3607,7 +2904,7 @@ public class Character
 }
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\Entities\CombatAttributesEntity.cs
+File: server\Domain\Entities\CombatAttributesEntity.cs
 Content:
 namespace VitalityBuilder.Api.Models.Entities;
 
@@ -3620,14 +2917,14 @@ public class CombatAttributes
     public int Endurance { get; set; }
 
     public int CharacterId { get; set; }
-    public Character Character { get; set; } = null!;
+    public CharacterEntity Character { get; set; } = null!;
     public int Total { get; internal set; }
 }
 
 
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\Entities\ExpertiseEntity.cs
+File: server\Domain\Entities\ExpertiseEntity.cs
 Content:
 namespace VitalityBuilder.Api.Models.Entities;
 public class Expertise
@@ -3639,11 +2936,11 @@ public class Expertise
     public string Description { get; set; } = string.Empty;
 
     public int CharacterId { get; set; }
-    public Character Character { get; set; } = null!;
+    public CharacterEntity Character { get; set; } = null!;
 }
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\Entities\SpecialAttackEntity.cs
+File: server\Domain\Entities\SpecialAttackEntity.cs
 Content:
 namespace VitalityBuilder.Api.Models.Entities;
 public class SpecialAttack
@@ -3656,7 +2953,7 @@ public class SpecialAttack
     public List<string> Upgrades { get; set; } = new();
 
     public int CharacterId { get; set; }
-    public Character Character { get; set; } = null!;
+    public CharacterEntity Character { get; set; } = null!;
     public int Cost { get; set; }
 
 
@@ -3664,7 +2961,7 @@ public class SpecialAttack
 
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\Entities\UniquePowerEntity.cs
+File: server\Domain\Entities\UniquePowerEntity.cs
 Content:
 namespace VitalityBuilder.Api.Models.Entities;
 public class UniquePower
@@ -3676,11 +2973,11 @@ public class UniquePower
     public string Description { get; set; } = string.Empty;
 
     public int CharacterId { get; set; }
-    public Character Character { get; set; } = null!;
+    public CharacterEntity Character { get; set; } = null!;
 }
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\Entities\UtilityAttributesEntity.cs
+File: server\Domain\Entities\UtilityAttributesEntity.cs
 Content:
 namespace VitalityBuilder.Api.Models.Entities;
 public class UtilityAttributes
@@ -3691,13 +2988,74 @@ public class UtilityAttributes
     public int Intelligence { get; set; }
 
     public int CharacterId { get; set; }
-    public Character Character { get; set; } = null!;
+    public CharacterEntity Character { get; set; } = null!;
 
     
 }
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\Validations\ArchetypeValidators.cs
+File: server\Domain\Enums\ArchetypeEnums.cs
+Content:
+namespace VitalityBuilder.Api.Models.Enums;
+
+public enum MovementArchetypeType
+{
+    Swift,
+    Skirmisher,
+    ParkourRunner,
+    Behemoth,
+    Bulwark,
+    Vanguard,
+    Mole,
+    Flight,
+    Teleportation,
+    Portal,
+    Swinging,
+    SuperJump
+}
+
+public enum AttackTypeArchetypeCategory
+{
+    AOESpecialist,
+    DirectSpecialist,
+    SingleTarget
+}
+
+public enum EffectTypeCategory
+{
+    DamageSpecialist,
+    HybridSpecialist,
+    CrowdControl
+}
+
+public enum UniqueAbilityCategory
+{
+    VersatileMaster,
+    Extraordinary,
+    CutAbove
+}
+
+public enum SpecialAttackCategory
+{
+    Normal,
+    Specialist,
+    Paragon,
+    OneTrick,
+    Straightforward,
+    SharedUses,
+    DualNatured,
+    Basic
+}
+
+public enum UtilityCategory
+{
+    Specialized,
+    Practical,
+    JackOfAllTrades
+}
+--------------------------------------------------
+
+File: server\Domain\Validations\ArchetypeValidators.cs
 Content:
 using FluentValidation;
 using VitalityBuilder.Api.Models.DTOs;
@@ -3844,7 +3202,7 @@ public class UtilityArchetypeDtoValidator : AbstractValidator<UtilityArchetypeDt
 }
 --------------------------------------------------
 
-File: <WindowsPath.parents> models\Validations\CharacterValidators.cs
+File: server\Domain\Validations\CharacterValidators.cs
 Content:
 using FluentValidation;
 using VitalityBuilder.Api.Models.DTOs;
@@ -3973,45 +3331,6 @@ public class MovementArchetypeDtoValidator : AbstractValidator<MovementArchetype
         RuleFor(x => x.MovementMultiplier)
             .InclusiveBetween(0.5f, 2.0f)
             .WithMessage("Movement multiplier must be between 0.5 and 2.0");
-    }
-}
---------------------------------------------------
-
-File: <WindowsPath.parents> models\Validations\ValidationExtensions.cs
-Content:
-using FluentValidation;
-using FluentValidation.AspNetCore;
-using Microsoft.Extensions.DependencyInjection;
-using VitalityBuilder.Api.Models.DTOs;
-using VitalityBuilder.Api.Models.Validations;
-
-namespace VitalityBuilder.Api.Infrastructure;
-
-/// <summary>
-/// Extension methods for registering validation services
-/// </summary>
-public static class ValidationExtensions
-{
-    public static IServiceCollection AddValidation(this IServiceCollection services)
-    {
-        // Register core character validators
-        services.AddScoped<IValidator<CreateCharacterDto>, CreateCharacterDtoValidator>();
-        services.AddScoped<IValidator<CombatAttributesDto>, CombatAttributesDtoValidator>();
-        services.AddScoped<IValidator<UtilityAttributesDto>, UtilityAttributesDtoValidator>();
-
-        // Register archetype validators
-        services.AddScoped<IValidator<CharacterArchetypesDto>, CharacterArchetypesDtoValidator>();
-        services.AddScoped<IValidator<MovementArchetypeDto>, MovementArchetypeDtoValidator>();
-        services.AddScoped<IValidator<AttackTypeArchetypeDto>, AttackTypeArchetypeDtoValidator>();
-        services.AddScoped<IValidator<EffectTypeArchetypeDto>, EffectTypeArchetypeDtoValidator>();
-        services.AddScoped<IValidator<UniqueAbilityArchetypeDto>, UniqueAbilityArchetypeDtoValidator>();
-        services.AddScoped<IValidator<SpecialAttackArchetypeDto>, SpecialAttackArchetypeDtoValidator>();
-        services.AddScoped<IValidator<UtilityArchetypeDto>, UtilityArchetypeDtoValidator>();
-
-        // Register FluentValidation
-        services.AddFluentValidationAutoValidation();
-
-        return services;
     }
 }
 --------------------------------------------------

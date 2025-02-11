@@ -6,6 +6,7 @@ using VitalityBuilder.Api.Models.Entities;
 using VitalityBuilder.Api.Services;
 using VitalityBuilder.Api.Infrastructure;
 
+
 namespace VitalityBuilder.Api.Controllers;
 
 [ApiController]
@@ -18,19 +19,6 @@ public class CharactersController : ControllerBase
     private readonly IValidator<CreateCharacterDto> _createCharacterValidator;
     private readonly IValidator<CharacterArchetypesDto> _archetypesValidator;
 
-    public CharactersController(
-        VitalityBuilderContext context,
-        ILogger<CharactersController> logger,
-        ICharacterArchetypesService archetypeService,
-        IValidator<CreateCharacterDto> createCharacterValidator,
-        IValidator<CharacterArchetypesDto> archetypesValidator)
-    {
-        _context = context;
-        _logger = logger;
-        _archetypeService = archetypeService;
-        _createCharacterValidator = createCharacterValidator;
-        _archetypesValidator = archetypesValidator;
-    }
 
     /// <summary>
     /// Creates a new character with basic attributes
@@ -55,7 +43,7 @@ public class CharactersController : ControllerBase
                 return BadRequest("Attribute points exceed tier limits");
             }
 
-            var character = new Character
+            var character = new CharacterEntity
             {
                 Name = dto.Name,
                 Tier = dto.Tier,
@@ -134,7 +122,7 @@ public class CharactersController : ControllerBase
     /// Gets a character by ID including all related data
     /// </summary>
     [HttpGet("{id}")]
-    public async Task<ActionResult<Character>> GetCharacter(int id)
+    public async Task<ActionResult<CharacterEntity>> GetCharacter(int id)
     {
         var character = await _context.Characters
             .Include(c => c.CombatAttributes)
@@ -168,5 +156,9 @@ public class CharactersController : ControllerBase
         _archetypesValidator = archetypesValidator;
         _validationService = validationService;
     }
+
+
+    
+    
 
 }

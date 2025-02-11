@@ -20,15 +20,76 @@ vitality-builder/
 │   ├── src/              # Source files
 │   ├── public/           # Static assets
 │   └── package.json      # Frontend dependencies
-├── server/               # .NET Web API
-│   ├── src/             # Source files
-│   └── tests/           # Backend tests
-├── shared/              # Shared types and utilities
-│   ├── types/           # TypeScript type definitions
-│   └── utils/           # Shared helper functions
-├── docs/                # Documentation
-│   └── rules/           # Game rule references
-└── tools/               # Development tools and scripts
+├── server/
+    ├── Controllers/
+    │   └── CharacterController.cs           // Handles HTTP endpoints
+
+    ├── Domain/
+    │   ├── Entities/
+    │   │   ├── CharacterEntity.cs           // Core character data
+    │   │   ├── CombatAttributesEntity.cs    // Combat-related attributes
+    │   │   ├── ExpertiseEntity.cs           // Character expertise
+    │   │   ├── SpecialAttackEntity.cs       // Special attack definitions
+    │   │   ├── UniquePowerEntity.cs         // Unique power definitions
+    │   │   └── UtilityAttributesEntity.cs   // Utility-related attributes
+    │   │
+    │   ├── DTOs/
+    │   │   ├── CharacterDto.cs              // Character data transfer
+    │   │   ├── CreateCharacterDto.cs        // Character creation
+    │   │   ├── CombatAttributesDto.cs       // Combat attributes transfer
+    │   │   └── UtilityAttributesDto.cs      // Utility attributes transfer
+    │   │
+    │   ├── Enums/
+    │   │   └── ArchetypeEnums.cs            // All archetype-related enums
+    │   │
+    │   └── Validations/
+    │       ├── CharacterValidator.cs         // Character validation rules
+    │       └── AttributeValidator.cs         // Attribute validation rules
+
+    ├── Infrastructure/
+    │   ├── Database/
+    │   │   ├── VitalityBuilderContext.cs    // EF Core DbContext
+    │   │   └── EntityConfigurations/        // Separate config files
+    │   │
+    │   ├── Logging/
+    │   │   └── LoggingConfiguration.cs      // Logging setup
+    │   │
+    │   └── Validation/
+    │       └── ValidationExtensions.cs       // Validation registration
+
+    ├── Interfaces/
+    │   ├── Services/
+    │   │   ├── ICharacterService.cs         // Character management
+    │   │   ├── ICombatService.cs            // Combat operations
+    │   │   └── ICalculationService.cs       // Game rule calculations
+    │   │
+    │   └── Repositories/
+    │       └── ICharacterRepository.cs       // Data access
+
+    ├── Services/
+    │   ├── Character/
+    │   │   ├── Creation/
+    │   │   │   └── CharacterCreationService.cs
+    │   │   └── Management/
+    │   │       └── CharacterManagementService.cs
+    │   │
+    │   ├── Combat/
+    │   │   ├── CombatService.cs             // Combat resolution
+    │   │   └── DiceRollingService.cs        // Dice rolling logic
+    │   │
+    │   └── Rules/
+    │       ├── Points/
+    │       │   └── PointPoolCalculator.cs    // Point calculations
+    │       ├── Stats/
+    │       │   └── CharacterStatCalculator.cs // Stat calculations
+    │       └── Abilities/
+    │           └── SpecialAttackCalculator.cs // Special ability math
+
+    └── Utilities/
+        ├── Extensions/
+        │   └── JsonValueConverter.cs         // JSON conversion helpers
+        └── Helpers/
+            └── ValidationHelper.cs           // Validation utilities
 ```
 
 ## Getting Started

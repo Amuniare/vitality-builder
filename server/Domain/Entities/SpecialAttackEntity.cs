@@ -9,7 +9,7 @@ public class SpecialAttack
     public List<string> Upgrades { get; set; } = new();
 
     public int CharacterId { get; set; }
-    public Character Character { get; set; } = null!;
+    public CharacterEntity Character { get; set; } = null!;
     public int Cost { get; set; }
 
 

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using VitalityBuilder.Api.Models.Archetypes;
+using VitalityBuilder.Api.Models.Enums;
 
 namespace VitalityBuilder.Api.Models.Entities;
 

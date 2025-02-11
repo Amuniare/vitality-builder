@@ -7,7 +7,7 @@ public class UtilityAttributes
     public int Intelligence { get; set; }
 
     public int CharacterId { get; set; }
-    public Character Character { get; set; } = null!;
+    public CharacterEntity Character { get; set; } = null!;
 
     
 }

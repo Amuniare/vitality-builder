@@ -194,4 +194,3 @@ public class VitalityBuilderContext(DbContextOptions<VitalityBuilderContext> opt
         });
     }
 }
-}

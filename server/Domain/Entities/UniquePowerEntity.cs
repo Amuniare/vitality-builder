@@ -1,5 +1,5 @@
 namespace VitalityBuilder.Api.Models.Entities;
-public class Expertise
+public class UniquePower
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -8,5 +8,5 @@ public class Expertise
     public string Description { get; set; } = string.Empty;
 
     public int CharacterId { get; set; }
-    public Character Character { get; set; } = null!;
+    public CharacterEntity Character { get; set; } = null!;
 }
