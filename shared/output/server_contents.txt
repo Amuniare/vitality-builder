@@ -5,23 +5,18 @@ server/
   Controllers/
     CharactersController.cs
   Domain/
+    Attributes/
+      CombatAttributesEntity.cs
+    Character/
+      CharacterArchetypesEntity.cs
+      CharacterEntity.cs
     DTOs/
-      AttackTypeArchetypeDto.cs
       CharacterArchetypesDto.cs
-      CharacterDTOs.cs
+      CharacterResponseDto.cs
       CombatAttributesDto.cs
       CreateCharacterDto.cs
-      EffectTypeArchetypeDto.cs
-      MovementArchetypeDto.cs
-      SpecialAttackArchetypeDto.cs
-      UniqueAbilityArchetypeDto.cs
-      UtilityArchetypeDto.cs
       UtilityAttributesDto.cs
     Entities/
-      Archetypes/
-        CharacterArchetypesEntity.cs
-      CharacterEntity.cs
-      CombatAttributesEntity.cs
       ExpertiseEntity.cs
       SpecialAttackEntity.cs
       UniquePowerEntity.cs
@@ -29,9 +24,13 @@ server/
     Enums/
       ArchetypeEnums.cs
     Validations/
+      ArchetypesValidator.cs
+      CharacterValidator.cs
+      CombatAttributesValidator.cs
+      UtilityAttributesValidator.cs
   Infrastructure/
-    Database/
-      EntityConfigurations/
+    Data/
+      Configurations/
         ArchetypesConfiguration.cs
         CharacterConfiguration.cs
         CombatAttributesConfiguration.cs
@@ -45,10 +44,6 @@ server/
     Validation/
       ValidationExtensions.cs
       Validators/
-        ArchetypesValidator.cs
-        CharacterValidator.cs
-        CombatAttributesValidator.cs
-        UtilityAttributesValidator.cs
   Interfaces/
     Repositories/
       ICharacterRepository.cs
@@ -2407,7 +2402,7 @@ Content:
 
 --------------------------------------------------
 
-File: server\Infrastructure\Database\VitalityBuilderContext.cs
+File: server\Infrastructure\Data\VitalityBuilderContext.cs
 Content:
 using Microsoft.EntityFrameworkCore;
 using VitalityBuilder.Api.Models.Entities;
@@ -2652,7 +2647,520 @@ public static class ValidationExtensions
 }
 --------------------------------------------------
 
-File: server\Infrastructure\Validation\Validators\ArchetypesValidator.cs
+File: server\Infrastructure\Data\Configurations\ArchetypesConfiguration.cs
+Content:
+
+--------------------------------------------------
+
+File: server\Infrastructure\Data\Configurations\CharacterConfiguration.cs
+Content:
+
+--------------------------------------------------
+
+File: server\Infrastructure\Data\Configurations\CombatAttributesConfiguration.cs
+Content:
+
+--------------------------------------------------
+
+File: server\Infrastructure\Data\Configurations\ExpertiseConfiguration.cs
+Content:
+
+--------------------------------------------------
+
+File: server\Infrastructure\Data\Configurations\SpecialAttackConfiguration.cs
+Content:
+
+--------------------------------------------------
+
+File: server\Infrastructure\Data\Configurations\UniquePowerConfiguration.cs
+Content:
+
+--------------------------------------------------
+
+File: server\Infrastructure\Data\Configurations\UtilityAttributesConfiguration.cs
+Content:
+
+--------------------------------------------------
+
+File: server\Domain\Attributes\CombatAttributesEntity.cs
+Content:
+namespace VitalityBuilder.Api.Models.Entities;
+
+public class CombatAttributes
+{
+    public int Id { get; set; }
+    public int Focus { get; set; }
+    public int Power { get; set; }
+    public int Mobility { get; set; }
+    public int Endurance { get; set; }
+
+    public int CharacterId { get; set; }
+    public CharacterEntity Character { get; set; } = null!;
+    public int Total { get; internal set; }
+}
+
+
+--------------------------------------------------
+
+File: server\Domain\Character\CharacterArchetypesEntity.cs
+Content:
+using System.ComponentModel.DataAnnotations;
+using VitalityBuilder.Api.Models.Archetypes;
+using VitalityBuilder.Api.Models.Enums;
+
+namespace VitalityBuilder.Api.Models.Entities;
+
+public class CharacterArchetypesEntity
+{
+    public int Id { get; set; }
+    public MovementArchetype MovementArchetype { get; set; } = null!;
+    public AttackTypeArchetype AttackTypeArchetype { get; set; } = null!;
+    public EffectTypeArchetype EffectTypeArchetype { get; set; } = null!;
+    public UniqueAbilityArchetype UniqueAbilityArchetype { get; set; } = null!;
+    public SpecialAttackArchetype SpecialAttackArchetype { get; set; } = null!;
+    public UtilityArchetype UtilityArchetype { get; set; } = null!;
+    
+    public int CharacterId { get; set; }
+    public CharacterArchetypesEntity CharacterEntity { get; set; } = null!;
+}
+
+public class MovementArchetypeEntity
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public MovementArchetypeType Type { get; set; }
+    public Dictionary<int, int> SpeedBonusByTier { get; set; } = new();
+    public bool IgnoresOpportunityAttacks { get; set; }
+    public bool IgnoresDifficultTerrain { get; set; }
+    public bool IsImmuneToProne { get; set; }
+    public float MovementMultiplier { get; set; } = 1.0f;
+    
+    public int CharacterArchetypesId { get; set; }
+    public CharacterArchetypesEntity CharacterArchetypesEntity { get; set; } = null!;
+}
+
+
+public class AttackTypeArchetypeEntity
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public AttackTypeArchetypeCategory Category { get; set; }
+    public int AccuracyPenalty { get; set; }
+    public int EffectPenalty { get; set; }
+    public bool BypassesAccuracyChecks { get; set; }
+    public bool HasFreeAOE { get; set; }
+    
+    public int CharacterArchetypesId { get; set; }
+    public CharacterArchetypesEntity CharacterArchetypesEntity { get; set; } = null!;
+}
+
+
+
+public class EffectTypeArchetypeEntity
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public EffectTypeCategory Category { get; set; }
+    public bool HasAccessToAdvancedConditions { get; set; }
+    public int DamagePenalty { get; set; }
+    public int ConditionPenalty { get; set; }
+    public bool RequiresHybridEffects { get; set; }
+    
+    public int CharacterArchetypesId { get; set; }
+    public CharacterArchetypesEntity CharacterArchetypesEntity { get; set; } = null!;
+}
+
+
+
+public class UniqueAbilityArchetypeEntity
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public UniqueAbilityCategory Category { get; set; }
+    public int ExtraQuickActions { get; set; }
+    public int ExtraPointPool { get; set; }
+    public Dictionary<string, int> StatBonuses { get; set; } = new();
+    
+    public int CharacterArchetypesId { get; set; }
+    public CharacterArchetypesEntity CharacterArchetypesEntity { get; set; } = null!;
+}
+
+
+
+public class SpecialAttackArchetypeEntity
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public SpecialAttackCategory Category { get; set; }
+    public int BasePoints { get; set; }
+    public int MaxSpecialAttacks { get; set; }
+    public float LimitPointMultiplier { get; set; }
+    public bool CanTakeLimits { get; set; }
+    public List<string> RequiredLimits { get; set; } = new();
+    
+    public int CharacterArchetypesId { get; set; }
+    public CharacterArchetypesEntity CharacterArchetypesEntity { get; set; } = null!;
+}
+
+
+
+public class UtilityArchetypeEntity
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public UtilityCategory Category { get; set; }
+    public int BaseUtilityPool { get; set; }
+    public bool CanPurchaseExpertise { get; set; }
+    public float TierBonusMultiplier { get; set; }
+    public List<string> Restrictions { get; set; } = new();
+    
+    public int CharacterArchetypesId { get; set; }
+    public CharacterArchetypesEntity CharacterArchetypesEntity { get; set; } = null!;
+}
+
+--------------------------------------------------
+
+File: server\Domain\Character\CharacterEntity.cs
+Content:
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+
+namespace VitalityBuilder.Api.Models.Entities;
+
+public class CharacterEntity
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public int Tier { get; set; } = 1;
+    
+    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+    public int MainPointPool { get; private set; }
+
+    public int SpecialAttacksPointPool { get; set; }
+    public int UtilityPointPool { get; set; }
+
+    // Navigation Properties
+    [JsonIgnore]
+    public virtual CombatAttributes? CombatAttributes { get; set; }
+    
+    [JsonIgnore]
+    public virtual UtilityAttributes? UtilityAttributes { get; set; }
+    
+    [JsonIgnore]
+    public virtual ICollection<Expertise> Expertise { get; set; } = new List<Expertise>();
+    
+    [JsonIgnore]
+    public virtual ICollection<SpecialAttack> SpecialAttacks { get; set; } = new List<SpecialAttack>();
+    
+    [JsonIgnore]
+    public virtual ICollection<UniquePower> UniquePowers { get; set; } = new List<UniquePower>();
+
+    // Add method for tier updates to encapsulate any future tier-related logic
+    public void UpdateTier(int newTier)
+    {
+        if (newTier < 1) throw new ArgumentException("Tier cannot be less than 1", nameof(newTier));
+        Tier = newTier;
+        // MainPointPool will be automatically recalculated by the database
+    }
+    
+    [JsonIgnore]
+    public virtual Models.Archetypes.CharacterArchetypes? CharacterArchetypes { get; set; }
+
+    // Calculated properties
+    [NotMapped]
+    public int AvailableMainPoints => MainPointPool - (Expertise?.Sum(e => e.Cost) ?? 0);
+
+    [NotMapped]
+    public int AvailableSpecialAttacksPoints => SpecialAttacksPointPool - (SpecialAttacks?.Sum(sa => sa.Cost) ?? 0);
+
+    [NotMapped]
+    public int AvailableUtilityPoints => UtilityPointPool - (UniquePowers?.Sum(up => up.Cost) ?? 0);
+}
+--------------------------------------------------
+
+File: server\Domain\DTOs\CharacterArchetypesDto.cs
+Content:
+using VitalityBuilder.Api.Models.Enums;
+
+namespace VitalityBuilder.Api.Models.DTOs;
+
+
+public class CharacterArchetypesDto
+{
+    public MovementArchetypeDto MovementArchetype { get; set; } = null!;
+    public AttackTypeArchetypeDto AttackTypeArchetype { get; set; } = null!;
+    public EffectTypeArchetypeDto EffectTypeArchetype { get; set; } = null!;
+    public UniqueAbilityArchetypeDto UniqueAbilityArchetype { get; set; } = null!;
+    public SpecialAttackArchetypeDto SpecialAttackArchetype { get; set; } = null!;
+    public UtilityArchetypeDto UtilityArchetype { get; set; } = null!;
+}
+
+public class MovementArchetypeDto
+{
+    public string Name { get; set; } = string.Empty;
+    public MovementArchetypeType Type { get; set; }
+    public Dictionary<int, int> SpeedBonusByTier { get; set; } = new();
+    public bool IgnoresOpportunityAttacks { get; set; }
+    public bool IgnoresDifficultTerrain { get; set; }
+    public bool IsImmuneToProne { get; set; }
+    public float MovementMultiplier { get; set; } = 1.0f;
+}
+
+public class AttackTypeArchetypeDto
+{
+    public string Name { get; set; } = string.Empty;
+    public AttackTypeArchetypeCategory Category { get; set; }
+    public int AccuracyPenalty { get; set; }
+    public int EffectPenalty { get; set; }
+    public bool BypassesAccuracyChecks { get; set; }
+    public bool HasFreeAOE { get; set; }
+}
+
+public class EffectTypeArchetypeDto
+{
+    public string Name { get; set; } = string.Empty;
+    public EffectTypeCategory Category { get; set; }
+    public bool HasAccessToAdvancedConditions { get; set; }
+    public int DamagePenalty { get; set; }
+    public int ConditionPenalty { get; set; }
+    public bool RequiresHybridEffects { get; set; }
+}
+
+public class UniqueAbilityArchetypeDto
+{
+    public string Name { get; set; } = string.Empty;
+    public UniqueAbilityCategory Category { get; set; }
+    public int ExtraQuickActions { get; set; }
+    public int ExtraPointPool { get; set; }
+    public Dictionary<string, int> StatBonuses { get; set; } = new();
+}
+
+public class SpecialAttackArchetypeDto
+{
+    public string Name { get; set; } = string.Empty;
+    public SpecialAttackCategory Category { get; set; }
+    public int BasePoints { get; set; }
+    public int MaxSpecialAttacks { get; set; }
+    public float LimitPointMultiplier { get; set; }
+    public bool CanTakeLimits { get; set; }
+    public List<string> RequiredLimits { get; set; } = new();
+}
+
+public class UtilityArchetypeDto
+{
+    public string Name { get; set; } = string.Empty;
+    public UtilityCategory Category { get; set; }
+    public int BaseUtilityPool { get; set; }
+    public bool CanPurchaseExpertise { get; set; }
+    public float TierBonusMultiplier { get; set; }
+    public List<string> Restrictions { get; set; } = new();
+}
+--------------------------------------------------
+
+File: server\Domain\DTOs\CharacterResponseDto.cs
+Content:
+namespace VitalityBuilder.Api.Models.DTOs
+    {
+
+        public class CharacterResponseDto
+        {
+            public int Id { get; set; }
+            public string Name { get; set; } = string.Empty;
+            public int Tier { get; set; }
+        
+            // Defense values
+            public int Avoidance { get; set; }
+            public double Durability { get; set; }
+            public int ResolveResistance { get; set; }
+            public int StabilityResistance { get; set; }
+            public int VitalityResistance { get; set; }
+        
+            // Point pools
+            public int RemainingCombatAP { get; set; }
+            public int RemainingUtilityAP { get; set; }
+        
+            // Attributes
+            public CombatAttributesDto CombatAttributes { get; set; } = new();
+            public UtilityAttributesDto UtilityAttributes { get; set; } = new();
+        }
+    }
+
+--------------------------------------------------
+
+File: server\Domain\DTOs\CombatAttributesDto.cs
+Content:
+namespace VitalityBuilder.Api.Models.DTOs;
+
+public class CombatAttributesDto
+{
+    public int Focus { get; set; }
+    public int Power { get; set; }
+    public int Mobility { get; set; }
+    public int Endurance { get; set; }
+    public int Total => Focus + Power + Mobility + Endurance;
+}
+--------------------------------------------------
+
+File: server\Domain\DTOs\CreateCharacterDto.cs
+Content:
+using VitalityBuilder.Api.Models.DTOs;
+
+namespace VitalityBuilder.Api.Models.DTOs;
+
+public class CreateCharacterDto
+{
+    public string Name { get; set; } = string.Empty;
+    public int Tier { get; set; } = 1;
+    public CombatAttributesDto CombatAttributes { get; set; } = new();
+    public UtilityAttributesDto UtilityAttributes { get; set; } = new();
+}
+--------------------------------------------------
+
+File: server\Domain\DTOs\UtilityAttributesDto.cs
+Content:
+namespace VitalityBuilder.Api.Models.DTOs;
+
+public class UtilityAttributesDto
+{
+    public int Awareness { get; set; }
+    public int Communication { get; set; }
+    public int Intelligence { get; set; }
+    public int Total => Awareness + Communication + Intelligence;
+}
+--------------------------------------------------
+
+File: server\Domain\Entities\ExpertiseEntity.cs
+Content:
+namespace VitalityBuilder.Api.Models.Entities;
+public class Expertise
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Category { get; set; } = string.Empty;
+    public int Cost { get; set; }
+    public string Description { get; set; } = string.Empty;
+
+    public int CharacterId { get; set; }
+    public CharacterEntity Character { get; set; } = null!;
+}
+--------------------------------------------------
+
+File: server\Domain\Entities\SpecialAttackEntity.cs
+Content:
+namespace VitalityBuilder.Api.Models.Entities;
+public class SpecialAttack
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string AttackType { get; set; } = string.Empty;
+    public string EffectType { get; set; } = string.Empty;
+    public List<string> Limits { get; set; } = new();
+    public List<string> Upgrades { get; set; } = new();
+
+    public int CharacterId { get; set; }
+    public CharacterEntity Character { get; set; } = null!;
+    public int Cost { get; set; }
+
+
+}
+
+--------------------------------------------------
+
+File: server\Domain\Entities\UniquePowerEntity.cs
+Content:
+namespace VitalityBuilder.Api.Models.Entities;
+public class UniquePower
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Category { get; set; } = string.Empty;
+    public int Cost { get; set; }
+    public string Description { get; set; } = string.Empty;
+
+    public int CharacterId { get; set; }
+    public CharacterEntity Character { get; set; } = null!;
+}
+--------------------------------------------------
+
+File: server\Domain\Entities\UtilityAttributesEntity.cs
+Content:
+namespace VitalityBuilder.Api.Models.Entities;
+public class UtilityAttributes
+{
+    public int Id { get; set; }
+    public int Awareness { get; set; }
+    public int Communication { get; set; }
+    public int Intelligence { get; set; }
+
+    public int CharacterId { get; set; }
+    public CharacterEntity Character { get; set; } = null!;
+
+    
+}
+--------------------------------------------------
+
+File: server\Domain\Enums\ArchetypeEnums.cs
+Content:
+namespace VitalityBuilder.Api.Models.Enums;
+
+public enum MovementArchetypeType
+{
+    Swift,
+    Skirmisher,
+    ParkourRunner,
+    Behemoth,
+    Bulwark,
+    Vanguard,
+    Mole,
+    Flight,
+    Teleportation,
+    Portal,
+    Swinging,
+    SuperJump
+}
+
+public enum AttackTypeArchetypeCategory
+{
+    AOESpecialist,
+    DirectSpecialist,
+    SingleTarget
+}
+
+public enum EffectTypeCategory
+{
+    DamageSpecialist,
+    HybridSpecialist,
+    CrowdControl
+}
+
+public enum UniqueAbilityCategory
+{
+    VersatileMaster,
+    Extraordinary,
+    CutAbove
+}
+
+public enum SpecialAttackCategory
+{
+    Normal,
+    Specialist,
+    Paragon,
+    OneTrick,
+    Straightforward,
+    SharedUses,
+    DualNatured,
+    Basic
+}
+
+public enum UtilityCategory
+{
+    Specialized,
+    Practical,
+    JackOfAllTrades
+}
+--------------------------------------------------
+
+File: server\Domain\Validations\ArchetypesValidator.cs
 Content:
 using FluentValidation;
 using VitalityBuilder.Api.Models.DTOs;
@@ -2799,7 +3307,7 @@ public class UtilityArchetypeDtoValidator : AbstractValidator<UtilityArchetypeDt
 }
 --------------------------------------------------
 
-File: server\Infrastructure\Validation\Validators\CharacterValidator.cs
+File: server\Domain\Validations\CharacterValidator.cs
 Content:
 using FluentValidation;
 using VitalityBuilder.Api.Models.DTOs;
@@ -2932,555 +3440,12 @@ public class MovementArchetypeDtoValidator : AbstractValidator<MovementArchetype
 }
 --------------------------------------------------
 
-File: server\Infrastructure\Validation\Validators\CombatAttributesValidator.cs
+File: server\Domain\Validations\CombatAttributesValidator.cs
 Content:
 
 --------------------------------------------------
 
-File: server\Infrastructure\Validation\Validators\UtilityAttributesValidator.cs
+File: server\Domain\Validations\UtilityAttributesValidator.cs
 Content:
-
---------------------------------------------------
-
-File: server\Infrastructure\Database\EntityConfigurations\ArchetypesConfiguration.cs
-Content:
-
---------------------------------------------------
-
-File: server\Infrastructure\Database\EntityConfigurations\CharacterConfiguration.cs
-Content:
-
---------------------------------------------------
-
-File: server\Infrastructure\Database\EntityConfigurations\CombatAttributesConfiguration.cs
-Content:
-
---------------------------------------------------
-
-File: server\Infrastructure\Database\EntityConfigurations\ExpertiseConfiguration.cs
-Content:
-
---------------------------------------------------
-
-File: server\Infrastructure\Database\EntityConfigurations\SpecialAttackConfiguration.cs
-Content:
-
---------------------------------------------------
-
-File: server\Infrastructure\Database\EntityConfigurations\UniquePowerConfiguration.cs
-Content:
-
---------------------------------------------------
-
-File: server\Infrastructure\Database\EntityConfigurations\UtilityAttributesConfiguration.cs
-Content:
-
---------------------------------------------------
-
-File: server\Domain\DTOs\AttackTypeArchetypeDto.cs
-Content:
-
---------------------------------------------------
-
-File: server\Domain\DTOs\CharacterArchetypesDto.cs
-Content:
-using VitalityBuilder.Api.Models.Enums;
-
-namespace VitalityBuilder.Api.Models.DTOs;
-
-
-public class CharacterArchetypesDto
-{
-    public MovementArchetypeDto MovementArchetype { get; set; } = null!;
-    public AttackTypeArchetypeDto AttackTypeArchetype { get; set; } = null!;
-    public EffectTypeArchetypeDto EffectTypeArchetype { get; set; } = null!;
-    public UniqueAbilityArchetypeDto UniqueAbilityArchetype { get; set; } = null!;
-    public SpecialAttackArchetypeDto SpecialAttackArchetype { get; set; } = null!;
-    public UtilityArchetypeDto UtilityArchetype { get; set; } = null!;
-}
-
-public class MovementArchetypeDto
-{
-    public string Name { get; set; } = string.Empty;
-    public MovementArchetypeType Type { get; set; }
-    public Dictionary<int, int> SpeedBonusByTier { get; set; } = new();
-    public bool IgnoresOpportunityAttacks { get; set; }
-    public bool IgnoresDifficultTerrain { get; set; }
-    public bool IsImmuneToProne { get; set; }
-    public float MovementMultiplier { get; set; } = 1.0f;
-}
-
-public class AttackTypeArchetypeDto
-{
-    public string Name { get; set; } = string.Empty;
-    public AttackTypeArchetypeCategory Category { get; set; }
-    public int AccuracyPenalty { get; set; }
-    public int EffectPenalty { get; set; }
-    public bool BypassesAccuracyChecks { get; set; }
-    public bool HasFreeAOE { get; set; }
-}
-
-public class EffectTypeArchetypeDto
-{
-    public string Name { get; set; } = string.Empty;
-    public EffectTypeCategory Category { get; set; }
-    public bool HasAccessToAdvancedConditions { get; set; }
-    public int DamagePenalty { get; set; }
-    public int ConditionPenalty { get; set; }
-    public bool RequiresHybridEffects { get; set; }
-}
-
-public class UniqueAbilityArchetypeDto
-{
-    public string Name { get; set; } = string.Empty;
-    public UniqueAbilityCategory Category { get; set; }
-    public int ExtraQuickActions { get; set; }
-    public int ExtraPointPool { get; set; }
-    public Dictionary<string, int> StatBonuses { get; set; } = new();
-}
-
-public class SpecialAttackArchetypeDto
-{
-    public string Name { get; set; } = string.Empty;
-    public SpecialAttackCategory Category { get; set; }
-    public int BasePoints { get; set; }
-    public int MaxSpecialAttacks { get; set; }
-    public float LimitPointMultiplier { get; set; }
-    public bool CanTakeLimits { get; set; }
-    public List<string> RequiredLimits { get; set; } = new();
-}
-
-public class UtilityArchetypeDto
-{
-    public string Name { get; set; } = string.Empty;
-    public UtilityCategory Category { get; set; }
-    public int BaseUtilityPool { get; set; }
-    public bool CanPurchaseExpertise { get; set; }
-    public float TierBonusMultiplier { get; set; }
-    public List<string> Restrictions { get; set; } = new();
-}
---------------------------------------------------
-
-File: server\Domain\DTOs\CharacterDTOs.cs
-Content:
-namespace VitalityBuilder.Api.Models.DTOs
-    {
-
-        public class CharacterResponseDto
-        {
-            public int Id { get; set; }
-            public string Name { get; set; } = string.Empty;
-            public int Tier { get; set; }
-        
-            // Defense values
-            public int Avoidance { get; set; }
-            public double Durability { get; set; }
-            public int ResolveResistance { get; set; }
-            public int StabilityResistance { get; set; }
-            public int VitalityResistance { get; set; }
-        
-            // Point pools
-            public int RemainingCombatAP { get; set; }
-            public int RemainingUtilityAP { get; set; }
-        
-            // Attributes
-            public CombatAttributesDto CombatAttributes { get; set; } = new();
-            public UtilityAttributesDto UtilityAttributes { get; set; } = new();
-        }
-    }
-
---------------------------------------------------
-
-File: server\Domain\DTOs\CombatAttributesDto.cs
-Content:
-namespace VitalityBuilder.Api.Models.DTOs;
-
-public class CombatAttributesDto
-{
-    public int Focus { get; set; }
-    public int Power { get; set; }
-    public int Mobility { get; set; }
-    public int Endurance { get; set; }
-    public int Total => Focus + Power + Mobility + Endurance;
-}
---------------------------------------------------
-
-File: server\Domain\DTOs\CreateCharacterDto.cs
-Content:
-using VitalityBuilder.Api.Models.DTOs;
-
-namespace VitalityBuilder.Api.Models.DTOs;
-
-public class CreateCharacterDto
-{
-    public string Name { get; set; } = string.Empty;
-    public int Tier { get; set; } = 1;
-    public CombatAttributesDto CombatAttributes { get; set; } = new();
-    public UtilityAttributesDto UtilityAttributes { get; set; } = new();
-}
---------------------------------------------------
-
-File: server\Domain\DTOs\EffectTypeArchetypeDto.cs
-Content:
-
---------------------------------------------------
-
-File: server\Domain\DTOs\MovementArchetypeDto.cs
-Content:
-
---------------------------------------------------
-
-File: server\Domain\DTOs\SpecialAttackArchetypeDto.cs
-Content:
-
---------------------------------------------------
-
-File: server\Domain\DTOs\UniqueAbilityArchetypeDto.cs
-Content:
-
---------------------------------------------------
-
-File: server\Domain\DTOs\UtilityArchetypeDto.cs
-Content:
-
---------------------------------------------------
-
-File: server\Domain\DTOs\UtilityAttributesDto.cs
-Content:
-namespace VitalityBuilder.Api.Models.DTOs;
-
-public class UtilityAttributesDto
-{
-    public int Awareness { get; set; }
-    public int Communication { get; set; }
-    public int Intelligence { get; set; }
-    public int Total => Awareness + Communication + Intelligence;
-}
---------------------------------------------------
-
-File: server\Domain\Entities\CharacterEntity.cs
-Content:
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
-
-namespace VitalityBuilder.Api.Models.Entities;
-
-public class CharacterEntity
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public int Tier { get; set; } = 1;
-    
-    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-    public int MainPointPool { get; private set; }
-
-    public int SpecialAttacksPointPool { get; set; }
-    public int UtilityPointPool { get; set; }
-
-    // Navigation Properties
-    [JsonIgnore]
-    public virtual CombatAttributes? CombatAttributes { get; set; }
-    
-    [JsonIgnore]
-    public virtual UtilityAttributes? UtilityAttributes { get; set; }
-    
-    [JsonIgnore]
-    public virtual ICollection<Expertise> Expertise { get; set; } = new List<Expertise>();
-    
-    [JsonIgnore]
-    public virtual ICollection<SpecialAttack> SpecialAttacks { get; set; } = new List<SpecialAttack>();
-    
-    [JsonIgnore]
-    public virtual ICollection<UniquePower> UniquePowers { get; set; } = new List<UniquePower>();
-
-    // Add method for tier updates to encapsulate any future tier-related logic
-    public void UpdateTier(int newTier)
-    {
-        if (newTier < 1) throw new ArgumentException("Tier cannot be less than 1", nameof(newTier));
-        Tier = newTier;
-        // MainPointPool will be automatically recalculated by the database
-    }
-    
-    [JsonIgnore]
-    public virtual Models.Archetypes.CharacterArchetypes? CharacterArchetypes { get; set; }
-
-    // Calculated properties
-    [NotMapped]
-    public int AvailableMainPoints => MainPointPool - (Expertise?.Sum(e => e.Cost) ?? 0);
-
-    [NotMapped]
-    public int AvailableSpecialAttacksPoints => SpecialAttacksPointPool - (SpecialAttacks?.Sum(sa => sa.Cost) ?? 0);
-
-    [NotMapped]
-    public int AvailableUtilityPoints => UtilityPointPool - (UniquePowers?.Sum(up => up.Cost) ?? 0);
-}
---------------------------------------------------
-
-File: server\Domain\Entities\CombatAttributesEntity.cs
-Content:
-namespace VitalityBuilder.Api.Models.Entities;
-
-public class CombatAttributes
-{
-    public int Id { get; set; }
-    public int Focus { get; set; }
-    public int Power { get; set; }
-    public int Mobility { get; set; }
-    public int Endurance { get; set; }
-
-    public int CharacterId { get; set; }
-    public CharacterEntity Character { get; set; } = null!;
-    public int Total { get; internal set; }
-}
-
-
---------------------------------------------------
-
-File: server\Domain\Entities\ExpertiseEntity.cs
-Content:
-namespace VitalityBuilder.Api.Models.Entities;
-public class Expertise
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string Category { get; set; } = string.Empty;
-    public int Cost { get; set; }
-    public string Description { get; set; } = string.Empty;
-
-    public int CharacterId { get; set; }
-    public CharacterEntity Character { get; set; } = null!;
-}
---------------------------------------------------
-
-File: server\Domain\Entities\SpecialAttackEntity.cs
-Content:
-namespace VitalityBuilder.Api.Models.Entities;
-public class SpecialAttack
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string AttackType { get; set; } = string.Empty;
-    public string EffectType { get; set; } = string.Empty;
-    public List<string> Limits { get; set; } = new();
-    public List<string> Upgrades { get; set; } = new();
-
-    public int CharacterId { get; set; }
-    public CharacterEntity Character { get; set; } = null!;
-    public int Cost { get; set; }
-
-
-}
-
---------------------------------------------------
-
-File: server\Domain\Entities\UniquePowerEntity.cs
-Content:
-namespace VitalityBuilder.Api.Models.Entities;
-public class UniquePower
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string Category { get; set; } = string.Empty;
-    public int Cost { get; set; }
-    public string Description { get; set; } = string.Empty;
-
-    public int CharacterId { get; set; }
-    public CharacterEntity Character { get; set; } = null!;
-}
---------------------------------------------------
-
-File: server\Domain\Entities\UtilityAttributesEntity.cs
-Content:
-namespace VitalityBuilder.Api.Models.Entities;
-public class UtilityAttributes
-{
-    public int Id { get; set; }
-    public int Awareness { get; set; }
-    public int Communication { get; set; }
-    public int Intelligence { get; set; }
-
-    public int CharacterId { get; set; }
-    public CharacterEntity Character { get; set; } = null!;
-
-    
-}
---------------------------------------------------
-
-File: server\Domain\Enums\ArchetypeEnums.cs
-Content:
-namespace VitalityBuilder.Api.Models.Enums;
-
-public enum MovementArchetypeType
-{
-    Swift,
-    Skirmisher,
-    ParkourRunner,
-    Behemoth,
-    Bulwark,
-    Vanguard,
-    Mole,
-    Flight,
-    Teleportation,
-    Portal,
-    Swinging,
-    SuperJump
-}
-
-public enum AttackTypeArchetypeCategory
-{
-    AOESpecialist,
-    DirectSpecialist,
-    SingleTarget
-}
-
-public enum EffectTypeCategory
-{
-    DamageSpecialist,
-    HybridSpecialist,
-    CrowdControl
-}
-
-public enum UniqueAbilityCategory
-{
-    VersatileMaster,
-    Extraordinary,
-    CutAbove
-}
-
-public enum SpecialAttackCategory
-{
-    Normal,
-    Specialist,
-    Paragon,
-    OneTrick,
-    Straightforward,
-    SharedUses,
-    DualNatured,
-    Basic
-}
-
-public enum UtilityCategory
-{
-    Specialized,
-    Practical,
-    JackOfAllTrades
-}
---------------------------------------------------
-
-File: server\Domain\Entities\Archetypes\CharacterArchetypesEntity.cs
-Content:
-using System.ComponentModel.DataAnnotations;
-using VitalityBuilder.Api.Models.Archetypes;
-using VitalityBuilder.Api.Models.Enums;
-
-namespace VitalityBuilder.Api.Models.Entities;
-
-public class CharacterArchetypesEntity
-{
-    public int Id { get; set; }
-    public MovementArchetype MovementArchetype { get; set; } = null!;
-    public AttackTypeArchetype AttackTypeArchetype { get; set; } = null!;
-    public EffectTypeArchetype EffectTypeArchetype { get; set; } = null!;
-    public UniqueAbilityArchetype UniqueAbilityArchetype { get; set; } = null!;
-    public SpecialAttackArchetype SpecialAttackArchetype { get; set; } = null!;
-    public UtilityArchetype UtilityArchetype { get; set; } = null!;
-    
-    public int CharacterId { get; set; }
-    public CharacterArchetypesEntity CharacterEntity { get; set; } = null!;
-}
-
-public class MovementArchetypeEntity
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public MovementArchetypeType Type { get; set; }
-    public Dictionary<int, int> SpeedBonusByTier { get; set; } = new();
-    public bool IgnoresOpportunityAttacks { get; set; }
-    public bool IgnoresDifficultTerrain { get; set; }
-    public bool IsImmuneToProne { get; set; }
-    public float MovementMultiplier { get; set; } = 1.0f;
-    
-    public int CharacterArchetypesId { get; set; }
-    public CharacterArchetypesEntity CharacterArchetypesEntity { get; set; } = null!;
-}
-
-
-public class AttackTypeArchetypeEntity
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public AttackTypeArchetypeCategory Category { get; set; }
-    public int AccuracyPenalty { get; set; }
-    public int EffectPenalty { get; set; }
-    public bool BypassesAccuracyChecks { get; set; }
-    public bool HasFreeAOE { get; set; }
-    
-    public int CharacterArchetypesId { get; set; }
-    public CharacterArchetypesEntity CharacterArchetypesEntity { get; set; } = null!;
-}
-
-
-
-public class EffectTypeArchetypeEntity
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public EffectTypeCategory Category { get; set; }
-    public bool HasAccessToAdvancedConditions { get; set; }
-    public int DamagePenalty { get; set; }
-    public int ConditionPenalty { get; set; }
-    public bool RequiresHybridEffects { get; set; }
-    
-    public int CharacterArchetypesId { get; set; }
-    public CharacterArchetypesEntity CharacterArchetypesEntity { get; set; } = null!;
-}
-
-
-
-public class UniqueAbilityArchetypeEntity
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public UniqueAbilityCategory Category { get; set; }
-    public int ExtraQuickActions { get; set; }
-    public int ExtraPointPool { get; set; }
-    public Dictionary<string, int> StatBonuses { get; set; } = new();
-    
-    public int CharacterArchetypesId { get; set; }
-    public CharacterArchetypesEntity CharacterArchetypesEntity { get; set; } = null!;
-}
-
-
-
-public class SpecialAttackArchetypeEntity
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public SpecialAttackCategory Category { get; set; }
-    public int BasePoints { get; set; }
-    public int MaxSpecialAttacks { get; set; }
-    public float LimitPointMultiplier { get; set; }
-    public bool CanTakeLimits { get; set; }
-    public List<string> RequiredLimits { get; set; } = new();
-    
-    public int CharacterArchetypesId { get; set; }
-    public CharacterArchetypesEntity CharacterArchetypesEntity { get; set; } = null!;
-}
-
-
-
-public class UtilityArchetypeEntity
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public UtilityCategory Category { get; set; }
-    public int BaseUtilityPool { get; set; }
-    public bool CanPurchaseExpertise { get; set; }
-    public float TierBonusMultiplier { get; set; }
-    public List<string> Restrictions { get; set; } = new();
-    
-    public int CharacterArchetypesId { get; set; }
-    public CharacterArchetypesEntity CharacterArchetypesEntity { get; set; } = null!;
-}
 
 --------------------------------------------------
