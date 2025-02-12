@@ -64,10 +64,9 @@ Server/
 │   │   └── InputSanitizer.cs
 │   │
 │   └── Validation/
-│       └── Validators/
-│           ├── CharacterValidator.cs
-│           ├── CombatAttributesValidator.cs
-│           └── UtilityAttributesValidator.cs
+│       ├── CharacterValidator.cs
+│       ├── CombatAttributesValidator.cs
+│       └── UtilityAttributesValidator.cs
 │
 ├── Services/
 │   ├── Calculations/
@@ -823,4 +822,3 @@ These additions complete our architecture by providing:
 - Basic security protections
 - Comprehensive API documentation
 
-The system remains simple enough for a small user base while maintaining proper software development practices.
