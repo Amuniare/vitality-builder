@@ -44,12 +44,7 @@
     <PackageReference Include="Moq" Version="4.20.69" />
   </ItemGroup>
 
-  <ItemGroup>
-    <!-- Project References -->
-    <ProjectReference Include="..\VitalityBuilder.Api.Domain\VitalityBuilder.Api.Domain.csproj" />
-    <ProjectReference Include="..\VitalityBuilder.Api.Infrastructure\VitalityBuilder.Api.Infrastructure.csproj" />
-    <ProjectReference Include="..\VitalityBuilder.Api.Services\VitalityBuilder.Api.Services.csproj" />
-  </ItemGroup>
+
 
   <ItemGroup>
     <!-- Additional Configurations -->
