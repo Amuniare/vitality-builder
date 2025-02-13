@@ -7,53 +7,47 @@ server/
   Domain/
     Attributes/
       CombatAttributesEntity.cs
+      UtilityAttributesEntity.cs
     Character/
       CharacterArchetypesEntity.cs
       CharacterEntity.cs
-    DTOs/
-      CharacterArchetypesDto.cs
-      CharacterResponseDto.cs
-      CombatAttributesDto.cs
-      CreateCharacterDto.cs
-      UtilityAttributesDto.cs
-    Entities/
-      ExpertiseEntity.cs
-      SpecialAttackEntity.cs
-      UniquePowerEntity.cs
-      UtilityAttributesEntity.cs
+    Constants/
+      GameRuleConstants.cs
+    Dtos/
+      Archetypes/
+        CharacterArchetypesDto.cs
+      Attributes/
+        CharacterResponseDto.cs
+        CreateCharacterDto.cs
+      Character/
+        CombatAttributesDto.cs
+        UtilityAttributesDto.cs
     Enums/
       ArchetypeEnums.cs
-    Validations/
-      ArchetypesValidator.cs
-      CharacterValidator.cs
-      CombatAttributesValidator.cs
-      UtilityAttributesValidator.cs
+    Errors/
+      ErrorResponse.cs
+      ValidationResults.cs
+    ValueObjects/
+      CombatStats.cs
   Infrastructure/
     Data/
       Configurations/
-        ArchetypesConfiguration.cs
         CharacterConfiguration.cs
         CombatAttributesConfiguration.cs
-        ExpertiseConfiguration.cs
-        SpecialAttackConfiguration.cs
-        UniquePowerConfiguration.cs
         UtilityAttributesConfiguration.cs
       VitalityBuilderContext.cs
     Logging/
       LoggingConfiguration.cs
     Validation/
+      ArchetypesValidator.cs
+      CharacterValidator.cs
       ValidationExtensions.cs
-      Validators/
   Interfaces/
     Repositories/
       ICharacterRepository.cs
     Services/
-      ICalculationService.cs
-      ICharacterArchetypesServices.cs
-      ICharacterCreationService.cs
-      ICharacterManagementService.cs
       ICharacterStatCalculator.cs
-      ICombatService.cs
+      IPointPoolCalculator.cs
   migrations/
     20250209215104_InitialCreate.cs
     20250210120258_FixMainPointPoolComputed.cs
@@ -62,29 +56,15 @@ server/
   Program.cs
   Properties/
     launchSettings.json
-  Repositories/
-    CharacterRepository.cs
   Services/
+    Calculations/
+      CalculationService.cs
+      PointPoolCalculator.cs
     Character/
-      Creation/
-        CharacterCreationService.cs
-      Management/
-        CharacterManagementService.cs
-    Combat/
-      CombatService.cs
-      DiceRollingService.cs
-    Rules/
-      Abilities/
-        SpecialAttackCalculator.cs
-      Points/
-        PointPoolCalculator.cs
-      Stats/
-        CharacterStatCalculator.cs
-  Utilities/
-    Extensions/
-      JsonValueConverter.cs
-    Helpers/
-      ValidationHelper.cs
+      CharacterCreationService.cs
+      CharacterUpdateService.cs
+    Validation/
+      ValidationService.cs
   vitality.db
   VitalityBuilder.Api.csproj
 
@@ -2238,108 +2218,27 @@ Content:
 }
 --------------------------------------------------
 
-File: server\Repositories\CharacterRepository.cs
+File: server\Services\Calculations\CalculationService.cs
 Content:
 
 --------------------------------------------------
 
-File: server\Utilities\Extensions\JsonValueConverter.cs
-Content:
-using System.Text.Json;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-
-namespace VitalityBuilder.Api.Infrastructure;
-
-/// <summary>
-/// Generic JSON value converter for Entity Framework Core
-/// </summary>
-public class JsonValueConverter<T> : ValueConverter<T, string> where T : class
-{
-    public JsonValueConverter() : base(
-        // Serialize to JSON string
-        v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
-        // Deserialize from JSON string with null handling
-        v => v == null ? null! : JsonSerializer.Deserialize<T>(v, JsonSerializerOptions.Default)!
-    )
-    {
-    }
-}
-
-/// <summary>
-/// Generic JSON comparer for Entity Framework Core
-/// </summary>
-public class JsonValueComparer<T> : ValueComparer<T> where T : class
-{
-    private static bool EqualsJson(T? left, T? right)
-    {
-        if (left == null && right == null)
-            return true;
-        if (left == null || right == null)
-            return false;
-        return JsonSerializer.Serialize(left) == JsonSerializer.Serialize(right);
-    }
-
-    private static int GetHashCodeJson(T value)
-    {
-        if (value == null)
-            return 0;
-        return JsonSerializer.Serialize(value).GetHashCode();
-    }
-
-    private static T GetSnapshotJson(T value)
-    {
-        if (value == null)
-            return null!;
-        var json = JsonSerializer.Serialize(value);
-        return JsonSerializer.Deserialize<T>(json)!;
-    }
-
-    public JsonValueComparer() : base(
-        (l, r) => EqualsJson(l, r),
-        v => GetHashCodeJson(v),
-        v => GetSnapshotJson(v))
-    {
-    }
-}
---------------------------------------------------
-
-File: server\Utilities\Helpers\ValidationHelper.cs
+File: server\Services\Calculations\PointPoolCalculator.cs
 Content:
 
 --------------------------------------------------
 
-File: server\Services\Combat\CombatService.cs
+File: server\Services\Character\CharacterCreationService.cs
 Content:
 
 --------------------------------------------------
 
-File: server\Services\Combat\DiceRollingService.cs
+File: server\Services\Character\CharacterUpdateService.cs
 Content:
 
 --------------------------------------------------
 
-File: server\Services\Rules\Abilities\SpecialAttackCalculator.cs
-Content:
-
---------------------------------------------------
-
-File: server\Services\Rules\Points\PointPoolCalculator.cs
-Content:
-
---------------------------------------------------
-
-File: server\Services\Rules\Stats\CharacterStatCalculator.cs
-Content:
-
---------------------------------------------------
-
-File: server\Services\Character\Creation\CharacterCreationService.cs
-Content:
-
---------------------------------------------------
-
-File: server\Services\Character\Management\CharacterManagementService.cs
+File: server\Services\Validation\ValidationService.cs
 Content:
 
 --------------------------------------------------
@@ -2347,20 +2246,35 @@ Content:
 File: server\Interfaces\Repositories\ICharacterRepository.cs
 Content:
 using VitalityBuilder.Api.Models.Entities;
-public interface ICharacterRepository
+using VitalityBuilder.Api.Infrastructure;
+
+namespace Server.Repositories;
+public class CharacterRepository : ICharacterRepository
 {
-    Task<Character> CreateCharacterAsync(Character character);
-    Task<List<Character>> GetAllCharactersAsync();
-    Task<Character?> GetCharacterByIdAsync(int id);
+    private readonly VitalityBuilderContext _context;
+    public CharacterRepository(VitalityBuilderContext context) => _context = context;
+
+    public async Task<CharacterEntity> CreateCharacterAsync(CharacterEntity character)
+    {
+        _context.Characters.Add(character);
+        await _context.SaveChangesAsync();
+        return character;
+    }
+
+    public async Task<List<CharacterEntity>> GetAllCharactersAsync() 
+        => await _context.Characters.ToListAsync();
+
+    public async Task<CharacterEntity?> GetCharacterByIdAsync(int id) 
+        => await _context.Characters.FindAsync(id);
 }
 --------------------------------------------------
 
-File: server\Interfaces\Services\ICalculationService.cs
+File: server\Interfaces\Services\ICharacterStatCalculator.cs
 Content:
 
 --------------------------------------------------
 
-File: server\Interfaces\Services\ICharacterArchetypesServices.cs
+File: server\Interfaces\Services\IPointPoolCalculator.cs
 Content:
 using VitalityBuilder.Api.Models;
 using VitalityBuilder.Api.Models.Archetypes;
@@ -2379,26 +2293,6 @@ public interface ICharacterArchetypesService
     int CalculateUtilityPoints(Models.Archetypes.UtilityArchetype archetype, int tier);
     Dictionary<string, int> CalculateArchetypeBonuses(Models.Archetypes.CharacterArchetypes archetypes, int tier);
 }
-
---------------------------------------------------
-
-File: server\Interfaces\Services\ICharacterCreationService.cs
-Content:
-
---------------------------------------------------
-
-File: server\Interfaces\Services\ICharacterManagementService.cs
-Content:
-
---------------------------------------------------
-
-File: server\Interfaces\Services\ICharacterStatCalculator.cs
-Content:
-
---------------------------------------------------
-
-File: server\Interfaces\Services\ICombatService.cs
-Content:
 
 --------------------------------------------------
 
@@ -2608,6 +2502,286 @@ Content:
 
 --------------------------------------------------
 
+File: server\Infrastructure\Validation\ArchetypesValidator.cs
+Content:
+using FluentValidation;
+using VitalityBuilder.Api.Models.DTOs;
+using VitalityBuilder.Api.Models.Archetypes;
+
+namespace VitalityBuilder.Api.Models.Validations;
+
+public class AttackTypeArchetypeDtoValidator : AbstractValidator<AttackTypeArchetypeDto>
+{
+    public AttackTypeArchetypeDtoValidator()
+    {
+        RuleFor(static x => x.Name)
+            .NotEmpty()
+            .MaximumLength(100);
+
+        RuleFor(static x => x.Category)
+            .IsInEnum()
+            .WithMessage("Invalid attack type category specified");
+
+        RuleFor(static x => x.AccuracyPenalty)
+            .GreaterThanOrEqualTo(0)
+            .When(static x => (int)x.Category == (int)AttackTypeArchetypeCategory.AOESpecialist)
+            .WithMessage("AOE Specialist must have a non-negative accuracy penalty");
+
+        RuleFor(static x => x.EffectPenalty)
+            .GreaterThanOrEqualTo(0)
+            .When(static x => (int)x.Category == (int)AttackTypeArchetypeCategory.DirectSpecialist)
+            .WithMessage("Direct Specialist must have a non-negative effect penalty");
+    }
+}
+
+public class EffectTypeArchetypeDtoValidator : AbstractValidator<EffectTypeArchetypeDto>
+{
+    public EffectTypeArchetypeDtoValidator()
+    {
+        RuleFor(static x => x.Name)
+            .NotEmpty()
+            .MaximumLength(100);
+
+        RuleFor(static x => x.Category)
+            .IsInEnum()
+            .WithMessage("Invalid effect type category specified");
+
+        RuleFor(static x => x.DamagePenalty)
+            .GreaterThanOrEqualTo(0)
+            .When(static x => (int)x.Category == (int)EffectTypeCategory.HybridSpecialist || (int)x.Category == (int)EffectTypeCategory.CrowdControl)
+            .WithMessage("Damage penalty must be non-negative for Hybrid Specialist and Crowd Control");
+
+        RuleFor(static x => x.ConditionPenalty)
+            .GreaterThanOrEqualTo(0)
+            .When(static x => (int)x.Category == (int)EffectTypeCategory.HybridSpecialist)
+            .WithMessage("Condition penalty must be non-negative for Hybrid Specialist");
+    }
+}
+
+public class UniqueAbilityArchetypeDtoValidator : AbstractValidator<UniqueAbilityArchetypeDto>
+{
+    public UniqueAbilityArchetypeDtoValidator()
+    {
+        RuleFor(static x => x.Name)
+            .NotEmpty()
+            .MaximumLength(100);
+
+        RuleFor(static x => x.Category)
+            .IsInEnum()
+            .WithMessage("Invalid unique ability category specified");
+
+        RuleFor(static x => x.ExtraQuickActions)
+            .GreaterThanOrEqualTo(0)
+            .When(static x => (int)x.Category == (int)UniqueAbilityCategory.VersatileMaster)
+            .WithMessage("Extra quick actions must be non-negative for Versatile Master");
+
+        RuleFor(static x => x.ExtraPointPool)
+            .GreaterThanOrEqualTo(0)
+            .When(static x => (int)x.Category == (int)UniqueAbilityCategory.Extraordinary)
+            .WithMessage("Extra point pool must be non-negative for Extraordinary");
+
+        RuleFor(static x => x.StatBonuses)
+            .NotNull()
+            .Must(static x => x.All(static kvp => kvp.Value >= 0))
+            .WithMessage("All stat bonuses must be non-negative");
+    }
+}
+
+public class SpecialAttackArchetypeDtoValidator : AbstractValidator<SpecialAttackArchetypeDto>
+{
+    public SpecialAttackArchetypeDtoValidator()
+    {
+        RuleFor(static x => x.Name)
+            .NotEmpty()
+            .MaximumLength(100);
+
+        RuleFor(static x => x.Category)
+            .IsInEnum()
+            .WithMessage("Invalid special attack category specified");
+
+        RuleFor(static x => x.BasePoints)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("Base points must be non-negative");
+
+        RuleFor(static x => x.MaxSpecialAttacks)
+            .GreaterThanOrEqualTo(1)
+            .WithMessage("Maximum special attacks must be at least 1");
+
+        RuleFor(static x => x.LimitPointMultiplier)
+            .GreaterThanOrEqualTo(0)
+            .When(static x => x.CanTakeLimits)
+            .WithMessage("Limit point multiplier must be non-negative when limits are allowed");
+
+        RuleFor(static x => x.RequiredLimits)
+            .NotNull()
+            .Must(static x => !x.Any(string.IsNullOrWhiteSpace))
+            .When(static x => (int)x.Category == (int)SpecialAttackCategory.Specialist)
+            .WithMessage("Specialist archetype must have at least one required limit");
+    }
+}
+
+public class UtilityArchetypeDtoValidator : AbstractValidator<UtilityArchetypeDto>
+{
+    public UtilityArchetypeDtoValidator()
+    {
+        RuleFor(static x => x.Name)
+            .NotEmpty()
+            .MaximumLength(100);
+
+        RuleFor(static x => x.Category)
+            .IsInEnum()
+            .WithMessage("Invalid utility category specified");
+
+        RuleFor(static x => x.BaseUtilityPool)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("Base utility pool must be non-negative");
+
+        RuleFor(static x => x.TierBonusMultiplier)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("Tier bonus multiplier must be non-negative");
+
+        RuleFor(static x => x.Restrictions)
+            .NotNull()
+            .Must(static x => !x.Any(string.IsNullOrWhiteSpace))
+            .When(static x => (int)x.Category == (int)UtilityCategory.Specialized || (int)x.Category == (int)UtilityCategory.JackOfAllTrades)
+            .WithMessage("Specialized and Jack of All Trades archetypes must have valid restrictions");
+    }
+}
+--------------------------------------------------
+
+File: server\Infrastructure\Validation\CharacterValidator.cs
+Content:
+using FluentValidation;
+using VitalityBuilder.Api.Models.DTOs;
+
+namespace VitalityBuilder.Api.Models.Validations;
+
+public class CreateCharacterDtoValidator : AbstractValidator<CreateCharacterDto>
+{
+    public CreateCharacterDtoValidator()
+    {
+        RuleFor(x => x.Name)
+            .NotEmpty().WithMessage("Character name is required")
+            .MaximumLength(100).WithMessage("Name cannot exceed 100 characters");
+
+        RuleFor(x => x.Tier)
+            .InclusiveBetween(1, 10)
+            .WithMessage("Tier must be between 1 and 10");
+
+        RuleFor(x => x.CombatAttributes)
+            .NotNull()
+            .SetValidator(new CombatAttributesDtoValidator());
+
+        RuleFor(x => x.UtilityAttributes)
+            .NotNull()
+            .SetValidator(new UtilityAttributesDtoValidator());
+    }
+}
+
+public class CombatAttributesDtoValidator : AbstractValidator<CombatAttributesDto>
+{
+    public CombatAttributesDtoValidator()
+    {
+        RuleFor(x => x.Focus)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("Focus cannot be negative");
+
+        RuleFor(x => x.Power)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("Power cannot be negative");
+
+        RuleFor(x => x.Mobility)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("Mobility cannot be negative");
+
+        RuleFor(x => x.Endurance)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("Endurance cannot be negative");
+
+        RuleFor(x => x.Total)
+            .Must((dto, total) => total >= 0)
+            .WithMessage("Total combat attributes cannot be negative");
+    }
+}
+
+public class UtilityAttributesDtoValidator : AbstractValidator<UtilityAttributesDto>
+{
+    public UtilityAttributesDtoValidator()
+    {
+        RuleFor(x => x.Awareness)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("Awareness cannot be negative");
+
+        RuleFor(x => x.Communication)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("Communication cannot be negative");
+
+        RuleFor(x => x.Intelligence)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("Intelligence cannot be negative");
+
+        RuleFor(x => x.Total)
+            .Must((dto, total) => total >= 0)
+            .WithMessage("Total utility attributes cannot be negative");
+    }
+}
+
+public class CharacterArchetypesDtoValidator : AbstractValidator<CharacterArchetypesDto>
+{
+    public CharacterArchetypesDtoValidator()
+    {
+        RuleFor(x => x.MovementArchetype)
+            .NotNull()
+            .SetValidator(new MovementArchetypeDtoValidator());
+
+        RuleFor(x => x.AttackTypeArchetype)
+            .NotNull()
+            .SetValidator(new AttackTypeArchetypeDtoValidator());
+
+        RuleFor(x => x.EffectTypeArchetype)
+            .NotNull()
+            .SetValidator(new EffectTypeArchetypeDtoValidator());
+
+        RuleFor(x => x.UniqueAbilityArchetype)
+            .NotNull()
+            .SetValidator(new UniqueAbilityArchetypeDtoValidator());
+
+        RuleFor(x => x.SpecialAttackArchetype)
+            .NotNull()
+            .SetValidator(new SpecialAttackArchetypeDtoValidator());
+
+        RuleFor(x => x.UtilityArchetype)
+            .NotNull()
+            .SetValidator(new UtilityArchetypeDtoValidator());
+    }
+}
+
+public class MovementArchetypeDtoValidator : AbstractValidator<MovementArchetypeDto>
+{
+    public MovementArchetypeDtoValidator()
+    {
+        RuleFor(x => x.Name)
+            .NotEmpty()
+            .MaximumLength(100);
+
+        RuleFor(x => x.Type)
+            .IsInEnum()
+            .WithMessage("Invalid movement type specified");
+
+        RuleFor(x => x.SpeedBonusByTier)
+            .NotNull()
+            .Must(x => x.All(kvp => kvp.Key >= 1 && kvp.Key <= 10))
+            .WithMessage("Tier bonuses must be between 1 and 10")
+            .Must(x => x.All(kvp => kvp.Value >= 0))
+            .WithMessage("Speed bonuses must be non-negative");
+
+        RuleFor(x => x.MovementMultiplier)
+            .InclusiveBetween(0.5f, 2.0f)
+            .WithMessage("Movement multiplier must be between 0.5 and 2.0");
+    }
+}
+--------------------------------------------------
+
 File: server\Infrastructure\Validation\ValidationExtensions.cs
 Content:
 using FluentValidation;
@@ -2647,32 +2821,12 @@ public static class ValidationExtensions
 }
 --------------------------------------------------
 
-File: server\Infrastructure\Data\Configurations\ArchetypesConfiguration.cs
-Content:
-
---------------------------------------------------
-
 File: server\Infrastructure\Data\Configurations\CharacterConfiguration.cs
 Content:
 
 --------------------------------------------------
 
 File: server\Infrastructure\Data\Configurations\CombatAttributesConfiguration.cs
-Content:
-
---------------------------------------------------
-
-File: server\Infrastructure\Data\Configurations\ExpertiseConfiguration.cs
-Content:
-
---------------------------------------------------
-
-File: server\Infrastructure\Data\Configurations\SpecialAttackConfiguration.cs
-Content:
-
---------------------------------------------------
-
-File: server\Infrastructure\Data\Configurations\UniquePowerConfiguration.cs
 Content:
 
 --------------------------------------------------
@@ -2700,6 +2854,23 @@ public class CombatAttributes
 }
 
 
+--------------------------------------------------
+
+File: server\Domain\Attributes\UtilityAttributesEntity.cs
+Content:
+namespace VitalityBuilder.Api.Models.Entities;
+public class UtilityAttributes
+{
+    public int Id { get; set; }
+    public int Awareness { get; set; }
+    public int Communication { get; set; }
+    public int Intelligence { get; set; }
+
+    public int CharacterId { get; set; }
+    public CharacterEntity Character { get; set; } = null!;
+
+    
+}
 --------------------------------------------------
 
 File: server\Domain\Character\CharacterArchetypesEntity.cs
@@ -2878,7 +3049,88 @@ public class CharacterEntity
 }
 --------------------------------------------------
 
-File: server\Domain\DTOs\CharacterArchetypesDto.cs
+File: server\Domain\Constants\GameRuleConstants.cs
+Content:
+
+--------------------------------------------------
+
+File: server\Domain\Enums\ArchetypeEnums.cs
+Content:
+namespace VitalityBuilder.Api.Models.Enums;
+
+public enum MovementArchetypeType
+{
+    Swift,
+    Skirmisher,
+    ParkourRunner,
+    Behemoth,
+    Bulwark,
+    Vanguard,
+    Mole,
+    Flight,
+    Teleportation,
+    Portal,
+    Swinging,
+    SuperJump
+}
+
+public enum AttackTypeArchetypeCategory
+{
+    AOESpecialist,
+    DirectSpecialist,
+    SingleTarget
+}
+
+public enum EffectTypeCategory
+{
+    DamageSpecialist,
+    HybridSpecialist,
+    CrowdControl
+}
+
+public enum UniqueAbilityCategory
+{
+    VersatileMaster,
+    Extraordinary,
+    CutAbove
+}
+
+public enum SpecialAttackCategory
+{
+    Normal,
+    Specialist,
+    Paragon,
+    OneTrick,
+    Straightforward,
+    SharedUses,
+    DualNatured,
+    Basic
+}
+
+public enum UtilityCategory
+{
+    Specialized,
+    Practical,
+    JackOfAllTrades
+}
+--------------------------------------------------
+
+File: server\Domain\Errors\ErrorResponse.cs
+Content:
+
+--------------------------------------------------
+
+File: server\Domain\Errors\ValidationResults.cs
+Content:
+
+--------------------------------------------------
+
+File: server\Domain\ValueObjects\CombatStats.cs
+Content:
+
+--------------------------------------------------
+
+File: server\Domain\Dtos\Archetypes\CharacterArchetypesDto.cs
 Content:
 using VitalityBuilder.Api.Models.Enums;
 
@@ -2957,7 +3209,7 @@ public class UtilityArchetypeDto
 }
 --------------------------------------------------
 
-File: server\Domain\DTOs\CharacterResponseDto.cs
+File: server\Domain\Dtos\Attributes\CharacterResponseDto.cs
 Content:
 namespace VitalityBuilder.Api.Models.DTOs
     {
@@ -2987,21 +3239,7 @@ namespace VitalityBuilder.Api.Models.DTOs
 
 --------------------------------------------------
 
-File: server\Domain\DTOs\CombatAttributesDto.cs
-Content:
-namespace VitalityBuilder.Api.Models.DTOs;
-
-public class CombatAttributesDto
-{
-    public int Focus { get; set; }
-    public int Power { get; set; }
-    public int Mobility { get; set; }
-    public int Endurance { get; set; }
-    public int Total => Focus + Power + Mobility + Endurance;
-}
---------------------------------------------------
-
-File: server\Domain\DTOs\CreateCharacterDto.cs
+File: server\Domain\Dtos\Attributes\CreateCharacterDto.cs
 Content:
 using VitalityBuilder.Api.Models.DTOs;
 
@@ -3016,7 +3254,21 @@ public class CreateCharacterDto
 }
 --------------------------------------------------
 
-File: server\Domain\DTOs\UtilityAttributesDto.cs
+File: server\Domain\Dtos\Character\CombatAttributesDto.cs
+Content:
+namespace VitalityBuilder.Api.Models.DTOs;
+
+public class CombatAttributesDto
+{
+    public int Focus { get; set; }
+    public int Power { get; set; }
+    public int Mobility { get; set; }
+    public int Endurance { get; set; }
+    public int Total => Focus + Power + Mobility + Endurance;
+}
+--------------------------------------------------
+
+File: server\Domain\Dtos\Character\UtilityAttributesDto.cs
 Content:
 namespace VitalityBuilder.Api.Models.DTOs;
 
@@ -3027,425 +3279,4 @@ public class UtilityAttributesDto
     public int Intelligence { get; set; }
     public int Total => Awareness + Communication + Intelligence;
 }
---------------------------------------------------
-
-File: server\Domain\Entities\ExpertiseEntity.cs
-Content:
-namespace VitalityBuilder.Api.Models.Entities;
-public class Expertise
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string Category { get; set; } = string.Empty;
-    public int Cost { get; set; }
-    public string Description { get; set; } = string.Empty;
-
-    public int CharacterId { get; set; }
-    public CharacterEntity Character { get; set; } = null!;
-}
---------------------------------------------------
-
-File: server\Domain\Entities\SpecialAttackEntity.cs
-Content:
-namespace VitalityBuilder.Api.Models.Entities;
-public class SpecialAttack
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string AttackType { get; set; } = string.Empty;
-    public string EffectType { get; set; } = string.Empty;
-    public List<string> Limits { get; set; } = new();
-    public List<string> Upgrades { get; set; } = new();
-
-    public int CharacterId { get; set; }
-    public CharacterEntity Character { get; set; } = null!;
-    public int Cost { get; set; }
-
-
-}
-
---------------------------------------------------
-
-File: server\Domain\Entities\UniquePowerEntity.cs
-Content:
-namespace VitalityBuilder.Api.Models.Entities;
-public class UniquePower
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string Category { get; set; } = string.Empty;
-    public int Cost { get; set; }
-    public string Description { get; set; } = string.Empty;
-
-    public int CharacterId { get; set; }
-    public CharacterEntity Character { get; set; } = null!;
-}
---------------------------------------------------
-
-File: server\Domain\Entities\UtilityAttributesEntity.cs
-Content:
-namespace VitalityBuilder.Api.Models.Entities;
-public class UtilityAttributes
-{
-    public int Id { get; set; }
-    public int Awareness { get; set; }
-    public int Communication { get; set; }
-    public int Intelligence { get; set; }
-
-    public int CharacterId { get; set; }
-    public CharacterEntity Character { get; set; } = null!;
-
-    
-}
---------------------------------------------------
-
-File: server\Domain\Enums\ArchetypeEnums.cs
-Content:
-namespace VitalityBuilder.Api.Models.Enums;
-
-public enum MovementArchetypeType
-{
-    Swift,
-    Skirmisher,
-    ParkourRunner,
-    Behemoth,
-    Bulwark,
-    Vanguard,
-    Mole,
-    Flight,
-    Teleportation,
-    Portal,
-    Swinging,
-    SuperJump
-}
-
-public enum AttackTypeArchetypeCategory
-{
-    AOESpecialist,
-    DirectSpecialist,
-    SingleTarget
-}
-
-public enum EffectTypeCategory
-{
-    DamageSpecialist,
-    HybridSpecialist,
-    CrowdControl
-}
-
-public enum UniqueAbilityCategory
-{
-    VersatileMaster,
-    Extraordinary,
-    CutAbove
-}
-
-public enum SpecialAttackCategory
-{
-    Normal,
-    Specialist,
-    Paragon,
-    OneTrick,
-    Straightforward,
-    SharedUses,
-    DualNatured,
-    Basic
-}
-
-public enum UtilityCategory
-{
-    Specialized,
-    Practical,
-    JackOfAllTrades
-}
---------------------------------------------------
-
-File: server\Domain\Validations\ArchetypesValidator.cs
-Content:
-using FluentValidation;
-using VitalityBuilder.Api.Models.DTOs;
-using VitalityBuilder.Api.Models.Archetypes;
-
-namespace VitalityBuilder.Api.Models.Validations;
-
-public class AttackTypeArchetypeDtoValidator : AbstractValidator<AttackTypeArchetypeDto>
-{
-    public AttackTypeArchetypeDtoValidator()
-    {
-        RuleFor(static x => x.Name)
-            .NotEmpty()
-            .MaximumLength(100);
-
-        RuleFor(static x => x.Category)
-            .IsInEnum()
-            .WithMessage("Invalid attack type category specified");
-
-        RuleFor(static x => x.AccuracyPenalty)
-            .GreaterThanOrEqualTo(0)
-            .When(static x => (int)x.Category == (int)AttackTypeArchetypeCategory.AOESpecialist)
-            .WithMessage("AOE Specialist must have a non-negative accuracy penalty");
-
-        RuleFor(static x => x.EffectPenalty)
-            .GreaterThanOrEqualTo(0)
-            .When(static x => (int)x.Category == (int)AttackTypeArchetypeCategory.DirectSpecialist)
-            .WithMessage("Direct Specialist must have a non-negative effect penalty");
-    }
-}
-
-public class EffectTypeArchetypeDtoValidator : AbstractValidator<EffectTypeArchetypeDto>
-{
-    public EffectTypeArchetypeDtoValidator()
-    {
-        RuleFor(static x => x.Name)
-            .NotEmpty()
-            .MaximumLength(100);
-
-        RuleFor(static x => x.Category)
-            .IsInEnum()
-            .WithMessage("Invalid effect type category specified");
-
-        RuleFor(static x => x.DamagePenalty)
-            .GreaterThanOrEqualTo(0)
-            .When(static x => (int)x.Category == (int)EffectTypeCategory.HybridSpecialist || (int)x.Category == (int)EffectTypeCategory.CrowdControl)
-            .WithMessage("Damage penalty must be non-negative for Hybrid Specialist and Crowd Control");
-
-        RuleFor(static x => x.ConditionPenalty)
-            .GreaterThanOrEqualTo(0)
-            .When(static x => (int)x.Category == (int)EffectTypeCategory.HybridSpecialist)
-            .WithMessage("Condition penalty must be non-negative for Hybrid Specialist");
-    }
-}
-
-public class UniqueAbilityArchetypeDtoValidator : AbstractValidator<UniqueAbilityArchetypeDto>
-{
-    public UniqueAbilityArchetypeDtoValidator()
-    {
-        RuleFor(static x => x.Name)
-            .NotEmpty()
-            .MaximumLength(100);
-
-        RuleFor(static x => x.Category)
-            .IsInEnum()
-            .WithMessage("Invalid unique ability category specified");
-
-        RuleFor(static x => x.ExtraQuickActions)
-            .GreaterThanOrEqualTo(0)
-            .When(static x => (int)x.Category == (int)UniqueAbilityCategory.VersatileMaster)
-            .WithMessage("Extra quick actions must be non-negative for Versatile Master");
-
-        RuleFor(static x => x.ExtraPointPool)
-            .GreaterThanOrEqualTo(0)
-            .When(static x => (int)x.Category == (int)UniqueAbilityCategory.Extraordinary)
-            .WithMessage("Extra point pool must be non-negative for Extraordinary");
-
-        RuleFor(static x => x.StatBonuses)
-            .NotNull()
-            .Must(static x => x.All(static kvp => kvp.Value >= 0))
-            .WithMessage("All stat bonuses must be non-negative");
-    }
-}
-
-public class SpecialAttackArchetypeDtoValidator : AbstractValidator<SpecialAttackArchetypeDto>
-{
-    public SpecialAttackArchetypeDtoValidator()
-    {
-        RuleFor(static x => x.Name)
-            .NotEmpty()
-            .MaximumLength(100);
-
-        RuleFor(static x => x.Category)
-            .IsInEnum()
-            .WithMessage("Invalid special attack category specified");
-
-        RuleFor(static x => x.BasePoints)
-            .GreaterThanOrEqualTo(0)
-            .WithMessage("Base points must be non-negative");
-
-        RuleFor(static x => x.MaxSpecialAttacks)
-            .GreaterThanOrEqualTo(1)
-            .WithMessage("Maximum special attacks must be at least 1");
-
-        RuleFor(static x => x.LimitPointMultiplier)
-            .GreaterThanOrEqualTo(0)
-            .When(static x => x.CanTakeLimits)
-            .WithMessage("Limit point multiplier must be non-negative when limits are allowed");
-
-        RuleFor(static x => x.RequiredLimits)
-            .NotNull()
-            .Must(static x => !x.Any(string.IsNullOrWhiteSpace))
-            .When(static x => (int)x.Category == (int)SpecialAttackCategory.Specialist)
-            .WithMessage("Specialist archetype must have at least one required limit");
-    }
-}
-
-public class UtilityArchetypeDtoValidator : AbstractValidator<UtilityArchetypeDto>
-{
-    public UtilityArchetypeDtoValidator()
-    {
-        RuleFor(static x => x.Name)
-            .NotEmpty()
-            .MaximumLength(100);
-
-        RuleFor(static x => x.Category)
-            .IsInEnum()
-            .WithMessage("Invalid utility category specified");
-
-        RuleFor(static x => x.BaseUtilityPool)
-            .GreaterThanOrEqualTo(0)
-            .WithMessage("Base utility pool must be non-negative");
-
-        RuleFor(static x => x.TierBonusMultiplier)
-            .GreaterThanOrEqualTo(0)
-            .WithMessage("Tier bonus multiplier must be non-negative");
-
-        RuleFor(static x => x.Restrictions)
-            .NotNull()
-            .Must(static x => !x.Any(string.IsNullOrWhiteSpace))
-            .When(static x => (int)x.Category == (int)UtilityCategory.Specialized || (int)x.Category == (int)UtilityCategory.JackOfAllTrades)
-            .WithMessage("Specialized and Jack of All Trades archetypes must have valid restrictions");
-    }
-}
---------------------------------------------------
-
-File: server\Domain\Validations\CharacterValidator.cs
-Content:
-using FluentValidation;
-using VitalityBuilder.Api.Models.DTOs;
-
-namespace VitalityBuilder.Api.Models.Validations;
-
-public class CreateCharacterDtoValidator : AbstractValidator<CreateCharacterDto>
-{
-    public CreateCharacterDtoValidator()
-    {
-        RuleFor(x => x.Name)
-            .NotEmpty().WithMessage("Character name is required")
-            .MaximumLength(100).WithMessage("Name cannot exceed 100 characters");
-
-        RuleFor(x => x.Tier)
-            .InclusiveBetween(1, 10)
-            .WithMessage("Tier must be between 1 and 10");
-
-        RuleFor(x => x.CombatAttributes)
-            .NotNull()
-            .SetValidator(new CombatAttributesDtoValidator());
-
-        RuleFor(x => x.UtilityAttributes)
-            .NotNull()
-            .SetValidator(new UtilityAttributesDtoValidator());
-    }
-}
-
-public class CombatAttributesDtoValidator : AbstractValidator<CombatAttributesDto>
-{
-    public CombatAttributesDtoValidator()
-    {
-        RuleFor(x => x.Focus)
-            .GreaterThanOrEqualTo(0)
-            .WithMessage("Focus cannot be negative");
-
-        RuleFor(x => x.Power)
-            .GreaterThanOrEqualTo(0)
-            .WithMessage("Power cannot be negative");
-
-        RuleFor(x => x.Mobility)
-            .GreaterThanOrEqualTo(0)
-            .WithMessage("Mobility cannot be negative");
-
-        RuleFor(x => x.Endurance)
-            .GreaterThanOrEqualTo(0)
-            .WithMessage("Endurance cannot be negative");
-
-        RuleFor(x => x.Total)
-            .Must((dto, total) => total >= 0)
-            .WithMessage("Total combat attributes cannot be negative");
-    }
-}
-
-public class UtilityAttributesDtoValidator : AbstractValidator<UtilityAttributesDto>
-{
-    public UtilityAttributesDtoValidator()
-    {
-        RuleFor(x => x.Awareness)
-            .GreaterThanOrEqualTo(0)
-            .WithMessage("Awareness cannot be negative");
-
-        RuleFor(x => x.Communication)
-            .GreaterThanOrEqualTo(0)
-            .WithMessage("Communication cannot be negative");
-
-        RuleFor(x => x.Intelligence)
-            .GreaterThanOrEqualTo(0)
-            .WithMessage("Intelligence cannot be negative");
-
-        RuleFor(x => x.Total)
-            .Must((dto, total) => total >= 0)
-            .WithMessage("Total utility attributes cannot be negative");
-    }
-}
-
-public class CharacterArchetypesDtoValidator : AbstractValidator<CharacterArchetypesDto>
-{
-    public CharacterArchetypesDtoValidator()
-    {
-        RuleFor(x => x.MovementArchetype)
-            .NotNull()
-            .SetValidator(new MovementArchetypeDtoValidator());
-
-        RuleFor(x => x.AttackTypeArchetype)
-            .NotNull()
-            .SetValidator(new AttackTypeArchetypeDtoValidator());
-
-        RuleFor(x => x.EffectTypeArchetype)
-            .NotNull()
-            .SetValidator(new EffectTypeArchetypeDtoValidator());
-
-        RuleFor(x => x.UniqueAbilityArchetype)
-            .NotNull()
-            .SetValidator(new UniqueAbilityArchetypeDtoValidator());
-
-        RuleFor(x => x.SpecialAttackArchetype)
-            .NotNull()
-            .SetValidator(new SpecialAttackArchetypeDtoValidator());
-
-        RuleFor(x => x.UtilityArchetype)
-            .NotNull()
-            .SetValidator(new UtilityArchetypeDtoValidator());
-    }
-}
-
-public class MovementArchetypeDtoValidator : AbstractValidator<MovementArchetypeDto>
-{
-    public MovementArchetypeDtoValidator()
-    {
-        RuleFor(x => x.Name)
-            .NotEmpty()
-            .MaximumLength(100);
-
-        RuleFor(x => x.Type)
-            .IsInEnum()
-            .WithMessage("Invalid movement type specified");
-
-        RuleFor(x => x.SpeedBonusByTier)
-            .NotNull()
-            .Must(x => x.All(kvp => kvp.Key >= 1 && kvp.Key <= 10))
-            .WithMessage("Tier bonuses must be between 1 and 10")
-            .Must(x => x.All(kvp => kvp.Value >= 0))
-            .WithMessage("Speed bonuses must be non-negative");
-
-        RuleFor(x => x.MovementMultiplier)
-            .InclusiveBetween(0.5f, 2.0f)
-            .WithMessage("Movement multiplier must be between 0.5 and 2.0");
-    }
-}
---------------------------------------------------
-
-File: server\Domain\Validations\CombatAttributesValidator.cs
-Content:
-
---------------------------------------------------
-
-File: server\Domain\Validations\UtilityAttributesValidator.cs
-Content:
-
 --------------------------------------------------

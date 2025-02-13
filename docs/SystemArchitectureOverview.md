@@ -48,7 +48,7 @@ Server/
 │   │   └── ValidationResult.cs
 │   │
 │   └── ValueObjects/
-│       └── DerivedStats.cs
+│       └── CombatStats.cs
 │
 ├── Infrastructure/
 │   ├── Data/
@@ -89,198 +89,289 @@ Server/
 ```
 
 
-## Controllers Folder
-Purpose: Handles incoming HTTP requests and manages API endpoints.
 
-Files:
-- CharacterController.cs
-  - Manages character-related HTTP endpoints (GET, POST, PUT, DELETE)
-  - Implements error handling for API responses
-  - Validates incoming requests
-  - Routes requests to appropriate services
+
+
+# Folder Architecture and Data Flow Analysis
+
+## Controllers Folder
+The Controllers folder acts as the gateway for all external communication with our application. Think of it as the front desk at a hotel - it's where all requests first arrive and get directed to the right place.
+
+### Data Sources
+- HTTP requests from client applications
+- Query parameters from URLs
+- Request bodies containing character data
+- Authentication tokens and headers
+- API version information
+
+### Data Destinations
+- Routes requests to appropriate services
+- Returns HTTP responses to clients
+- Sends validation errors back to users
+- Forwards logging information
+- Triggers event notifications
+
+### Example Flow
+When a request comes in to update a character's attributes:
+```csharp
+[HttpPut("characters/{id}/attributes")]
+public async Task<IActionResult> UpdateAttributes(
+    int id, 
+    UpdateAttributesRequest request)
+{
+    // First, validate the incoming request
+    if (!ModelState.IsValid)
+    {
+        return BadRequest(ModelState);
+    }
+
+    // Forward to service layer for processing
+    var result = await _characterService
+        .UpdateAttributesAsync(id, request);
+
+    // Return appropriate response
+    return Ok(result);
+}
+```
 
 ## Domain Folder
-Purpose: Contains core business logic and data structures.
+The Domain folder contains the core business logic and data structures of our application. It's like the blueprint room of a construction company - it defines what everything should look like and how it should work.
 
-### Attributes Folder
-Contains core attribute definitions:
-- CombatAttributes.cs
-  - Defines Focus, Power, Mobility, Endurance
-  - Includes validation rules for combat attributes
-  - Manages combat attribute calculations
+### Data Sources
+- Entity definitions from code
+- Game rule constants
+- Business logic requirements
+- Data validation rules
+- Relationship definitions
 
-- UtilityAttributes.cs
-  - Defines Awareness, Communication, Intelligence
-  - Handles utility attribute validation
-  - Contains utility calculation methods
+### Data Destinations
+- Database structure through Entity Framework
+- Service layer implementations
+- Validation rule enforcement
+- Response data formatting
+- Calculation systems
 
-### Character Folder
-Core character-related entities:
-- Character.cs
-  - Main character entity definition
-  - Manages relationships between character components
-  - Contains basic character properties
+### Key Components
+- Entities: Define data structure
+- DTOs: Handle data transfer
+- Enums: Define fixed options
+- Constants: Store game rules
+- Value Objects: Handle complex values
 
-- CharacterArchetypes.cs
-  - Defines character archetype selections
-  - Manages archetype-specific rules
-  - Handles archetype relationships
-
-### Constants Folder
-Game rule constants and configurations:
-- GameRuleConstants.cs
-  - Defines base values (like movement speed)
-  - Contains calculation constants
-  - Stores game rule limitations
-
-### DTOs Folder
-Data transfer objects for API communication:
-- Character/
-  - CharacterBasicDto.cs: Basic character creation/update data
-  - CharacterResponseDto.cs: Complete character response data
-
-- Attributes/
-  - CombatAttributesDto.cs: Combat attribute transfer
-  - UtilityAttributesDto.cs: Utility attribute transfer
-
-- Archetypes/
-  - CharacterArchetypesDto.cs: Archetype selection data
-
-
+### Example Structure
+```csharp
+public class Character
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public int Tier { get; set; }
+    public CombatAttributes CombatAttributes { get; set; }
+    public UtilityAttributes UtilityAttributes { get; set; }
+    public CharacterArchetypes Archetypes { get; set; }
+    
+    public virtual ICollection<SpecialAttack> SpecialAttacks { get; set; }
+}
+```
 
 ## Infrastructure Folder
-This folder manages our application's technical infrastructure - think of it as the foundation and plumbing of our system.
+The Infrastructure folder handles all the technical underpinnings of our application. It's like the building's foundation and utility systems - you don't see it directly, but everything depends on it.
 
-### Data Folder
-This folder handles all database-related operations and configurations.
+### Data Sources
+- Database configuration settings
+- Entity Framework mappings
+- Security requirements
+- Validation rules
+- Logging configuration
 
-- Configurations/
-  - CharacterConfiguration.cs
-    - Defines how character entities map to database tables
-    - Sets up relationships between character and its components
-    - Configures database constraints and indexes
-    - Example: Maps the Tier property to a database column with appropriate constraints
+### Data Destinations
+- Database operations
+- Security enforcement
+- Input validation
+- Error logging
+- Performance monitoring
 
-  - CombatAttributesConfiguration.cs
-    - Configures combat attribute database mapping
-    - Sets up validation rules at the database level
-    - Manages relationships with the Character entity
-    - Example: Ensures Focus cannot exceed Tier value
+### Key Components
+- Data: Database context and configurations
+- Security: Input sanitization and protection
+- Validation: Rule enforcement
+- Logging: System monitoring
 
-  - UtilityAttributesConfiguration.cs
-    - Similar to CombatAttributes but for utility attributes
-    - Manages database constraints for utility values
-    - Sets up proper relationships and validations
-
-- VitalityBuilderContext.cs
-  - Central database context class
-  - Manages database connections and transactions
-  - Configures entity relationships
-  - Sets up database-wide conventions
-  - Example: Configuring automatic property value calculations
-
-### Security Folder
-Handles basic security measures to protect our application.
-
-- InputSanitizer.cs
-  - Cleans user input to prevent injection attacks
-  - Validates input formats
-  - Ensures data safety before processing
-  - Example: Removing dangerous characters from text input
-
-### Validation Folder
-Manages all validation rules across the application.
-
-- Validators/
-  - CharacterValidator.cs
-    - Validates complete character objects
-    - Ensures game rules are followed
-    - Checks relationships between components
-    - Example: Validating total attribute points don't exceed limits
-
-  - CombatAttributesValidator.cs
-    - Specific validation for combat attributes
-    - Ensures attribute values meet game rules
-    - Validates calculations and relationships
-    - Example: Ensuring Focus + Power + Mobility + Endurance ≤ Tier × 2
-
-  - UtilityAttributesValidator.cs
-    - Validates utility attribute rules
-    - Ensures proper attribute relationships
-    - Checks against game limitations
-    - Example: Validating total utility points ≤ Tier
+### Example Configuration
+```csharp
+public class CharacterConfiguration 
+    : IEntityTypeConfiguration<Character>
+{
+    public void Configure(
+        EntityTypeBuilder<Character> builder)
+    {
+        builder.HasKey(c => c.Id);
+        
+        builder.Property(c => c.Name)
+            .IsRequired()
+            .HasMaxLength(100);
+            
+        builder.HasOne(c => c.CombatAttributes)
+            .WithOne()
+            .HasForeignKey<CombatAttributes>("CharacterId");
+    }
+}
+```
 
 ## Services Folder
-This folder contains the business logic and calculations for our application.
+The Services folder contains all the business logic implementation. It's like the staff of our hotel - they take requests from the front desk and actually do the work.
 
-### Calculations Folder
-Handles all game-related calculations.
+### Data Sources
+- Requests from controllers
+- Data from repositories
+- Game rule constants
+- Configuration settings
+- User input data
 
-- CharacterStatCalculator.cs
-  - Calculates derived statistics (Accuracy, Damage, etc.)
-  - Handles archetype modifications
-  - Manages stat interactions
-  - Example: Calculating Avoidance = 10 + Tier + Mobility
+### Data Destinations
+- Database updates through repositories
+- Response data to controllers
+- Validation results
+- Event notifications
+- Logging system
 
-- PointPoolCalculator.cs
-  - Manages point pool calculations
-  - Tracks point expenditure
-  - Handles archetype modifications to pools
-  - Example: Calculating main point pool = (Tier - 2) × 15
+### Key Components
+- Character: Character management
+- Combat: Combat resolution
+- Calculations: Game rule math
+- Validation: Business rule checking
 
-### Character Folder
-Manages character operations.
+### Example Service
+```csharp
+public class CharacterService : ICharacterService
+{
+    private readonly ICharacterRepository _repository;
+    private readonly ICalculationService _calculator;
+    private readonly IValidationService _validator;
 
-- CharacterCreationService.cs
-  - Handles character creation process
-  - Validates initial character setup
-  - Sets default values
-  - Example: Setting up initial attribute pools
-
-- CharacterUpdateService.cs
-  - Manages character modifications
-  - Handles attribute updates
-  - Processes archetype changes
-  - Example: Updating derived stats when attributes change
-
-### Validation Folder
-Centralizes validation services.
-
-- ValidationService.cs
-  - Coordinates validation across the application
-  - Manages validation flow
-  - Combines multiple validation rules
-  - Example: Validating a character update across all components
+    public async Task<Character> UpdateAttributesAsync(
+        int id, 
+        UpdateAttributesRequest request)
+    {
+        var character = await _repository
+            .GetCharacterAsync(id);
+            
+        // Update attributes
+        _mapper.Map(request, character.CombatAttributes);
+        
+        // Recalculate derived stats
+        await _calculator
+            .RecalculateStatsAsync(character);
+            
+        // Save changes
+        await _repository.SaveChangesAsync();
+        
+        return character;
+    }
+}
+```
 
 ## Interfaces Folder
-Defines contracts for our services and repositories.
+The Interfaces folder defines the contracts that our services must follow. It's like having a standardized set of job descriptions - it ensures everyone knows exactly what they're supposed to do.
 
-### Repositories Folder
-- ICharacterRepository.cs
-  - Defines data access methods
-  - Specifies CRUD operations
-  - Sets up query interfaces
-  - Example: Defining methods for fetching and updating characters
+### Data Sources
+- Service contract definitions
+- Method signatures
+- Parameter specifications
+- Return type definitions
+- Dependency declarations
 
-### Services Folder
-- ICharacterStatCalculator.cs
-  - Defines calculation method contracts
-  - Specifies required calculation interfaces
-  - Sets up stat computation contracts
-  - Example: Defining methods for calculating derived stats
+### Data Destinations
+- Service implementations
+- Dependency injection system
+- Unit test mocks
+- Documentation generation
+- API contracts
 
-- IPointPoolCalculator.cs
-  - Defines point calculation contracts
-  - Specifies pool management interfaces
-  - Sets up point tracking methods
-  - Example: Defining methods for calculating available points
+### Key Components
+- Repositories: Data access contracts
+- Services: Business logic contracts
+- Calculators: Math operation contracts
+
+### Example Interface
+```csharp
+public interface ICharacterService
+{
+    Task<Character> GetCharacterAsync(int id);
+    Task<Character> CreateCharacterAsync(
+        CreateCharacterRequest request);
+    Task<Character> UpdateAttributesAsync(
+        int id, 
+        UpdateAttributesRequest request);
+    Task DeleteCharacterAsync(int id);
+}
+```
+
+## Data Flow Example
+Let's follow a complete request through the system:
+
+1. Client sends PUT request to update character attributes
+2. Controllers folder receives request and validates basic format
+3. Request passes to Services folder for processing
+4. Services use Interfaces to access repositories
+5. Domain models define data structure
+6. Infrastructure handles database operations
+7. Results flow back through services to controller
+8. Controller returns response to client
+
+```csharp
+// Flow example with logging
+public async Task<IActionResult> UpdateCharacter(
+    int id, 
+    UpdateCharacterRequest request)
+{
+    try 
+    {
+        _logger.LogInformation(
+            "Updating character {Id}", id);
+            
+        // Controller validates request
+        if (!ModelState.IsValid)
+        {
+            _logger.LogWarning(
+                "Invalid request for character {Id}", id);
+            return BadRequest(ModelState);
+        }
+        
+        // Service processes update
+        var result = await _characterService
+            .UpdateCharacterAsync(id, request);
+            
+        // Infrastructure logs success
+        _logger.LogInformation(
+            "Successfully updated character {Id}", id);
+            
+        // Controller returns response
+        return Ok(result);
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, 
+            "Error updating character {Id}", id);
+        return StatusCode(500, "Internal server error");
+    }
+}
+```
+
+This architecture ensures:
+- Clear separation of concerns
+- Consistent data flow patterns
+- Proper error handling
+- Comprehensive logging
+- Maintainable codebase
+- Testable components
+- Scalable structure
+
+Each folder has a distinct responsibility, but they work together seamlessly to handle requests, process data, and maintain system integrity.
 
 
 
 
-
-
-# Part 1: Component Interactions
+# Component Interactions
 
 ## Simple Interaction
 
