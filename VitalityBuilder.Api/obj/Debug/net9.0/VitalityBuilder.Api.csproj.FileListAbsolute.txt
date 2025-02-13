@@ -6,3 +6,11 @@ C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder\server\obj\Debug\net9.
 C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder\server\obj\Debug\net9.0\VitalityBuilder.Api.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder\server\obj\Debug\net9.0\VitalityBuilder.Api.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder\server\obj\Debug\net9.0\VitalityBuilder.Api.sourcelink.json
+C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder\VitalityBuilder.Api\obj\Debug\net9.0\VitalityBuilder.Api.csproj.AssemblyReference.cache
+C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder\VitalityBuilder.Api\obj\Debug\net9.0\VitalityBuilder.Api.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder\VitalityBuilder.Api\obj\Debug\net9.0\VitalityBuilder.Api.AssemblyInfoInputs.cache
+C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder\VitalityBuilder.Api\obj\Debug\net9.0\VitalityBuilder.Api.AssemblyInfo.cs
+C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder\VitalityBuilder.Api\obj\Debug\net9.0\VitalityBuilder.Api.csproj.CoreCompileInputs.cache
+C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder\VitalityBuilder.Api\obj\Debug\net9.0\VitalityBuilder.Api.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder\VitalityBuilder.Api\obj\Debug\net9.0\VitalityBuilder.Api.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Trent\OneDrive\Documents\GitHub\vitality-builder\VitalityBuilder.Api\obj\Debug\net9.0\VitalityBuilder.Api.sourcelink.json

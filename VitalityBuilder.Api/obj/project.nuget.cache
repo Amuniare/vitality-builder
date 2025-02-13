@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "HpHnSC7PJhA=",
+  "dgSpecHash": "RporFqD+fko=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Trent\\OneDrive\\Documents\\GitHub\\vitality-builder\\server\\VitalityBuilder.Api.csproj",
+  "projectFilePath": "C:\\Users\\Trent\\OneDrive\\Documents\\GitHub\\vitality-builder\\VitalityBuilder.Api\\VitalityBuilder.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Trent\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\Trent\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",

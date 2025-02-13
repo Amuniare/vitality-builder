@@ -9,7 +9,7 @@ public class CharacterStatCalculator : ICharacterStatCalculator
 {
     
     
-    public CombatStats CalculateAllStats(Character character)
+    public CombatStats CalculateAllStats(Domain.Character.Character character)
     {
         var stats = new CombatStats
         {
@@ -36,21 +36,21 @@ public class CharacterStatCalculator : ICharacterStatCalculator
         return stats;
     }
 
-    private int CalculateAvoidance(Character character)
+    private int CalculateAvoidance(Domain.Character.Character character)
     {
         return GameRuleConstants.BaseResistanceValue +
                character.Tier +
                character.CombatAttributes.Mobility;
     }
 
-    private int CalculateDurability(Character character)
+    private int CalculateDurability(Domain.Character.Character character)
     {
         return character.Tier +
                (int)Math.Ceiling(character.CombatAttributes.Endurance * 
                                 GameRuleConstants.EnduranceMultiplier);
     }
 
-    private int CalculateMovementSpeed(Character character)
+    private int CalculateMovementSpeed(Domain.Character.Character character)
     {
         // Calculate base movement
         var baseSpeed = Math.Max(
@@ -66,19 +66,19 @@ public class CharacterStatCalculator : ICharacterStatCalculator
         );
     }
 
-    private int CalculateInitiative(Character character)
+    private int CalculateInitiative(Domain.Character.Character character)
     {
         return character.CombatAttributes.Focus +
                character.UtilityAttributes.Awareness;
     }
 
-    private int CalculateBaseAccuracy(Character character)
+    private int CalculateBaseAccuracy(Domain.Character.Character character)
     {
         var baseAccuracy = character.Tier + character.CombatAttributes.Focus;
         return character.Archetypes.ApplyAttackModifiers(baseAccuracy, character.Tier);
     }
 
-    private int CalculateBaseDamage(Character character)
+    private int CalculateBaseDamage(Domain.Character.Character character)
     {
         var baseDamage = character.Tier + 
                         (int)Math.Ceiling(character.CombatAttributes.Power * 
@@ -93,7 +93,7 @@ public class CharacterStatCalculator : ICharacterStatCalculator
         return modifiedDamage;
     }
 
-    private int CalculateBaseCondition(Character character)
+    private int CalculateBaseCondition(Domain.Character.Character character)
     {
         var baseCondition = character.Tier * 2;
         var (_, modifiedCondition) = character.Archetypes.ApplyEffectModifiers(
@@ -105,28 +105,28 @@ public class CharacterStatCalculator : ICharacterStatCalculator
         return modifiedCondition;
     }
 
-    private int CalculateResolveResistance(Character character)
+    private int CalculateResolveResistance(Domain.Character.Character character)
     {
         return GameRuleConstants.BaseResistanceValue +
                character.Tier +
                character.CombatAttributes.Focus;
     }
 
-    private int CalculateStabilityResistance(Character character)
+    private int CalculateStabilityResistance(Domain.Character.Character character)
     {
         return GameRuleConstants.BaseResistanceValue +
                character.Tier +
                character.CombatAttributes.Power;
     }
 
-    private int CalculateVitalityResistance(Character character)
+    private int CalculateVitalityResistance(Domain.Character.Character character)
     {
         return GameRuleConstants.BaseResistanceValue +
                character.Tier +
                character.CombatAttributes.Endurance;
     }
 
-    private void ApplyArchetypeModifiers(CombatStats stats, Character character)
+    private void ApplyArchetypeModifiers(CombatStats stats, Domain.Character.Character character)
     {
         // Apply attack archetype effects
         if (character.Archetypes.AttackType == AttackArchetype.AOESpecialist)
@@ -183,6 +183,21 @@ public class CharacterStatCalculator : ICharacterStatCalculator
             stats.StabilityResistance += bonus;
             stats.VitalityResistance += bonus;
         }
+    }
+
+    public Task CalculateAllStats(Domain.Character.Character character)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task CalculateBaseAttackValuesAsync(Domain.Character.Character character)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task CalculateModifiedAttackValuesAsync(Domain.Character.Character character, bool isBoosted)
+    {
+        throw new NotImplementedException();
     }
 
     

@@ -6,7 +6,7 @@ namespace VitalityBuilder.Api.Services.Calculations;
 
 public class PointPoolCalculator : IPointPoolCalculator
 {
-    public PointPools CalculateAllPools(Character character)
+    public PointPools CalculateAllPools(Domain.Character.Character character)
     {
         return new PointPools
         {
@@ -18,7 +18,7 @@ public class PointPoolCalculator : IPointPoolCalculator
         };
     }
 
-    private int CalculateMainPool(Character character)
+    private int CalculateMainPool(Domain.Character.Character character)
     {
         var basePool = GameRuleConstants.CalculateMainPool(character.Tier);
 
@@ -31,7 +31,7 @@ public class PointPoolCalculator : IPointPoolCalculator
         return basePool;
     }
 
-    private int CalculateUtilityPoints(Character character)
+    private int CalculateUtilityPoints(Domain.Character.Character character)
     {
         var basePoints = GameRuleConstants.CalculateUtilityPoints(character.Tier);
 
@@ -40,17 +40,17 @@ public class PointPoolCalculator : IPointPoolCalculator
         return (int)(basePoints * multiplier);
     }
 
-    private int CalculateCombatAttributePoints(Character character)
+    private int CalculateCombatAttributePoints(Domain.Character.Character character)
     {
         return GameRuleConstants.CombatAttributePointsMultiplier * character.Tier;
     }
 
-    private int CalculateUtilityAttributePoints(Character character)
+    private int CalculateUtilityAttributePoints(Domain.Character.Character character)
     {
         return character.Tier;
     }
 
-    private int CalculateSpecialAttackPoints(Character character)
+    private int CalculateSpecialAttackPoints(Domain.Character.Character character)
     {
         // Calculate base points from limits
         var limitPoints = CalculateLimitPoints(character);
@@ -62,7 +62,7 @@ public class PointPoolCalculator : IPointPoolCalculator
         );
     }
 
-    private int CalculateLimitPoints(Character character)
+    private int CalculateLimitPoints(Domain.Character.Character character)
     {
         var totalLimitValue = 0;
         foreach (var attack in character.SpecialAttacks)
@@ -119,7 +119,7 @@ public class PointPoolCalculator : IPointPoolCalculator
         };
     }
 
-    public ValidationResult ValidatePointAllocation(Character character)
+    public ValidationResult ValidatePointAllocation(Domain.Character.Character character)
     {
         var pools = CalculateAllPools(character);
         var result = new ValidationResult();

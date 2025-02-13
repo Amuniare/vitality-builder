@@ -1,123 +1,125 @@
 using FluentValidation;
 using VitalityBuilder.Api.Domain.Constants;
-using VitalityBuilder.Api.Domain.Dtos.Character;
+using VitalityBuilder.Api.Domain.Dtos.Attributes;
 
 namespace VitalityBuilder.Api.Infrastructure.Validation;
 
-public class CharacterValidator : AbstractValidator<CharacterBasicDto>
+public class CombatAttributesValidator : AbstractValidator<CombatAttributesDto>
 {
-    public CharacterValidator()
+    private readonly int _characterTier;
+
+    public CombatAttributesValidator(int characterTier)
     {
-        // Name Validation
-        RuleFor(x => x.Name)
-            .NotEmpty()
-            .WithMessage("Character name is required")
-            .Length(1, 100)
-            .WithMessage("Name must be between 1 and 100 characters")
-            .Must(name => !name.Contains("  "))
-            .WithMessage("Name cannot contain consecutive spaces")
-            .Matches("^[a-zA-Z0-9\\s\\-']*$")
-            .WithMessage("Name can only contain letters, numbers, spaces, hyphens, and apostrophes");
+        _characterTier = characterTier;
 
-        // Tier Validation
-        RuleFor(x => x.Tier)
-            .InclusiveBetween(GameRuleConstants.MinimumTier, GameRuleConstants.MaximumTier)
-            .WithMessage($"Tier must be between {GameRuleConstants.MinimumTier} and {GameRuleConstants.MaximumTier}");
-
-        // Combat Attributes
-        RuleFor(x => x)
-            .Must(ValidateCombatAttributeTotal)
-            .WithMessage(x => $"Total combat attributes cannot exceed {x.Tier * 2} points");
-
+        // Validate Focus
         RuleFor(x => x.Focus)
-            .Must((character, focus) => focus <= character.Tier)
-            .WithMessage(x => $"Focus cannot exceed character tier ({x.Tier})");
+            .InclusiveBetween(0, _characterTier)
+            .WithMessage($"Focus must be between 0 and {_characterTier}");
 
+        // Validate Power
         RuleFor(x => x.Power)
-            .Must((character, power) => power <= character.Tier)
-            .WithMessage(x => $"Power cannot exceed character tier ({x.Tier})");
+            .InclusiveBetween(0, _characterTier)
+            .WithMessage($"Power must be between 0 and {_characterTier}");
 
+        // Validate Mobility
         RuleFor(x => x.Mobility)
-            .Must((character, mobility) => mobility <= character.Tier)
-            .WithMessage(x => $"Mobility cannot exceed character tier ({x.Tier})");
+            .InclusiveBetween(0, _characterTier)
+            .WithMessage($"Mobility must be between 0 and {_characterTier}");
 
+        // Validate Endurance
         RuleFor(x => x.Endurance)
-            .Must((character, endurance) => endurance <= character.Tier)
-            .WithMessage(x => $"Endurance cannot exceed character tier ({x.Tier})");
+            .InclusiveBetween(0, _characterTier)
+            .WithMessage($"Endurance must be between 0 and {_characterTier}");
 
-        // Utility Attributes
+        // Validate Total Points
         RuleFor(x => x)
-            .Must(ValidateUtilityAttributeTotal)
-            .WithMessage(x => $"Total utility attributes cannot exceed {x.Tier} points");
+            .Must(ValidateTotalPoints)
+            .WithMessage($"Total combat attributes cannot exceed {_characterTier * 2} points");
 
-        RuleFor(x => x.Awareness)
-            .Must((character, awareness) => awareness <= character.Tier)
-            .WithMessage(x => $"Awareness cannot exceed character tier ({x.Tier})");
+        // Validate Available Points
+        RuleFor(x => x)
+            .Must(ValidatePointsSpent)
+            .WithMessage(x => $"Cannot spend more than {x.AvailablePoints} points");
 
-        RuleFor(x => x.Communication)
-            .Must((character, communication) => communication <= character.Tier)
-            .WithMessage(x => $"Communication cannot exceed character tier ({x.Tier})");
+        // Custom Validations
+        RuleFor(x => x)
+            .Must(ValidateArchetypeRequirements)
+            .WithMessage("Combat attributes do not meet archetype requirements")
+            .Must(ValidateSpecialAttackRequirements)
+            .WithMessage("Combat attributes do not meet special attack requirements");
 
-        RuleFor(x => x.Intelligence)
-            .Must((character, intelligence) => intelligence <= character.Tier)
-            .WithMessage(x => $"Intelligence cannot exceed character tier ({x.Tier})");
-
-        // Archetype Validation
-        RuleFor(x => x.MovementArchetype)
-            .NotEmpty()
-            .WithMessage("Movement archetype is required")
-            .Must(BeValidArchetype)
-            .WithMessage("Invalid movement archetype selected");
-
-        RuleFor(x => x.AttackArchetype)
-            .NotEmpty()
-            .WithMessage("Attack archetype is required")
-            .Must(BeValidArchetype)
-            .WithMessage("Invalid attack archetype selected");
-
-        RuleFor(x => x.EffectArchetype)
-            .NotEmpty()
-            .WithMessage("Effect archetype is required")
-            .Must(BeValidArchetype)
-            .WithMessage("Invalid effect archetype selected");
-
-        RuleFor(x => x.UniqueAbilityArchetype)
-            .NotEmpty()
-            .WithMessage("Unique ability archetype is required")
-            .Must(BeValidArchetype)
-            .WithMessage("Invalid unique ability archetype selected");
-
-        RuleFor(x => x.SpecialAttackArchetype)
-            .NotEmpty()
-            .WithMessage("Special attack archetype is required")
-            .Must(BeValidArchetype)
-            .WithMessage("Invalid special attack archetype selected");
-
-        RuleFor(x => x.UtilityArchetype)
-            .NotEmpty()
-            .WithMessage("Utility archetype is required")
-            .Must(BeValidArchetype)
-            .WithMessage("Invalid utility archetype selected");
+        // Context-specific validation rules
+        When(x => x.Focus > 0 && x.Power > 0, () =>
+        {
+            RuleFor(x => x)
+                .Must(ValidateHybridBuildRequirements)
+                .WithMessage("Hybrid build requirements not met");
+        });
     }
 
-    private bool ValidateCombatAttributeTotal(CharacterBasicDto character)
+    private bool ValidateTotalPoints(CombatAttributesDto attributes)
     {
-        var total = character.Focus + character.Power + 
-                   character.Mobility + character.Endurance;
-        return total <= character.Tier * 2;
+        return attributes.TotalPoints <= _characterTier * 2;
     }
 
-    private bool ValidateUtilityAttributeTotal(CharacterBasicDto character)
+    private bool ValidatePointsSpent(CombatAttributesDto attributes)
     {
-        var total = character.Awareness + character.Communication + 
-                   character.Intelligence;
-        return total <= character.Tier;
+        return attributes.TotalPoints <= attributes.AvailablePoints;
     }
 
-    private bool BeValidArchetype(string archetype)
+    private bool ValidateArchetypeRequirements(CombatAttributesDto attributes)
     {
-        // Add specific archetype validation logic based on your enums
-        return !string.IsNullOrWhiteSpace(archetype) && 
-               archetype.All(c => char.IsLetterOrDigit(c) || c == '_');
+        // Add specific archetype validation logic
+        // This would check any minimum attribute requirements based on selected archetypes
+        return true;
+    }
+
+    private bool ValidateSpecialAttackRequirements(CombatAttributesDto attributes)
+    {
+        // Add specific special attack validation logic
+        // This would check if attributes meet minimum requirements for chosen special attacks
+        return true;
+    }
+
+    private bool ValidateHybridBuildRequirements(CombatAttributesDto attributes)
+    {
+        // Add specific hybrid build validation logic
+        // This would enforce any special rules for characters using both Focus and Power
+        return true;
+    }
+
+    /// <summary>
+    /// Creates combat attribute warnings without failing validation
+    /// </summary>
+    public IEnumerable<string> GenerateWarnings(CombatAttributesDto attributes)
+    {
+        var warnings = new List<string>();
+
+        // Check for unspent points
+        if (attributes.RemainingPoints > 0)
+        {
+            warnings.Add($"You have {attributes.RemainingPoints} unspent combat attribute points");
+        }
+
+        // Check for potentially inefficient allocations
+        if (attributes.Focus > 0 && attributes.Power > 0 && attributes.Mobility > 0)
+        {
+            warnings.Add("Spreading points across Focus, Power, and Mobility may reduce combat effectiveness");
+        }
+
+        // Check for defensive vulnerabilities
+        if (attributes.Endurance == 0)
+        {
+            warnings.Add("Having 0 Endurance may make your character vulnerable in combat");
+        }
+
+        // Check for mobility issues
+        if (attributes.Mobility == 0)
+        {
+            warnings.Add("Having 0 Mobility may limit your tactical options in combat");
+        }
+
+        return warnings;
     }
 }

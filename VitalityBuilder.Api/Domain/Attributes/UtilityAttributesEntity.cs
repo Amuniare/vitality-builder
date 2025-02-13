@@ -8,7 +8,7 @@ public class UtilityAttributes
     public int Id { get; set; }
 
     public int CharacterId { get; set; }
-    public Character Character { get; set; } = null!;
+    public Domain.Character.Character character { get; set; } = null!;
 
     [Range(0, 10)]
     public int Awareness { get; set; }

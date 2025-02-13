@@ -7,7 +7,7 @@ public class CharacterArchetypes
     public int Id { get; set; }
 
     public int CharacterId { get; set; }
-    public Character Character { get; set; } = null!;
+    public Domain.Character.Character character { get; set; } = null!;
 
     // Core archetypes
     public MovementArchetype MovementType { get; set; }
