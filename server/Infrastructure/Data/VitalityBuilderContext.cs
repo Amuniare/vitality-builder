@@ -1,196 +1,131 @@
 using Microsoft.EntityFrameworkCore;
-using VitalityBuilder.Api.Models.Entities;
-using VitalityBuilder.Api.Models.Archetypes;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System.Text.Json;
+using VitalityBuilder.Domain.Attributes;
+using VitalityBuilder.Domain.Character;
+using VitalityBuilder.Infrastructure.Data.Configurations;
 
-namespace VitalityBuilder.Api.Infrastructure;
+namespace VitalityBuilder.Infrastructure.Data;
 
-public class VitalityBuilderContext(DbContextOptions<VitalityBuilderContext> options) : DbContext(options)
+public class VitalityBuilderContext : DbContext
 {
-    // Use fully qualified names to resolve ambiguity
-    public DbSet<Models.Archetypes.CharacterArchetypes> CharacterArchetypes => Set<Models.Archetypes.CharacterArchetypes>();
-    public DbSet<CharacterEntity> Characters => Set<CharacterEntity>();
-    public DbSet<CombatAttributes> CombatAttributes => Set<CombatAttributes>();
-    public DbSet<UtilityAttributes> UtilityAttributes => Set<UtilityAttributes>();
-    public DbSet<Expertise> Expertise => Set<Expertise>();
-    public DbSet<SpecialAttack> SpecialAttacks => Set<SpecialAttack>();
-    public DbSet<UniquePower> UniquePowers => Set<UniquePower>();
+    public VitalityBuilderContext(DbContextOptions<VitalityBuilderContext> options)
+        : base(options)
+    {
+    }
 
-    
-    /// <summary>
-    /// Database set for character archetypes and their associated components
-    /// </summary>
-    public DbSet<CharacterArchetypes> CharacterArchetypesEntity => Set<CharacterArchetypes>();
+    // Core Entities
+    public DbSet<Character> Characters { get; set; } = null!;
+    public DbSet<CombatAttributes> CombatAttributes { get; set; } = null!;
+    public DbSet<UtilityAttributes> UtilityAttributes { get; set; } = null!;
+    public DbSet<CharacterArchetypes> CharacterArchetypes { get; set; } = null!;
+
+    // Collections
+    public DbSet<SpecialAttack> SpecialAttacks { get; set; } = null!;
+    public DbSet<CharacterFeature> Features { get; set; } = null!;
+    public DbSet<CharacterExpertise> Expertise { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        ConfigureCharacterArchetypes(modelBuilder);
-        ConfigureMovementArchetype(modelBuilder);
-        ConfigureAttackTypeArchetype(modelBuilder);
-        ConfigureEffectTypeArchetype(modelBuilder);
-        ConfigureUniqueAbilityArchetype(modelBuilder);
-        ConfigureSpecialAttackArchetype(modelBuilder);
-        ConfigureUtilityArchetype(modelBuilder);
+        // Apply entity configurations
+        modelBuilder.ApplyConfiguration(new CharacterConfiguration());
+        modelBuilder.ApplyConfiguration(new CombatAttributesConfiguration());
+        modelBuilder.ApplyConfiguration(new UtilityAttributesConfiguration());
+        modelBuilder.ApplyConfiguration(new CharacterArchetypesConfiguration());
+
+        // Global query filters
+        modelBuilder.Entity<Character>()
+            .HasQueryFilter(c => !c.IsDeleted);
+
+        // Common properties for all entities
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            // Add audit fields if they exist
+            if (entityType.FindProperty("CreatedAt") != null)
+            {
+                modelBuilder.Entity(entityType.Name)
+                    .Property("CreatedAt")
+                    .HasDefaultValueSql("GETUTCDATE()");
+            }
+
+            if (entityType.FindProperty("LastModifiedAt") != null)
+            {
+                modelBuilder.Entity(entityType.Name)
+                    .Property("LastModifiedAt")
+                    .HasDefaultValueSql("GETUTCDATE()");
+            }
+
+            // Add soft delete if supported
+            if (entityType.FindProperty("IsDeleted") != null)
+            {
+                modelBuilder.Entity(entityType.Name)
+                    .Property("IsDeleted")
+                    .HasDefaultValue(false);
+            }
+        }
+
+        // Configure database triggers
+        modelBuilder.HasDbFunction(typeof(VitalityBuilderContext)
+            .GetMethod(nameof(CalculateCharacterPoints))!)
+            .HasName("fn_CalculateCharacterPoints");
     }
 
-    private void ConfigureCharacterArchetypes(ModelBuilder modelBuilder)
+    // Database functions
+    public int CalculateCharacterPoints(int characterId, string poolType)
+        => throw new NotSupportedException();
+
+    // Override SaveChanges to handle audit fields
+    public override int SaveChanges()
     {
-        modelBuilder.Entity<CharacterArchetypes>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-            // Configure one-to-one relationship with Character
-            entity.HasOne(e => e.Character)
-                .WithOne()
-                .HasForeignKey<CharacterArchetypes>(e => e.CharacterId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // Configure required navigation properties
-            entity.Navigation(e => e.MovementArchetype).IsRequired();
-            entity.Navigation(e => e.AttackTypeArchetype).IsRequired();
-            entity.Navigation(e => e.EffectTypeArchetype).IsRequired();
-            entity.Navigation(e => e.UniqueAbilityArchetype).IsRequired();
-            entity.Navigation(e => e.SpecialAttackArchetype).IsRequired();
-            entity.Navigation(e => e.UtilityArchetype).IsRequired();
-
-            // Configure table name
-            entity.ToTable("CharacterArchetypes");
-        });
+        UpdateAuditFields();
+        return base.SaveChanges();
     }
 
-    private void ConfigureMovementArchetype(ModelBuilder modelBuilder)
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        modelBuilder.Entity<MovementArchetype>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-            entity.Property(e => e.SpeedBonusByTier)
-                .HasConversion(
-                    v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
-                    v => JsonSerializer.Deserialize<Dictionary<int, int>>(v, JsonSerializerOptions.Default)
-                         ?? new Dictionary<int, int>(),
-                    new ValueComparer<Dictionary<int, int>>(
-                        (c1, c2) => c1!.SequenceEqual(c2!),
-                        c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                        c => new Dictionary<int, int>(c)
-                    )
-                );
-
-            entity.Property(e => e.Type)
-                .HasConversion<string>();
-
-            entity.ToTable("MovementArchetypes");
-        });
+        UpdateAuditFields();
+        return base.SaveChangesAsync(cancellationToken);
     }
 
-    private void ConfigureAttackTypeArchetype(ModelBuilder modelBuilder)
+    private void UpdateAuditFields()
     {
-        modelBuilder.Entity<AttackTypeArchetype>(entity =>
+        var entries = ChangeTracker.Entries()
+            .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
+
+        var currentTime = DateTime.UtcNow;
+
+        foreach (var entry in entries)
         {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            if (entry.State == EntityState.Added)
+            {
+                if (entry.Property("CreatedAt")?.CurrentValue == null)
+                {
+                    entry.Property("CreatedAt").CurrentValue = currentTime;
+                }
+            }
 
-            entity.Property(e => e.Category)
-                .HasConversion<string>();
-
-            entity.ToTable("AttackTypeArchetypes");
-        });
+            if (entry.Property("LastModifiedAt")?.CurrentValue != null)
+            {
+                entry.Property("LastModifiedAt").CurrentValue = currentTime;
+            }
+        }
     }
 
-    private void ConfigureEffectTypeArchetype(ModelBuilder modelBuilder)
+    // Helper methods for common operations
+    public async Task<bool> CharacterExistsAsync(int id)
     {
-        modelBuilder.Entity<EffectTypeArchetype>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-            entity.Property(e => e.Category)
-                .HasConversion<string>();
-
-            entity.ToTable("EffectTypeArchetypes");
-        });
+        return await Characters.AnyAsync(c => c.Id == id && !c.IsDeleted);
     }
 
-    private void ConfigureUniqueAbilityArchetype(ModelBuilder modelBuilder)
+    public IQueryable<Character> GetCharactersWithRelated()
     {
-        modelBuilder.Entity<UniqueAbilityArchetype>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-            entity.Property(e => e.StatBonuses)
-                .HasConversion(
-                    v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
-                    v => JsonSerializer.Deserialize<Dictionary<string, int>>(v, JsonSerializerOptions.Default)
-                         ?? new Dictionary<string, int>(),
-                    new ValueComparer<Dictionary<string, int>>(
-                        (c1, c2) => c1!.SequenceEqual(c2!),
-                        c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                        c => new Dictionary<string, int>(c)
-                    )
-                );
-
-            entity.Property(e => e.Category)
-                .HasConversion<string>();
-
-            entity.ToTable("UniqueAbilityArchetypes");
-        });
-    }
-
-    private void ConfigureSpecialAttackArchetype(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<SpecialAttackArchetype>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-            entity.Property(e => e.RequiredLimits)
-                .HasConversion(
-                    v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
-                    v => JsonSerializer.Deserialize<List<string>>(v, JsonSerializerOptions.Default)
-                         ?? new List<string>(),
-                    new ValueComparer<List<string>>(
-                        (c1, c2) => c1!.SequenceEqual(c2!),
-                        c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                        c => new List<string>(c)
-                    )
-                );
-
-            entity.Property(e => e.Category)
-                .HasConversion<string>();
-
-            entity.ToTable("SpecialAttackArchetypes");
-        });
-    }
-
-    private void ConfigureUtilityArchetype(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<UtilityArchetype>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-            entity.Property(e => e.Restrictions)
-                .HasConversion(
-                    v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
-                    v => JsonSerializer.Deserialize<List<string>>(v, JsonSerializerOptions.Default)
-                         ?? new List<string>(),
-                    new ValueComparer<List<string>>(
-                        (c1, c2) => c1!.SequenceEqual(c2!),
-                        c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                        c => new List<string>(c)
-                    )
-                );
-
-            entity.Property(e => e.Category)
-                .HasConversion<string>();
-
-            entity.ToTable("UtilityArchetypes");
-        });
+        return Characters
+            .Include(c => c.CombatAttributes)
+            .Include(c => c.UtilityAttributes)
+            .Include(c => c.Archetypes)
+            .Include(c => c.SpecialAttacks)
+            .Include(c => c.Features)
+            .Include(c => c.Expertise)
+            .AsSplitQuery(); // Split into multiple SQL queries for better performance
     }
 }

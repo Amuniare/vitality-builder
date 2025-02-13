@@ -1,75 +1,90 @@
-using VitalityBuilder.Api.Models.Enums;
+using System.ComponentModel.DataAnnotations;
 
-namespace VitalityBuilder.Api.Models.DTOs;
+namespace VitalityBuilder.Domain.Dtos.Archetypes;
 
-
+/// <summary>
+/// Data transfer object for character archetype selections
+/// </summary>
 public class CharacterArchetypesDto
 {
-    public MovementArchetypeDto MovementArchetype { get; set; } = null!;
-    public AttackTypeArchetypeDto AttackTypeArchetype { get; set; } = null!;
-    public EffectTypeArchetypeDto EffectTypeArchetype { get; set; } = null!;
-    public UniqueAbilityArchetypeDto UniqueAbilityArchetype { get; set; } = null!;
-    public SpecialAttackArchetypeDto SpecialAttackArchetype { get; set; } = null!;
-    public UtilityArchetypeDto UtilityArchetype { get; set; } = null!;
+    [Required(ErrorMessage = "Movement archetype is required")]
+    public string MovementType { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Attack archetype is required")]
+    public string AttackType { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Effect archetype is required")]
+    public string EffectType { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Unique ability archetype is required")]
+    public string UniqueAbility { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Special attack archetype is required")]
+    public string SpecialAttack { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Utility archetype is required")]
+    public string UtilityType { get; set; } = string.Empty;
+
+    // Calculated modifiers based on archetype combinations
+    public ArchetypeModifiersDto Modifiers { get; set; } = new();
+
+    // Point calculations for special attacks
+    public ArchetypePointsDto Points { get; set; } = new();
+
+    // Validation state
+    public ArchetypeValidationDto Validation { get; set; } = new();
 }
 
-public class MovementArchetypeDto
+/// <summary>
+/// Contains all archetype-based modifiers for character calculations
+/// </summary>
+public class ArchetypeModifiersDto
 {
-    public string Name { get; set; } = string.Empty;
-    public MovementArchetypeType Type { get; set; }
-    public Dictionary<int, int> SpeedBonusByTier { get; set; } = new();
-    public bool IgnoresOpportunityAttacks { get; set; }
-    public bool IgnoresDifficultTerrain { get; set; }
-    public bool IsImmuneToProne { get; set; }
-    public float MovementMultiplier { get; set; } = 1.0f;
-}
+    // Movement Modifiers
+    public int MovementSpeedModifier { get; set; }
+    public bool IgnoreOpportunityAttacks { get; set; }
+    public bool IgnoreTerrainPenalties { get; set; }
+    public bool ImmuneToProne { get; set; }
+    public int AttackReachBonus { get; set; }
 
-public class AttackTypeArchetypeDto
-{
-    public string Name { get; set; } = string.Empty;
-    public AttackTypeArchetypeCategory Category { get; set; }
-    public int AccuracyPenalty { get; set; }
-    public int EffectPenalty { get; set; }
-    public bool BypassesAccuracyChecks { get; set; }
+    // Attack Modifiers
+    public int AccuracyModifier { get; set; }
+    public bool BypassAccuracyChecks { get; set; }
     public bool HasFreeAOE { get; set; }
-}
 
-public class EffectTypeArchetypeDto
-{
-    public string Name { get; set; } = string.Empty;
-    public EffectTypeCategory Category { get; set; }
-    public bool HasAccessToAdvancedConditions { get; set; }
-    public int DamagePenalty { get; set; }
-    public int ConditionPenalty { get; set; }
-    public bool RequiresHybridEffects { get; set; }
-}
+    // Effect Modifiers
+    public int DamageModifier { get; set; }
+    public int ConditionModifier { get; set; }
+    public bool HasFreeConditions { get; set; }
 
-public class UniqueAbilityArchetypeDto
-{
-    public string Name { get; set; } = string.Empty;
-    public UniqueAbilityCategory Category { get; set; }
+    // Action Modifiers
     public int ExtraQuickActions { get; set; }
-    public int ExtraPointPool { get; set; }
-    public Dictionary<string, int> StatBonuses { get; set; } = new();
+    public int QuickActionConversionCost { get; set; }
+
+    // Point Modifiers
+    public double MainPoolMultiplier { get; set; } = 1.0;
+    public double UtilityPoolMultiplier { get; set; } = 1.0;
 }
 
-public class SpecialAttackArchetypeDto
+/// <summary>
+/// Contains point calculations specific to archetype selections
+/// </summary>
+public class ArchetypePointsDto
 {
-    public string Name { get; set; } = string.Empty;
-    public SpecialAttackCategory Category { get; set; }
-    public int BasePoints { get; set; }
-    public int MaxSpecialAttacks { get; set; }
-    public float LimitPointMultiplier { get; set; }
+    public int SpecialAttackBasePoints { get; set; }
+    public int SpecialAttackLimit { get; set; }
+    public double LimitPointMultiplier { get; set; }
     public bool CanTakeLimits { get; set; }
-    public List<string> RequiredLimits { get; set; } = new();
+    public int SharedUses { get; set; }
 }
 
-public class UtilityArchetypeDto
+/// <summary>
+/// Contains validation information for archetype selections
+/// </summary>
+public class ArchetypeValidationDto
 {
-    public string Name { get; set; } = string.Empty;
-    public UtilityCategory Category { get; set; }
-    public int BaseUtilityPool { get; set; }
-    public bool CanPurchaseExpertise { get; set; }
-    public float TierBonusMultiplier { get; set; }
-    public List<string> Restrictions { get; set; } = new();
+    public bool IsValid { get; set; }
+    public ICollection<string> Errors { get; set; } = new List<string>();
+    public ICollection<string> Warnings { get; set; } = new List<string>();
+    public ICollection<string> Incompatibilities { get; set; } = new List<string>();
 }
