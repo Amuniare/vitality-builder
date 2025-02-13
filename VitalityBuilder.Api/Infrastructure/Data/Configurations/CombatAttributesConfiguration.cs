@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using VitalityBuilder.Domain.Attributes;
-using VitalityBuilder.Domain.Constants;
+using VitalityBuilder.Api.Domain.Attributes;
+using VitalityBuilder.Api.Domain.Constants;
 
-namespace VitalityBuilder.Infrastructure.Data.Configurations;
+namespace VitalityBuilder.Api.Infrastructure.Data.Configurations;
 
 public class CombatAttributesConfiguration : IEntityTypeConfiguration<CombatAttributes>
 {

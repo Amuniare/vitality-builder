@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace VitalityBuilder.Infrastructure.Security;
+namespace VitalityBuilder.Api.Infrastructure.Security;
 
 /// <summary>
 /// Provides input sanitization for user-provided data

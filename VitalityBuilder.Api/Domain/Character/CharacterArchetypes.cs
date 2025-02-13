@@ -1,6 +1,6 @@
-using VitalityBuilder.Domain.Enums;
+using VitalityBuilder.Api.Domain.Enums;
 
-namespace VitalityBuilder.Domain.Character;
+namespace VitalityBuilder.Api.Domain.Character;
 
 public class CharacterArchetypes
 {

@@ -1,4 +1,4 @@
-namespace VitalityBuilder.Domain.Errors;
+namespace VitalityBuilder.Api.Domain.Errors;
 
 /// <summary>
 /// Standardized error response for API endpoints

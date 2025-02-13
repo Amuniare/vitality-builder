@@ -1,7 +1,7 @@
-using VitalityBuilder.Domain.Character;
-using VitalityBuilder.Domain.ValueObjects;
+using VitalityBuilder.Api.Domain.Character;
+using VitalityBuilder.Api.Domain.ValueObjects;
 
-namespace VitalityBuilder.Interfaces.Services;
+namespace VitalityBuilder.Api.Interfaces.Services;
 
 /// <summary>
 /// Interface for calculating character statistics and derived values

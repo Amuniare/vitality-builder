@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-using VitalityBuilder.Domain.Constants;
+using VitalityBuilder.Api.Domain.Constants;
 
-namespace VitalityBuilder.Domain.Dtos.Character;
+namespace VitalityBuilder.Api.Domain.Dtos.Character;
 
 /// <summary>
 /// Basic data transfer object for character creation and updates

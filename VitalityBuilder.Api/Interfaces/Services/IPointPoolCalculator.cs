@@ -1,7 +1,7 @@
-using VitalityBuilder.Domain.Character;
-using VitalityBuilder.Domain.Errors;
+using VitalityBuilder.Api.Domain.Character;
+using VitalityBuilder.Api.Domain.Errors;
 
-namespace VitalityBuilder.Interfaces.Services;
+namespace VitalityBuilder.Api.Interfaces.Services;
 
 /// <summary>
 /// Interface for calculating and validating character point pools

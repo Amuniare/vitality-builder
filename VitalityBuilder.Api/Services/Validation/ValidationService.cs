@@ -1,11 +1,11 @@
 using FluentValidation;
-using VitalityBuilder.Domain.Character;
-using VitalityBuilder.Domain.Constants;
-using VitalityBuilder.Domain.Dtos.Character;
-using VitalityBuilder.Domain.Errors;
-using VitalityBuilder.Infrastructure.Validation;
+using VitalityBuilder.Api.Domain.Character;
+using VitalityBuilder.Api.Domain.Constants;
+using VitalityBuilder.Api.Domain.Dtos.Character;
+using VitalityBuilder.Api.Domain.Errors;
+using VitalityBuilder.Api.Infrastructure.Validation;
 
-namespace VitalityBuilder.Services.Validation;
+namespace VitalityBuilder.Api.Services.Validation;
 
 public class ValidationService : IValidationService
 {

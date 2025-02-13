@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace VitalityBuilder.Domain.Dtos.Archetypes;
+namespace VitalityBuilder.Api.Domain.Dtos.Archetypes;
 
 /// <summary>
 /// Data transfer object for character archetype selections

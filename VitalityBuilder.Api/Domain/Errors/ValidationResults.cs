@@ -1,4 +1,4 @@
-namespace VitalityBuilder.Domain.Errors;
+namespace VitalityBuilder.Api.Domain.Errors;
 
 /// <summary>
 /// Represents the result of a validation operation

@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using VitalityBuilder.Domain.Attributes;
-using VitalityBuilder.Domain.ValueObjects;
+using VitalityBuilder.Api.Domain.Attributes;
+using VitalityBuilder.Api.Domain.ValueObjects;
 
-namespace VitalityBuilder.Domain.Character;
+namespace VitalityBuilder.Api.Domain.Character;
 
 public class Character
 {

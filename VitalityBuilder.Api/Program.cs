@@ -2,14 +2,14 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using VitalityBuilder.Infrastructure.Data;
-using VitalityBuilder.Infrastructure.Security;
-using VitalityBuilder.Infrastructure.Validation;
-using VitalityBuilder.Interfaces.Repositories;
-using VitalityBuilder.Interfaces.Services;
-using VitalityBuilder.Services.Calculations;
-using VitalityBuilder.Services.Character;
-using VitalityBuilder.Services.Validation;
+using VitalityBuilder.Api.Infrastructure.Data;
+using VitalityBuilder.Api.Infrastructure.Security;
+using VitalityBuilder.Api.Infrastructure.Validation;
+using VitalityBuilder.Api.Interfaces.Repositories;
+using VitalityBuilder.Api.Interfaces.Services;
+using VitalityBuilder.Api.Services.Calculations;
+using VitalityBuilder.Api.Services.Character;
+using VitalityBuilder.Api.Services.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,7 +44,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<VitalityBuilderContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
-        b => b.MigrationsAssembly("VitalityBuilder.Infrastructure")));
+        b => b.MigrationsAssembly("VitalityBuilder.Api.Infrastructure")));
 
 // Register Services
 builder.Services.AddScoped<ICharacterRepository, CharacterRepository>();

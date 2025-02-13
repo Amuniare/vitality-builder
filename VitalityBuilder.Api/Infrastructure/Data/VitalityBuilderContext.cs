@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using VitalityBuilder.Domain.Attributes;
-using VitalityBuilder.Domain.Character;
-using VitalityBuilder.Infrastructure.Data.Configurations;
+using VitalityBuilder.Api.Domain.Attributes;
+using VitalityBuilder.Api.Domain.Character;
+using VitalityBuilder.Api.Infrastructure.Data.Configurations;
 
-namespace VitalityBuilder.Infrastructure.Data;
+namespace VitalityBuilder.Api.Infrastructure.Data;
 
 public class VitalityBuilderContext : DbContext
 {

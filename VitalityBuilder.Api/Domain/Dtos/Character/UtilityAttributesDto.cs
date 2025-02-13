@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-using VitalityBuilder.Domain.Constants;
+using VitalityBuilder.Api.Domain.Constants;
 
-namespace VitalityBuilder.Domain.Dtos.Attributes;
+namespace VitalityBuilder.Api.Domain.Dtos.Attributes;
 
 /// <summary>
 /// Data transfer object for utility-related attributes

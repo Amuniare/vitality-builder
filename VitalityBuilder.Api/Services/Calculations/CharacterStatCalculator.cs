@@ -1,9 +1,9 @@
-using VitalityBuilder.Domain.Character;
-using VitalityBuilder.Domain.Constants;
-using VitalityBuilder.Domain.ValueObjects;
-using VitalityBuilder.Interfaces.Services;
+using VitalityBuilder.Api.Domain.Character;
+using VitalityBuilder.Api.Domain.Constants;
+using VitalityBuilder.Api.Domain.ValueObjects;
+using VitalityBuilder.Api.Interfaces.Services;
 
-namespace VitalityBuilder.Services.Calculations;
+namespace VitalityBuilder.Api.Services.Calculations;
 
 public class CharacterStatCalculator : ICharacterStatCalculator
 {

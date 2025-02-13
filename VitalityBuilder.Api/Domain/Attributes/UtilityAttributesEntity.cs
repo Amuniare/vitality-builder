@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-using VitalityBuilder.Domain.Character;
+using VitalityBuilder.Api.Domain.Character;
 
-namespace VitalityBuilder.Domain.Attributes;
+namespace VitalityBuilder.Api.Domain.Attributes;
 
 public class UtilityAttributes
 {

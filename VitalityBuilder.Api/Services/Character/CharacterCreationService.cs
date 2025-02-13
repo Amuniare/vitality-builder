@@ -1,10 +1,10 @@
-using VitalityBuilder.Domain.Character;
-using VitalityBuilder.Domain.Dtos.Character;
-using VitalityBuilder.Domain.Errors;
-using VitalityBuilder.Infrastructure.Security;
-using VitalityBuilder.Interfaces.Services;
+using VitalityBuilder.Api.Domain.Character;
+using VitalityBuilder.Api.Domain.Dtos.Character;
+using VitalityBuilder.Api.Domain.Errors;
+using VitalityBuilder.Api.Infrastructure.Security;
+using VitalityBuilder.Api.Interfaces.Services;
 
-namespace VitalityBuilder.Services.Character;
+namespace VitalityBuilder.Api.Services.Character;
 
 public class CharacterCreationService : ICharacterCreationService
 {

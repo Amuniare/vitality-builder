@@ -1,6 +1,6 @@
-using VitalityBuilder.Domain.Constants;
+using VitalityBuilder.Api.Domain.Constants;
 
-namespace VitalityBuilder.Domain.ValueObjects;
+namespace VitalityBuilder.Api.Domain.ValueObjects;
 
 /// <summary>
 /// Represents derived combat statistics for a character

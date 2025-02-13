@@ -46,9 +46,9 @@
 
   <ItemGroup>
     <!-- Project References -->
-    <ProjectReference Include="..\VitalityBuilder.Domain\VitalityBuilder.Domain.csproj" />
-    <ProjectReference Include="..\VitalityBuilder.Infrastructure\VitalityBuilder.Infrastructure.csproj" />
-    <ProjectReference Include="..\VitalityBuilder.Services\VitalityBuilder.Services.csproj" />
+    <ProjectReference Include="..\VitalityBuilder.Api.Domain\VitalityBuilder.Api.Domain.csproj" />
+    <ProjectReference Include="..\VitalityBuilder.Api.Infrastructure\VitalityBuilder.Api.Infrastructure.csproj" />
+    <ProjectReference Include="..\VitalityBuilder.Api.Services\VitalityBuilder.Api.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>

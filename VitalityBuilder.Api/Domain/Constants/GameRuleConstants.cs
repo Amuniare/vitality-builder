@@ -1,4 +1,4 @@
-namespace VitalityBuilder.Domain.Constants;
+namespace VitalityBuilder.Api.Domain.Constants;
 
 public static class GameRuleConstants
 {

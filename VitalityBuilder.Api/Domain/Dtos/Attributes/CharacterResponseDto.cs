@@ -1,4 +1,4 @@
-namespace VitalityBuilder.Domain.Dtos.Character;
+namespace VitalityBuilder.Api.Domain.Dtos.Character;
 
 /// <summary>
 /// Comprehensive character data transfer object for API responses

@@ -1,6 +1,6 @@
-using VitalityBuilder.Domain.Character;
+using VitalityBuilder.Api.Domain.Character;
 
-namespace VitalityBuilder.Interfaces.Repositories;
+namespace VitalityBuilder.Api.Interfaces.Repositories;
 
 /// <summary>
 /// Repository interface for character data access operations

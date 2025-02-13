@@ -1,8 +1,8 @@
 using FluentValidation;
-using VitalityBuilder.Domain.Constants;
-using VitalityBuilder.Domain.Dtos.Character;
+using VitalityBuilder.Api.Domain.Constants;
+using VitalityBuilder.Api.Domain.Dtos.Character;
 
-namespace VitalityBuilder.Infrastructure.Validation;
+namespace VitalityBuilder.Api.Infrastructure.Validation;
 
 public class CharacterValidator : AbstractValidator<CharacterBasicDto>
 {

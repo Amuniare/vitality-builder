@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using VitalityBuilder.Domain.Dtos.Character;
-using VitalityBuilder.Domain.Errors;
-using VitalityBuilder.Interfaces.Services;
-using VitalityBuilder.Services.Character;
+using VitalityBuilder.Api.Domain.Dtos.Character;
+using VitalityBuilder.Api.Domain.Errors;
+using VitalityBuilder.Api.Interfaces.Services;
+using VitalityBuilder.Api.Services.Character;
 
-namespace VitalityBuilder.Controllers;
+namespace VitalityBuilder.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
