@@ -1,0 +1,117 @@
+PS \server> dotnet build
+C:\Program Files\dotnet\sdk\9.0.102\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.EolTargetFrameworks.targets(32,5): warning NETSDK1138: The target framework 'net7.0' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/dotnet-core-support for more information about the support policy.
+Restore succeeded with 1 warning(s) in 0.3s
+    C:\Program Files\dotnet\sdk\9.0.102\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.EolTargetFrameworks.targets(32,5): warning NETSDK1138: The target framework 'net7.0' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/dotnet-core-support for more information about the support policy.
+  VitalityBuilder.Api failed with 105 error(s) and 4 warning(s) (1.9s)
+    C:\Program Files\dotnet\sdk\9.0.102\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.EolTargetFrameworks.targets(32,5): warning NETSDK1138: The target framework 'net7.0' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/dotnet-core-support for more information about the support policy.
+    C:\Program Files\dotnet\sdk\9.0.102\Microsoft.Common.CurrentVersion.targets(2175,5): warning MSB9008: The referenced project '..\VitalityBuilder.Domain\VitalityBuilder.Domain.csproj' does not exist.
+    C:\Program Files\dotnet\sdk\9.0.102\Microsoft.Common.CurrentVersion.targets(2175,5): warning MSB9008: The referenced project '..\VitalityBuilder.Infrastructure\VitalityBuilder.Infrastructure.csproj' does not exist.
+    C:\Program Files\dotnet\sdk\9.0.102\Microsoft.Common.CurrentVersion.targets(2175,5): warning MSB9008: The referenced project '..\VitalityBuilder.Services\VitalityBuilder.Services.csproj' does not exist.
+    \server\Domain\Character\CharacterArchetypes.cs(1,30): error CS0234: The type or namespace name 'Enums' does not exist in the namespace 'VitalityBuilder.Domain' (are you missing an assembly reference?)
+    \server\migrations\20250210120258_FixMainPointPoolComputed.Designer.cs(7,27): error CS0234: The type or namespace name 'Infrastructure' does not exist in the namespace 'VitalityBuilder.Api' (are you missing an assembly reference?)    
+    \server\migrations\VitalityBuilderContextModelSnapshot.cs(6,27): error CS0234: The type or namespace name 'Infrastructure' does not exist in the namespace 'VitalityBuilder.Api' (are you missing an assembly reference?)
+    \server\Infrastructure\Validation\CombatAttributesValidator.cs(7,14): error CS0101: The namespace 'VitalityBuilder.Infrastructure.Validation' already contains a definition for 'CharacterValidator'
+    \server\Services\Calculations\CharacterStatCalculator.cs(10,42): error CS0118: 'Character' is a namespace but is used like a type
+    \server\Services\Calculations\CharacterStatCalculator.cs(37,36): error CS0118: 'Character' is a namespace but is used like a type
+    \server\Services\Calculations\CharacterStatCalculator.cs(44,37): error CS0118: 'Character' is a namespace but is used like a type
+    \server\Services\Calculations\CharacterStatCalculator.cs(51,40): error CS0118: 'Character' is a namespace but is used like a type
+    \server\Services\Calculations\CharacterStatCalculator.cs(67,37): error CS0118: 'Character' is a namespace but is used like a type
+    \server\Services\Calculations\CharacterStatCalculator.cs(73,39): error CS0118: 'Character' is a namespace but is used like a type
+    \server\Services\Calculations\CharacterStatCalculator.cs(79,37): error CS0118: 'Character' is a namespace but is used like a type
+    \server\Services\Calculations\CharacterStatCalculator.cs(94,40): error CS0118: 'Character' is a namespace but is used like a type
+    \server\Services\Calculations\CharacterStatCalculator.cs(106,44): error CS0118: 'Character' is a namespace but is used like a type
+    \server\Services\Calculations\CharacterStatCalculator.cs(113,46): error CS0118: 'Character' is a namespace but is used like a type
+    \server\Services\Calculations\CharacterStatCalculator.cs(120,45): error CS0118: 'Character' is a namespace but is used like a type
+    \server\Services\Calculations\CharacterStatCalculator.cs(127,61): error CS0118: 'Character' is a namespace but is used like a type
+    \server\Controllers\CharactersController.cs(37,65): error CS0246: The type or namespace name 'CreateCharacterDto' could not be found 
+    \server\Interfaces\Repositories\ICharacterRepository.cs(66,22): error CS0246: The type or namespace name 'SpecialAttack' could not be found 
+    \server\Interfaces\Repositories\ICharacterRepository.cs(71,22): error CS0246: The type or namespace name 'CharacterFeature' could not be found 
+    \server\Controllers\CharactersController.cs(128,20): error CS0246: The type or namespace name 'UpdateCharacterDto' could not be found 
+    \server\Services\Calculations\CharacterStatCalculator.cs(8,40): error CS0535: 'CharacterStatCalculator' does not implement interface member 'ICharacterStatCalculator.CalculateAllStats(Character)'
+    \server\Services\Calculations\CharacterStatCalculator.cs(8,40): error CS0535: 'CharacterStatCalculator' does not implement interface member 'ICharacterStatCalculator.CalculateBaseAttackValuesAsync(Character)'
+    \server\Services\Calculations\CharacterStatCalculator.cs(8,40): error CS0535: 'CharacterStatCalculator' does not implement interface member 'ICharacterStatCalculator.CalculateModifiedAttackValuesAsync(Character, bool)'
+    \server\Services\Calculations\CharacterStatCalculator.cs(8,40): error CS0535: 'CharacterStatCalculator' does not implement interface member 'ICharacterStatCalculator.CalculateDefenseValuesAsync(Character)'
+    \server\Services\Calculations\CharacterStatCalculator.cs(8,40): error CS0535: 'CharacterStatCalculator' does not implement interface member 'ICharacterStatCalculator.CalculateResistanceValuesAsync(Character)'
+    \server\Services\Calculations\CharacterStatCalculator.cs(8,40): error CS0535: 'CharacterStatCalculator' does not implement interface member 'ICharacterStatCalculator.CalculateMovementValuesAsync(Character)'
+    \server\Services\Calculations\CharacterStatCalculator.cs(8,40): error CS0535: 'CharacterStatCalculator' does not implement interface member 'ICharacterStatCalculator.CalculateInitiativeValuesAsync(Character)'
+    \server\Services\Calculations\CharacterStatCalculator.cs(8,40): error CS0535: 'CharacterStatCalculator' does not implement interface member 'ICharacterStatCalculator.CalculateUtilityValuesAsync(Character)'
+    \server\Services\Calculations\CharacterStatCalculator.cs(8,40): error CS0535: 'CharacterStatCalculator' does not implement interface member 'ICharacterStatCalculator.ValidateCalculatedValuesAsync(Character)'
+    \server\Interfaces\Repositories\ICharacterRepository.cs(76,22): error CS0246: The type or namespace name 'CharacterExpertise' could not be found 
+    \server\Controllers\CharactersController.cs(181,20): error CS0246: The type or namespace name 'UpdateCombatAttributesDto' could not be found 
+    \server\Domain\Attributes\UtilityAttributesEntity.cs(11,12): error CS0118: 'Character' is a namespace but is used like a type
+    \server\Domain\Attributes\CombatAttributesEntity.cs(11,12): error CS0118: 'Character' is a namespace but is used like a type
+    \server\Controllers\CharactersController.cs(235,20): error CS0246: The type or namespace name 'UpdateUtilityAttributesDto' could not be found 
+    \server\Domain\Character\Character.cs(34,24): error CS0246: The type or namespace name 'SpecialAttack' could not be found 
+    \server\Controllers\CharactersController.cs(13,22): error CS0246: The type or namespace name 'ICharacterService' could not be found 
+    \server\Domain\Character\Character.cs(35,24): error CS0246: The type or namespace name 'CharacterFeature' could not be found 
+    \server\Domain\Character\Character.cs(36,24): error CS0246: The type or namespace name 'CharacterExpertise' could not be found 
+    \server\Controllers\CharactersController.cs(14,22): error CS0246: The type or namespace name 'IValidationService' could not be found 
+    \server\Infrastructure\Data\VitalityBuilderContext.cs(22,18): error CS0246: The type or namespace name 'SpecialAttack' could not be found 
+    \server\Infrastructure\Data\VitalityBuilderContext.cs(23,18): error CS0246: The type or namespace name 'CharacterFeature' could not be found 
+    \server\Infrastructure\Data\VitalityBuilderContext.cs(24,18): error CS0246: The type or namespace name 'CharacterExpertise' could not be found 
+    \server\Controllers\CharactersController.cs(18,9): error CS0246: The type or namespace name 'ICharacterService' could not be found 
+    \server\Controllers\CharactersController.cs(19,9): error CS0246: The type or namespace name 'IValidationService' could not be found 
+    \server\Infrastructure\Validation\CombatAttributesValidator.cs(9,12): error CS0111: Type 'CharacterValidator' already defines a member called 'CharacterValidator' with the same parameter types
+    \server\Infrastructure\Validation\CombatAttributesValidator.cs(103,18): error CS0111: Type 'CharacterValidator' already defines a member called 'ValidateCombatAttributeTotal' with the same parameter types
+    \server\Infrastructure\Validation\CombatAttributesValidator.cs(110,18): error CS0111: Type 'CharacterValidator' already defines a member called 'ValidateUtilityAttributeTotal' with the same parameter types
+    \server\Infrastructure\Validation\CombatAttributesValidator.cs(117,18): error CS0111: Type 'CharacterValidator' already defines a member called 'BeValidArchetype' with the same parameter types
+    \server\Services\Calculations\PointPoolCalculator.cs(9,41): error CS0118: 'Character' is a namespace but is used like a type
+    \server\Services\Calculations\PointPoolCalculator.cs(21,35): error CS0118: 'Character' is a namespace but is used like a type
+    \server\Services\Calculations\PointPoolCalculator.cs(34,40): error CS0118: 'Character' is a namespace but is used like a type
+    \server\Services\Calculations\PointPoolCalculator.cs(43,48): error CS0118: 'Character' is a namespace but is used like a type
+    \server\Services\Calculations\PointPoolCalculator.cs(48,49): error CS0118: 'Character' is a namespace but is used like a type
+    \server\Services\Calculations\PointPoolCalculator.cs(53,46): error CS0118: 'Character' is a namespace but is used like a type
+    \server\Services\Calculations\PointPoolCalculator.cs(65,38): error CS0118: 'Character' is a namespace but is used like a type
+    \server\Services\Calculations\PointPoolCalculator.cs(122,53): error CS0118: 'Character' is a namespace but is used like a type
+    \server\Services\Calculations\PointPoolCalculator.cs(7,36): error CS0535: 'PointPoolCalculator' does not implement interface member 'IPointPoolCalculator.CalculateAllPoolsAsync(Character)'
+    \server\Services\Calculations\PointPoolCalculator.cs(7,36): error CS0535: 'PointPoolCalculator' does not implement interface member 'IPointPoolCalculator.CalculateSpecialAttackPointsAsync(Character, IEnumerable<string>)'
+    \server\Services\Calculations\PointPoolCalculator.cs(7,36): error CS0535: 'PointPoolCalculator' does not implement interface member 'IPointPoolCalculator.ValidatePointAllocationAsync(Character)'
+    \server\Services\Calculations\PointPoolCalculator.cs(7,36): error CS0535: 'PointPoolCalculator' does not implement interface member 'IPointPoolCalculator.HasSufficientPointsAsync(Character, string, int)'
+    \server\Services\Calculations\PointPoolCalculator.cs(7,36): error CS0535: 'PointPoolCalculator' does not implement interface member 'IPointPoolCalculator.CalculateRemainingPointsAsync(Character)'
+    \server\Services\Calculations\PointPoolCalculator.cs(7,36): error CS0535: 'PointPoolCalculator' does not implement interface member 'IPointPoolCalculator.CalculatePointCostAsync(Character, string, IDictionary<string, object>)'        
+    \server\Services\Calculations\PointPoolCalculator.cs(7,36): error CS0535: 'PointPoolCalculator' does not implement interface member 'IPointPoolCalculator.ValidateLimitPointsAsync(Character, IEnumerable<string>)'
+    \server\migrations\20250210120258_FixMainPointPoolComputed.Designer.cs(13,23): error CS0246: The type or namespace name 'VitalityBuilderContext' could not be found 
+    \server\Interfaces\Services\ICharacterStatCalculator.cs(56,10): error CS0246: The type or namespace name 'ValidationResult' could not be found 
+    \server\Domain\Character\CharacterArchetypes.cs(13,12): error CS0246: The type or namespace name 'MovementArchetype' could not be found 
+    \server\migrations\VitalityBuilderContextModelSnapshot.cs(12,23): error CS0246: The type or namespace name 'VitalityBuilderContext' could not be found 
+    \server\Services\Character\CharacterCreationService.cs(9,41): error CS0246: The type or namespace name 'ICharacterCreationService' could not be found 
+    \server\Services\Character\CharacterCreationService.cs(11,22): error CS0246: The type or namespace name 'ICharacterRepository' could not be found 
+    \server\Services\Character\CharacterCreationService.cs(14,22): error CS0246: The type or namespace name 'IValidationService' could not be found 
+    \server\Services\Validation\ValidationService.cs(10,34): error CS0246: The type or namespace name 'IValidationService' could not be found 
+    \server\Services\Validation\ValidationService.cs(12,22): error CS0246: The type or namespace name 'ICharacterRepository' could not be found 
+    \server\Services\Character\CharacterCreationService.cs(18,9): error CS0246: The type or namespace name 'ICharacterRepository' could not be found 
+    \server\Services\Character\CharacterCreationService.cs(21,9): error CS0246: The type or namespace name 'IValidationService' could not be found 
+    \server\Services\Character\CharacterUpdateService.cs(9,39): error CS0246: The type or namespace name 'ICharacterUpdateService' could not be found 
+    \server\Services\Validation\ValidationService.cs(13,22): error CS0246: The type or namespace name 'IPointPoolCalculator' could not be found 
+    \server\Services\Character\CharacterCreationService.cs(31,66): error CS0246: The type or namespace name 'CreateCharacterDto' could not be found 
+    \server\Domain\Dtos\Attributes\CharacterResponseDto.cs(19,12): error CS0246: The type or namespace name 'CombatAttributesDto' could not be found 
+    \server\Domain\Dtos\Attributes\CharacterResponseDto.cs(20,12): error CS0246: The type or namespace name 'UtilityAttributesDto' could not be found 
+    \server\Services\Character\CharacterUpdateService.cs(260,12): error CS0246: The type or namespace name 'CombatAttributes' could not be found 
+    \server\Domain\Character\CharacterArchetypes.cs(14,12): error CS0246: The type or namespace name 'AttackArchetype' could not be found 
+    \server\Domain\Dtos\Attributes\CharacterResponseDto.cs(23,12): error CS0246: The type or namespace name 'CharacterArchetypesDto' could not be found 
+    \server\Services\Character\CharacterUpdateService.cs(261,12): error CS0246: The type or namespace name 'UtilityAttributes' could not be found 
+    \server\Services\Validation\ValidationService.cs(17,9): error CS0246: The type or namespace name 'ICharacterRepository' could not be found 
+    \server\Services\Validation\ValidationService.cs(18,9): error CS0246: The type or namespace name 'IPointPoolCalculator' could not be found 
+    \server\Services\Character\CharacterUpdateService.cs(11,22): error CS0246: The type or namespace name 'ICharacterRepository' could not be found 
+    \server\Domain\Character\CharacterArchetypes.cs(15,12): error CS0246: The type or namespace name 'EffectArchetype' could not be found 
+    \server\Services\Validation\ValidationService.cs(26,67): error CS0246: The type or namespace name 'CreateCharacterDto' could not be found 
+    \server\Services\Character\CharacterUpdateService.cs(14,22): error CS0246: The type or namespace name 'IValidationService' could not be found 
+    \server\Services\Validation\ValidationService.cs(68,9): error CS0246: The type or namespace name 'UpdateCharacterDto' could not be found 
+    \server\Domain\Character\CharacterArchetypes.cs(16,12): error CS0246: The type or namespace name 'UniqueAbilityArchetype' could not be found 
+    \server\Services\Validation\ValidationService.cs(214,9): error CS0246: The type or namespace name 'UpdateCombatAttributesDto' could not be found 
+    \server\Services\Character\CharacterUpdateService.cs(18,9): error CS0246: The type or namespace name 'ICharacterRepository' could not be found 
+    \server\Services\Character\CharacterUpdateService.cs(21,9): error CS0246: The type or namespace name 'IValidationService' could not be found 
+    \server\Services\Validation\ValidationService.cs(243,9): error CS0246: The type or namespace name 'UpdateUtilityAttributesDto' could not be found 
+    \server\Domain\Character\CharacterArchetypes.cs(17,12): error CS0246: The type or namespace name 'SpecialAttackArchetype' could not be found 
+    \server\Services\Character\CharacterUpdateService.cs(31,74): error CS0246: The type or namespace name 'UpdateCharacterDto' could not be found 
+    \server\Services\Validation\ValidationService.cs(269,9): error CS0246: The type or namespace name 'SpecialAttack' could not be found 
+    \server\Domain\Character\CharacterArchetypes.cs(18,12): error CS0246: The type or namespace name 'UtilityArchetype' could not be found 
+    \server\Services\Character\CharacterUpdateService.cs(132,85): error CS0246: The type or namespace name 'UpdateCombatAttributesDto' could not be found 
+    \server\Services\Validation\ValidationService.cs(296,9): error CS0246: The type or namespace name 'CharacterFeature' could not be found 
+    \server\Services\Character\CharacterUpdateService.cs(147,86): error CS0246: The type or namespace name 'UpdateUtilityAttributesDto' could not be found 
+    \server\Services\Validation\ValidationService.cs(315,9): error CS0246: The type or namespace name 'CharacterExpertise' could not be found 
+    \server\Services\Character\CharacterUpdateService.cs(161,79): error CS0246: The type or namespace name 'UpdateArchetypesDto' could not be found 
+    \server\Services\Character\CharacterUpdateService.cs(205,9): error CS0246: The type or namespace name 'CombatStats' could not be found 
+
+Build failed with 105 error(s) and 6 warning(s) in 4.0s
+PS \server> 

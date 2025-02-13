@@ -50,9 +50,9 @@ def read_file_content(file_path: Path) -> str:
 def main():
     try:
         project_root = find_project_root()
-        target_dir = project_root / "server"
+        target_dir = project_root / "VitalityBuilder.Api"
         output_dir = project_root / "shared" / "output"
-        output_file = output_dir / "server_contents.txt"
+        output_file = output_dir / "VitalityBuilder.Api_contents.txt"
         skip_dirs = ["bin", "obj", ".git", ".vs", "node_modules", "packages", "dist", "output"]
 
         # Ensure output directory exists
@@ -81,7 +81,7 @@ def main():
             for path, content in file_contents:
                 # Convert path to Windows-style string
                 win_path = str(path).replace('/', '\\')
-                f.write(f"\nFile: server\\{win_path}\n")
+                f.write(f"\nFile: VitalityBuilder.Api\\{win_path}\n")
                 f.write("Content:\n")
                 f.write(content)
                 f.write("\n" + "-" * 50 + "\n")

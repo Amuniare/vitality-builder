@@ -1,77 +1,122 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using System.Text.Json.Serialization;
-using VitalityBuilder.Api.Infrastructure; 
-using VitalityBuilder.Api.Services;
+using Serilog;
+using VitalityBuilder.Infrastructure.Data;
+using VitalityBuilder.Infrastructure.Security;
+using VitalityBuilder.Infrastructure.Validation;
+using VitalityBuilder.Interfaces.Repositories;
+using VitalityBuilder.Interfaces.Services;
+using VitalityBuilder.Services.Calculations;
+using VitalityBuilder.Services.Character;
+using VitalityBuilder.Services.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddValidation();
+// Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
 
+builder.Host.UseSerilog();
 
-
-// Configure JSON options
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-    });
-
-// Configure logging
-builder.Services.AddLogging(logging =>
-{
-    logging.AddConsole();
-    logging.AddDebug();
-});
-
-// Add database context
-builder.Services.AddDbContext<VitalityBuilderContext>(options => 
-{
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    options.UseSqlServer(connectionString);
-    // Add logging for development
-    if (builder.Environment.IsDevelopment())
-    {
-        options.EnableSensitiveDataLogging();
-        options.EnableDetailedErrors();
-    }
-});
-
-// Add services
-builder.Services.AddScoped<ICharacterArchetypesService, CharacterArchetypesService>();
-
-// Add Swagger
+// Add services to the container
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
+
+// Configure Swagger
+builder.Services.AddSwaggerGen(c =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
+    c.SwaggerDoc("v1", new OpenApiInfo 
+    { 
+        Title = "Vitality Builder API", 
         Version = "v1",
-        Title = "Vitality System Character Builder API",
-        Description = "An ASP.NET Core Web API for managing Vitality System character creation"
+        Description = "API for the Vitality System Character Builder"
+    });
+    
+    // Include XML comments
+    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+});
+
+// Configure Database
+builder.Services.AddDbContext<VitalityBuilderContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        b => b.MigrationsAssembly("VitalityBuilder.Infrastructure")));
+
+// Register Services
+builder.Services.AddScoped<ICharacterRepository, CharacterRepository>();
+builder.Services.AddScoped<ICharacterCreationService, CharacterCreationService>();
+builder.Services.AddScoped<ICharacterUpdateService, CharacterUpdateService>();
+builder.Services.AddScoped<ICharacterStatCalculator, CharacterStatCalculator>();
+builder.Services.AddScoped<IPointPoolCalculator, PointPoolCalculator>();
+builder.Services.AddScoped<IValidationService, ValidationService>();
+
+// Register Validators
+builder.Services.AddValidatorsFromAssemblyContaining<CharacterValidator>();
+
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins(builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? Array.Empty<string>())
+              .AllowAnyMethod()
+              .AllowAnyHeader();
     });
 });
+
+// Add Health Checks
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<VitalityBuilderContext>();
 
 var app = builder.Build();
 
-// Configure middleware
-app.UseSwagger();
-app.UseSwaggerUI(options =>
+// Configure the HTTP request pipeline
+if (app.Environment.IsDevelopment())
 {
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-    options.RoutePrefix = string.Empty;
-});
+    app.UseSwagger();
+    app.UseSwaggerUI(c => 
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Vitality Builder API V1");
+        c.RoutePrefix = string.Empty;
+    });
+}
+else
+{
+    app.UseExceptionHandler("/error");
+    app.UseHsts();
+}
 
 app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
+app.UseCors();
 
-// Ensure database exists
+// Add security headers
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+    context.Response.Headers.Add("X-Frame-Options", "DENY");
+    context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
+    context.Response.Headers.Add("Referrer-Policy", "strict-origin-when-cross-origin");
+    context.Response.Headers.Add("Content-Security-Policy", 
+        "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline';");
+    
+    await next();
+});
+
+// Global error handling
+app.UseMiddleware<ErrorHandlingMiddleware>();
+
+app.MapControllers();
+app.MapHealthChecks("/health");
+
+// Ensure database is created and migrated
 using (var scope = app.Services.CreateScope())
 {
-    var context = scope.ServiceProvider.GetRequiredService<VitalityBuilderContext>();
-    context.Database.EnsureCreated();
+    var db = scope.ServiceProvider.GetRequiredService<VitalityBuilderContext>();
+    db.Database.Migrate();
 }
 
 app.Run();

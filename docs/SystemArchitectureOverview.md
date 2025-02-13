@@ -14,7 +14,7 @@ This layer contains all our game rules and calculations. When a user makes chang
 ## Directory Tree
 
 ```
-Server/
+VitalityBuilder.Api/
 ├── Controllers/
 │   └── CharacterController.cs
 │

@@ -7,6 +7,8 @@ namespace VitalityBuilder.Services.Calculations;
 
 public class CharacterStatCalculator : ICharacterStatCalculator
 {
+    
+    
     public CombatStats CalculateAllStats(Character character)
     {
         var stats = new CombatStats
@@ -182,4 +184,6 @@ public class CharacterStatCalculator : ICharacterStatCalculator
             stats.VitalityResistance += bonus;
         }
     }
+
+    
 }
