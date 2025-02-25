@@ -265,12 +265,14 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(xmlPath);
 });
 
-// Configure Database
+// First configure the database context
 builder.Services.AddDbContext<VitalityBuilderContext>(options =>
     options.UseSqlServer(
-        builder.Services.AddScoped<ICharacterRepository, CharacterRepository>();
         builder.Configuration.GetConnectionString("DefaultConnection"),
         b => b.MigrationsAssembly("VitalityBuilder.Api.Infrastructure")));
+
+// Then register the repository service
+builder.Services.AddScoped<ICharacterRepository, CharacterRepository>();
 
 // Register Services
 builder.Services.AddScoped<ICharacterRepository, CharacterRepository>();
